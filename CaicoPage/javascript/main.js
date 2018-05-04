@@ -1,4 +1,4 @@
-;$(function(){
+$(document).ready(function(){
 	"use strict";
 	var body=$("body");
 	var header=$("#header");
