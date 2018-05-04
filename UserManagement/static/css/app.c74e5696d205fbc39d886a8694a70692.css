@@ -1,0 +1,39 @@
+#app {
+	font-family: Avenir, Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+/*	text-align: center;*/
+	color: #2c3e50;
+	margin-top: 60px
+}
+table td[data-v-61dcdb4c], table th[data-v-61dcdb4c] {
+	text-align: center;
+	vertical-align: middle!important
+}
+table tr[data-v-61dcdb4c]:hover {
+	background-color: coral;
+	color: #fff
+}
+input[data-v-61dcdb4c] {
+	width: 55vw!important
+}
+._formControl[data-v-3c3d30e0] {
+	min-width: 100%;
+	max-width: 100%
+}
+p[data-v-4280640b] {
+	display: inline;
+	margin-left: 1em
+}
+ul li[data-v-4280640b]:hover {
+	background-color: coral;
+	color: #fff
+}
+strong[data-v-8632bc16] {
+	color: red
+}
+._formControl[data-v-8632bc16] {
+	min-width: 100%;
+	max-width: 100%
+}
+/*# sourceMappingURL=app.c74e5696d205fbc39d886a8694a70692.css.map */
