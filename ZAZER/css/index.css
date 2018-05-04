@@ -1,0 +1,296 @@
+ .index-banner{
+	position: relative;
+}
+
+.index-banner-bg{
+	/*height: 569px;*/
+	overflow: hidden;/*hidden  内容会被修剪，并且其余内容是不可见的;visible	默认值。内容不会被修剪，会呈现在元素框之外;scroll	内容会被修剪，但是浏览器会显示滚动条以便查看其余的内容。auto	如果内容被修剪，则浏览器会显示滚动条以便查看其余的内容。*/
+}
+
+.index-banner-bg img{
+	margin: 0 auto;
+}
+
+.index-banner-text{
+	position: absolute;
+	top:200px;
+	left: 50%;
+	margin-left: -388px;
+}
+
+.index-banner-text .text-info{
+	margin-top: 17px;
+	text-align: center;
+	color: #FFFFFF;
+}
+
+.index-banner-text .text-info .line{
+	display: inline-block;/*none	此元素不会被显示。
+							block	此元素将显示为块级元素，此元素前后会带有换行符。
+							inline	默认。此元素会被显示为内联元素，元素前后没有换行符。
+							inline-block	行内块元素。（CSS2.1 新增的值）
+							list-item	此元素会作为列表显示。
+							run-in	此元素会根据上下文作为块级元素或内联元素显示。*/
+	width: 40px;
+	border-top: 1px solid #ffffff;/*上边框*/
+	vertical-align: middle;/*baseline	默认。元素放置在父元素的基线上。
+							sub	垂直对齐文本的下标。
+							super	垂直对齐文本的上标
+							top	把元素的顶端与行中最高元素的顶端对齐
+							text-top	把元素的顶端与父元素字体的顶端对齐
+							middle	把此元素放置在父元素的中部。
+							bottom	把元素的顶端与行中最低的元素的顶端对齐。
+							text-bottom	把元素的底端与父元素字体的底端对齐。
+							length	 
+							%	使用 "line-height" 属性的百分比值来排列此元素。允许使用负值。
+							inherit	规定应该从父元素继承 vertical-align 属性的值。*/
+}
+
+.index-banner-text .text-info .line .line-l{
+	margin-right: 26px;
+}
+
+.index-banner-text .text-info .line .line-r{
+	margin-left: 26px;
+}
+
+.index-banner-text .text-logo{
+	width: 776px;
+	height: 118px;
+	background: url(../img/text-logo.png) no-repeat;
+}
+
+/*菜单*/
+.index-menu{
+	position: relative;
+	border-top: 4px solid #f34949;
+}
+
+.index-menu .menu-tips{
+	position: absolute;
+	left: 50%;
+	top: 0;
+	margin-left: -78px;
+	width: 155px;
+	height: 72px;
+	text-align: center;
+	line-height: 65px;
+	color: #ffffff;
+	background: #f34949;
+}
+
+.index-menu .menu-tips:after{/*:after 选择器在被选元素的内容后面插入内容。使用 content 属性来指定要插入的内容。*/
+	position: absolute;
+	content: '';
+	left: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	border-left: 78px solid transparent;/*transparent 透明*/
+	border-right: 78px solid transparent;
+	border-bottom: 10px solid #ffffff;
+}
+
+.index-menu .menu-list{
+	margin-top: 150px;
+	color: #555555;
+	overflow: hidden;
+}
+
+.index-menu .menu-list ul{
+	width: 1160px;
+}
+
+
+.index-menu .menu-item{
+	float: left;
+	width: 520px;
+	margin-right: 60px;
+	margin-bottom: 56px;
+}
+
+.index-menu .menu-item .list-title,.index-menu .menu-item .line{
+	float: left;
+}
+
+.index-menu .menu-item .price{
+	float: right;
+}
+
+.index-menu .menu-item .list-title{
+	width: 230px;
+	color: #000000;
+	overflow: hidden;
+	white-space: nowrap;/*nowrap	文本不会换行，文本会在在同一行上继续，直到遇到 <br> 标签为止。*/
+	text-overflow: ellipsis;/*ellipsis	显示省略符号来代表被修剪的文本。*/
+}
+
+.index-menu .menu-item .comment{
+	margin-top: 4px;
+	color: #B7B7B7;
+	font-size: 12px;
+}
+
+.index-menu .menu-item .line{
+	margin-top: 9px;
+	width: 192px;
+	border-top: 1px solid #e3e1e1;
+}
+
+.index-menu .menu-morelist{
+	margin: 0 auto;
+	width: 114px;
+	height: 32px;
+	padding-left: 16px;
+	border: 1px solid #D7D5D5;
+	font-size: 14px;
+	line-height: 32px;
+	color: #B7B7B7;
+}
+
+.index-menu .menu-morelist .icon{
+	display: inline-block;
+	width: 11px;
+	height: 7px;
+	background: url(../img/icon-daoshanjiao.png) no-repeat;
+}
+
+.index-panel{
+	height: 362px;
+	margin-top: 200px;
+}
+
+ .index-panel-header h3{
+	float: left;
+	margin-right: 48px;	
+	font-size: 20px;
+	color:#000000;
+	font-weight: normal;
+}
+
+.index-panel-header .line{
+	float: left;
+	width: 200px;
+	margin-top: 9px;
+	border-top: 1px solid #e5e3e3;
+}
+
+.index-panel-header .btn-group{
+	font-size: 0;
+	float: right;
+}
+
+.index-panel-header .btn{
+	display: inline-block;
+	margin-left: 11px;
+	width: 9px;
+	height: 9px;
+	background: #dedede;
+	border-radius: 50%;
+}
+
+.index-panel-header .active{
+	background: #9b9b9b;
+}
+
+.index-panel-body{
+	float: left;
+	margin-top: 78px;
+}
+
+.index-food-list{
+	overflow: hidden;
+}
+
+.index-food-list ul{
+	width: 1160px;
+}
+
+.index-food-list .food-item{
+	float: left;
+	width: 230px;
+	margin-right: 60px;
+}
+
+.index-food-list .food-item .food-img{
+	margin-bottom: 30px;
+	height: 202px;
+}
+
+.index-food-list .food-item .name{
+	color: #555555;
+	margin-bottom: 10px;
+}
+
+.index-food-list .food-item .name span{
+	float: right;
+}
+
+.index-food-list .food-item .star-bar .star1{
+	display: inline-block;
+	width: 12px;
+	height: 13px;
+	margin-right: 5px;
+	background-image: url(../img/star1.png);
+	background-repeat: no-repeat;
+}
+
+.index-food-list .food-item .star-bar span{
+	float: left;
+}
+
+.index-food-list .food-item .star-bar .star0{
+	display: inline-block;
+	width: 12px;
+	height: 13px;
+	margin-right: 5px;
+	background-image: url(../img/star0.png);
+	background-repeat: no-repeat;
+}
+
+.index-footer{
+	height: 528px;
+	margin-top: 200px;
+	margin-bottom: 200px;
+}
+
+.index-footer-header h3{
+	float: left;
+	margin-right: 48px;	
+	font-size: 20px;
+	color:#000000;
+	font-weight: normal;
+}
+
+.index-footer-header .line{
+	float: left;
+	width: 200px;
+	margin-top: 9px;
+	border-top: 1px solid #e5e3e3;
+}
+
+.index-footer-body{
+	float: left;
+	margin-top: 130px;
+}
+
+.index-pics{
+	height: 381px;
+	overflow: hidden;
+}
+
+.index-pics .pic-col{
+	float: left;
+}
+
+.index-pics .pic-col-l{
+	width: 353px;
+}
+
+.index-pics .pic-col-m{
+	width: 287px;
+}
+
+.index-pics .pic-col-r{
+	width: 460px;
+}
