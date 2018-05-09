@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #container{
+            display: flex;
+        }
+        video{
+            width:650px;
+            border-radius: 20px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <video id="video" controls="controls" poster="http://static.adesk.com/wallpaper?imgid=58525aba69401b34865ef4df&reso=1200x800">
+            <source type="video/ogg" src="../static/周星馳, 吳孟達, 田啟文, 甜筒輝 行運一條龍之水哥出場.mp4"><!--Safari-->
+            <source type="video/ogg" src="../static/周星馳, 吳孟達, 田啟文, 甜筒輝 行運一條龍之水哥出場.Ogg"><!--非Safari-->
+            您的浏览器不支持HTML5
+        </video>
+    </div>
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#video").on("click",function(){
+                console.log("event");
+            })
+        })
+    </script>
+</body>
+</html>
