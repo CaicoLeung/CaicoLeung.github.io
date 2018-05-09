@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script> -->
+	<title>焦点轮播图</title>
+	<!-- ======================= Style ================================ -->
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		a {
+			text-decoration: none;
+			padding: 10px;
+		}
+
+		#container {
+			width: 600px;
+			height: 400px;
+			border: 3px solid #333;
+			overflow: hidden;
+			;
+			position: relative;
+			margin: 20px auto;
+		}
+
+		#list {
+			width: 4200px;
+			height: inherit;
+			position: absolute;
+			z-index: 1;
+		}
+
+		#list img {
+			float: left;
+			width: 600px;
+			height: inherit;
+		}
+
+		#buttons {
+			position: absolute;
+			height: 10px;
+			width: 100px;
+			z-index: 2;
+			bottom: 20px;
+			left: 250px;
+		}
+
+		#buttons span {
+			cursor: pointer;
+			float: left;
+			border: 2px solid #fff;
+			width: 10px;
+			height: 10px;
+			border-radius: 5px;
+			margin-left: 5px;
+		}
+
+		#buttons .on {
+			background: #eee;
+		}
+
+		.arrow {
+			display: none;
+			cursor: pointer;
+			line-height: 39px;
+			text-align: center;
+			font-size: 36px;
+			font-weight: bold;
+			color: #000;
+			z-index: 2;
+			position: absolute;
+			top: 150px;
+			background-color: rgba(56, 140, 158, 0.6)
+		}
+
+		.arrow:hover {
+			background-color: rgba(39, 50, 127, 0.5);
+			color: #fff;
+		}
+
+		#container:hover .arrow {
+			display: block;
+		}
+
+		#prev {
+			left: 5px;
+		}
+
+		#next {
+			right: 5px;
+		}
+	</style>
+</head>
+<!-- ======================= Body ================================ -->
+
+<body>
+	<div id="container">
+		<div id="list" style="left: -600px;">
+			<img src="img/Hzw.jpeg" alt="5">
+			<img src="img/onepiece.jpeg" alt="1">
+			<img src="img/hzw1.jpeg" alt="2">
+			<img src="img/solong.jpeg" alt="3">
+			<img src="img/Arsi.jpeg" alt="4">
+			<img src="img/Hzw.jpeg" alt="5">
+			<img src="img/onepiece.jpeg" alt="1">
+		</div>
+		<div id="buttons">
+			<span index="1" class="on"></span>
+			<span index="2"></span>
+			<span index="3"></span>
+			<span index="4"></span>
+			<span index="5"></span>
+		</div>
+		<a href="javascript:;" class="arrow" id="prev">&lt;</a>
+		<a href="javascript:;" class="arrow" id="next">&gt;</a>
+	</div>
+	<!-- ======================= Script ================================ -->
+	<script>
+		window.onload = function () {
+			var container = document.getElementById("container");
+			var list = document.getElementById("list");
+			var prev = document.getElementById("prev");
+			var next = document.getElementById("next");
+			var spans = document.getElementsByTagName("span");
+			var index = 1;
+
+			function showButton() {
+				for (var i = 0; i < spans.length; i++) {
+					if (spans[i].className == 'on') {
+						spans[i].className = '';
+						break;
+					}
+				}
+				spans[index - 1].className = 'on';
+			};
+
+			function animate(offset) {
+				var newLeft = parseInt(list.style.left) + offset; //动画后的left
+				// console.log("newLeft:"+newLeft);
+				// console.log("parseInt(list.style.left):"+parseInt(list.style.left));
+				// console.log("offset"+offset);
+				var time = 600; //位移时间
+				var interval = 5; //位移间隔时间
+				var speed = offset / (time / interval); //每次位移量
+				function go() {
+					if ((speed < 0 && parseInt(list.style.left) > newLeft) || (speed > 0 && parseInt(list.style.left) < newLeft)) {
+						list.style.left = parseInt(list.style.left) + speed + "px";
+						setTimeout(go, interval);
+					} else {
+						list.style.left = newLeft + "px";
+						if (newLeft > -600) {
+							list.style.left = -3000 + "px";
+						}
+						if (newLeft < -3000) {
+							list.style.left = -600 + "px";
+						}
+					}
+				};
+				go();
+			};
+
+			prev.onclick = function () {
+				if (index == 1) {
+					index = spans.length;
+				} else {
+					index -= 1;
+				}
+				animate(600);
+				showButton();
+			}
+
+			next.onclick = function () {
+				if (index == spans.length) {
+					index = 1;
+				} else {
+					index += 1;
+				}
+				animate(-600);
+				showButton();
+			};
+
+			for (var i = 0; i < spans.length; i++) {
+				spans[i].onclick = function () {
+					if (this.className == "on") {
+						return;
+					}
+					var myIndex = parseInt(this.getAttribute("index"));
+					var offset = -600 * (myIndex - index);
+					index = myIndex;
+					animate(offset);
+					showButton();
+				};
+			};
+		};
+	</script>
+</body>
+
+</html>
