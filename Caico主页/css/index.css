@@ -1,0 +1,172 @@
+/* ------ Main ------ */
+main #focus{
+    /* width: 800px;
+    height: 533px; */
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+main #focus .post-list li{
+    position: absolute;
+}
+main #focus .btn{
+    cursor: pointer;
+}
+main #focus .post-list{
+    /* width: 800px;
+    height: 533px; */
+    overflow: hidden;
+    margin: 0 auto;
+}
+main #focus .pre-btn{
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url(../image/back.png) no-repeat center;
+}
+main #focus .next-btn{
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: url(../image/forward.png) no-repeat center;
+}
+hr{
+    box-shadow: 1px 0 1px 2px #eee;
+}
+
+main .content{
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    background-color: #F6F6F6;
+}
+main .content ul.contentItems{
+    display: flex;
+    width: 1100px;
+    padding: 1rem 0;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+main .content ul.contentItems li.list{
+    width: 205px;
+    height: 250px;
+    overflow: hidden;
+    float: left;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 1px 2px 1px 2px #eee;
+    position: relative;
+    background-color: #ffffff;
+}
+main .content ul.contentItems li.list:hover{
+    color: #FF7F50;
+    text-shadow: 1px 0px 5px;
+}
+main .content ul.contentItems li.list article{
+    position: absolute;
+    top: 91;
+    width: 100%;
+    height: 250px;
+    font-size: 0.7rem;
+    padding: 5px;
+    background-color: #ffffff;
+}
+main .content ul.contentItems li.list h6{
+    text-align: center;
+    font-size: 1.2rem;
+}
+main .content ul.contentItems div.pic{
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+}
+main .content ul.contentItems div.pic1{
+    background: url(../image/灯泡.png) no-repeat center;
+}
+main .content ul.contentItems div.pic2{
+    background: url(../image/钻石.png) no-repeat center;
+}
+main .content ul.contentItems div.pic3{
+    background: url(../image/对.png) no-repeat center;
+}
+main .content ul.contentItems div.pic4{
+    background: url(../image/head.png) no-repeat center;
+}
+
+main .news{
+    width: 1100px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: space-between;
+}
+main .news .leftNews{
+    flex: 2;
+}
+main .news .rightNews{
+    flex: 3;
+}
+main .news .newsTitle{
+    width: 100%;
+    height: 2rem;
+    line-height: 2rem;
+    color: #FF7F50;
+}
+main .news .newsTitle h2{
+    float: left;
+}
+main .news .newsTitle span{
+    float: right;
+    margin-right: 0.5rem;
+}
+main .news .newsTitle span a{
+    color: #FF7F50;
+}
+main .news article{
+    padding: 1rem;
+}
+main .news article P{
+    position: relative;
+    font-size: 0.8rem;
+}
+main .news article P a{
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0;
+    color: #FF7F50;
+}
+main .news .rightNews ul.newsContent{
+    width: 100%;
+}
+main .news .rightNews ul.newsContent li{
+    border-bottom: 1px dashed #000;
+    width: 100%;
+    height: 5rem;
+    cursor: pointer;
+}
+main .news .rightNews ul.newsContent li div.date{
+    width: 4rem;
+    height: inherit;
+    float: left;
+    text-align: center;
+    color: #6E6D6D;
+}
+main .news .rightNews ul.newsContent li div.date .dateDay{
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 5px auto 2px;
+    border: 2px solid #FF7F50;
+    border-top: 8px solid #FF7F50;
+    color: #FF7F50;
+    border-radius: 5px;
+    line-height: 2rem;
+    font-weight: bold;
+}
+main .news .rightNews ul.newsContent li .contentDetail{
+    padding: 0 0.5rem;
+    overflow: hidden;
+}
+main .news .rightNews ul.newsContent li .contentDetail p{
+    font-size: 0.8rem;
+    height: 3rem;
+    text-overflow: ellipsis;
+}
