@@ -8,6 +8,7 @@
     margin: auto;
     background: url(../image/Spinner-1s-200px.svg) no-repeat center;
     background-color: #ffffff;
+    z-index: 9999;
 }
 
 /* ------ Main ------ */
