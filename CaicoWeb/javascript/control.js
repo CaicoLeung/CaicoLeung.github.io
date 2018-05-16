@@ -43,7 +43,8 @@
         'https://caicoleung.github.io/CaicoWeb/image/list6.jpg',
         'https://caicoleung.github.io/CaicoWeb/image/list7.jpg',
         'https://caicoleung.github.io/CaicoWeb/image/list8.jpg',
-        'https://caicoleung.github.io/CaicoWeb/image/list9.jpg'
+        'https://caicoleung.github.io/CaicoWeb/image/list9.jpg',
+        'https://caicoleung.github.io/CaicoWeb/image/25_de_abril_bridge_night_tagus_river_portugal-wallpaper-2560x1080.jpg'
     ],
         $progress = $(".progress-bar"),
         $progressVal = $(".progress-value"),
