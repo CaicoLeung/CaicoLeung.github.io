@@ -7,7 +7,7 @@
     bottom: 0;
     margin: auto;
     /* background: url(../Double\ Ring-1s-200px.svg) no-repeat center; */
-    background-color: #ffffff;
+    background-color: #708090;
     text-align: center;
     line-height: 130vh;
     z-index: 9999;
@@ -51,7 +51,7 @@ hr{
 }
 
 main .content{
-    font-family: Arial, Helvetica, sans-serif;
+    /* font-family: 'Microsoft YaHei', "微软雅黑", Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", "monospace"; */
     width: 100%;
     background-color: #F6F6F6;
 }
@@ -61,6 +61,7 @@ main .content ul.contentItems{
     padding: 1rem 0;
     margin: 0 auto;
     justify-content: space-between;
+    font-size: 14px;
 }
 main .content ul.contentItems li.list{
     width: 205px;
@@ -75,20 +76,19 @@ main .content ul.contentItems li.list{
 }
 main .content ul.contentItems li.list:hover{
     color: #FF7F50;
-    text-shadow: 1px 0px 5px;
+    font-weight: 600;
 }
-main .content ul.contentItems li.list article{
+main .content ul.contentItems li.list .article{
     position: absolute;
-    top: 91;
+    top: 90px;
     width: 100%;
     height: 250px;
-    font-size: 0.7rem;
-    padding: 5px;
+    padding: 10px;
     background-color: #ffffff;
 }
 main .content ul.contentItems li.list h6{
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 15px;
 }
 main .content ul.contentItems div.pic{
     width: 100px;
@@ -157,7 +157,6 @@ main .news .rightNews ul.newsContent{
 main .news .rightNews ul.newsContent li{
     border-bottom: 1px dashed #000;
     width: 100%;
-    height: 5rem;
     cursor: pointer;
 }
 main .news .rightNews ul.newsContent li div.date{
@@ -179,13 +178,14 @@ main .news .rightNews ul.newsContent li div.date .dateDay{
     font-weight: bold;
 }
 main .news .rightNews ul.newsContent li .contentDetail{
-    padding: 0 0.5rem;
+    height: 76px;
+    padding: 0 7px;
     overflow: hidden;
+    font-size: 14px;
+    text-overflow: ellipsis;
 }
 main .news .rightNews ul.newsContent li .contentDetail p{
-    font-size: 0.8rem;
     height: 3rem;
-    text-overflow: ellipsis;
 }
 
 main .content .news .rightNews .contentShow{
@@ -205,18 +205,23 @@ main .content .news .rightNews .contentShow ul{
 }
 main .content .news .rightNews .contentShow ul li.show-list{
     width: 270px;
-    height: 100%;
+    height: 180px;
     margin-right: 60px;
     float: left;
+    border-radius: 10px;
     text-align: center;
     background-color: #ffffff;
-    box-shadow: 1px 2px 1px 2px #eee;
-    font-family: '小米兰亭字体',Arial, Helvetica, sans-serif;
+    border: 2px solid #ffffff;
+    font-family: '小米兰亭字体', 'Microsoft YaHei', "微软雅黑", Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", "monospace";
+}
+main .content .news .rightNews .contentShow ul li.show-list:hover a{
+    color: #FF7F50;
 }
 main .content .news .rightNews .contentShow ul li.show-list .list-pic{
     width: 100%;
     height: 75%;
     margin-bottom: 0.5rem;
+    border-radius: 10px 10px 0 0;
 }
 main .content .news .rightNews .contentShow ul li.show-list .list-pic1{
     background: url(../image/list5.jpg) no-repeat center;

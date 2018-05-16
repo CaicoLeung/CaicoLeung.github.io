@@ -41,6 +41,9 @@
         'https://caicoleung.github.io/CaicoWeb/image/list4.jpg',
         'https://caicoleung.github.io/CaicoWeb/image/list5.jpg',
         'https://caicoleung.github.io/CaicoWeb/image/list6.jpg',
+        'https://caicoleung.github.io/CaicoWeb/image/list7.jpg',
+        'https://caicoleung.github.io/CaicoWeb/image/list8.jpg',
+        'https://caicoleung.github.io/CaicoWeb/image/list9.jpg'
     ],
         $progress = $(".progress-bar"),
         $progressVal = $(".progress-value"),
@@ -76,14 +79,14 @@
         lists.each(function (){
             $(this).on("mouseenter",function (e){
                 e.stopPropagation();
-                $(this).children("article").animate({
-                    top: 0
+                $(this).children(".article").animate({
+                    top: -30
                 },300)
             })
             $(this).on("mouseleave",function (e){
                 e.stopPropagation();
-                $(this).children("article").animate({
-                    top: 91
+                $(this).children(".article").animate({
+                    top: 90
                 },300)
             })
         })
@@ -91,21 +94,40 @@
     $(function(){
         var $contentShowUl = $("ul#contentShowUl"),
             $btnLeft = $(".btn-left"),
-            $btnRight = $(".btn-right");
+            $btnRight = $(".btn-right"),
+            yesorno = true;
         
         $btnRight.on("click",function (){
             // console.log($contentShowUl.css("left"));
             if($contentShowUl.css("left") === "30px"){
                 $contentShowUl.animate({
                     left: -960
+                },500)
+            }else if(yesorno == true){
+                yesorno = false;
+                $contentShowUl.animate({
+                    left: -1020
+                },200).animate({
+                    left: -960
+                },100,function(){
+                    yesorno = true;
                 })
             }
         })
         $btnLeft.on("click",function (){
-            console.log($contentShowUl.css("left"));
+            // console.log($contentShowUl.css("left"));
             if($contentShowUl.css("left") === "-960px"){
                 $contentShowUl.animate({
                     left: 30
+                })
+            }else if(yesorno == true){
+                yesorno = false;
+                $contentShowUl.animate({
+                    left: 90
+                },200).animate({
+                    left: 30
+                },100,function(){
+                    yesorno = true;
                 })
             }
         })

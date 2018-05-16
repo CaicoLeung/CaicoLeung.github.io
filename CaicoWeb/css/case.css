@@ -1,0 +1,127 @@
+/* **** Main **** */
+
+body {
+    font-family: '小米兰亭字体', 'Microsoft YaHei', "微软雅黑", Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", "monospace";
+}
+
+main .mainTitlePic {
+    width: 100%;
+    height: 250px;
+    color: #ffffff;
+    background: url(../image/25_de_abril_bridge_night_tagus_river_portugal-wallpaper-2560x1080.jpg) no-repeat center;
+    background-position: 100% 50%;
+    position: relative;
+}
+
+main .mainTitlePic h1 {
+    font-size: 35px;
+    position: absolute;
+}
+
+main .mainTitlePic h1.title1 {
+    left: 0;
+    top: 50px;
+}
+
+main .mainTitlePic h1.title2 {
+    right: 0;
+    top: 150px;
+}
+
+main .projectShow {
+    width: 1100px;
+    margin: 0 auto;
+    position: relative;
+}
+
+main .projectShow hr {
+    height: 7px;
+    background-color: #FF7F50;
+    margin: 20px 0;
+    position: relative;
+}
+
+main .projectShow span {
+    display: block;
+    width: 150px;
+    height: 15px;
+    background-color: #ffffff;
+    text-align: center;
+    color: #242424;
+    font-size: 17px;
+    font-weight: bold;
+    position: absolute;
+    left: 475px;
+    top: -7px;
+    z-index: 5;
+}
+
+main .projectShow ul.prjectContainer {
+    width: 1080px;
+    height: auto;
+    margin: 0 auto;
+}
+
+main .projectShow ul.prjectContainer li.projectItems {
+    float: left;
+    width: 300px;
+    height: 200px;
+    margin: 20px 30px;
+    border: 1px solid #242424;
+    text-align: center;
+}
+
+main .projectShow ul.prjectContainer li.projectItems:hover a {
+    color: #FF7F50;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic {
+    width: 100%;
+    height: 80%;
+    margin-bottom: 10px;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic1 {
+    background: url(../image/list1.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic2 {
+    background: url(../image/list2.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic3 {
+    background: url(../image/list3.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic4 {
+    background: url(../image/list4.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic5 {
+    background: url(../image/list5.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic6 {
+    background: url(../image/list6.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic7 {
+    background: url(../image/list7.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic8 {
+    background: url(../image/list8.jpg) no-repeat center;
+    background-size: 100% 100%;
+}
+
+main .projectShow ul.prjectContainer li.projectItems .pic9 {
+    background: url(../image/list9.jpg) no-repeat center;
+    background-size: 100% 100%;
+}

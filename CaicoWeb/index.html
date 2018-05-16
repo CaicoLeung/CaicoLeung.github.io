@@ -57,25 +57,25 @@
                 <ul class="contentItems">
                     <li class="list">
                         <div class="pic pic1"></div>
-                        <article><h6>单例模式</h6>
-                        <p>单例模式是设计模式中最简单的形式之一。这一模式的目的是使得类的一个对象成为系统中的唯一实例。要实现这一点，可以从客户端对其进行实例化开始。因此需要用一种只允许生成对象类的唯一实例的机制，“阻止”所有想要生成对象的访问。使用工厂方法来限制实例化过程。这个方法应该是静态方法（类方法），因为让类的实例去生成另一个唯一实例毫无意义。</p></article>
+                        <div class="article"><h6>单例模式</h6>
+                        <p>单例模式是设计模式中最简单的形式之一。这一模式的目的是使得类的一个对象成为系统中的唯一实例。要实现这一点，可以从客户端对其进行实例化开始。因此需要用一种只允许生成对象类的唯一实例的机制，“阻止”所有想要生成对象的访问。</p></div>
                     </li>
                     <li class="list">
                         <div class="pic pic2"></div>
-                        <article><h6>工厂模式</h6>
+                        <div class="article"><h6>工厂模式</h6>
                         <p>把实现同一个功能的相同代码放在一个函数中，以后再想实现这个功能的时候，我们只需要直接的执行这个函数就可，减少了页面中的坑余代码，提高代码的重复使用率【低耦合高内聚】</p></article>
                     </li>
                     <li class="list">
                         <div class="pic pic3"></div>
-                        <article><h6>原形模式</h6>
+                        <div class="article"><h6>原形模式</h6>
                         <p>用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。<br>
-                        Prototype原型模式是一种创建型设计模式，Prototype模式允许一个对象再创建另外一个制的对象，根本无需知道任何如何创建的细节,工作原理是:通过将一个原型对象传给那个要发建的对象，这个要发动创建的对象通过请求原型对象拷贝它们自己来实施创建。</p></article>
+                        Prototype原型模式是一种创建型设计模式，Prototype模式允许一个对象再创建另外一个制的对象，根本无需知道任何如何创建的细节,工作原理是:通过将一个原型对象传给那个要发建的对象，这个要发动创建的对象通过请求原型对象拷贝它们自己来实施创建。</p></div>
                     </li>
                     <li class="list">
                         <div class="pic pic4"></div>
-                        <article><h6>观察者模式</h6>
+                        <div class="article"><h6>观察者模式</h6>
                         <p>观察者模式完美的将观察者和被观察的对象分离开。<br>
-                        观察者设计模式定义了对象间的一种一对多的组合关系，以便一个对象的状态发生变化时，所有依赖于它的对象都得到通知并自动刷新。</p></article>
+                        观察者设计模式定义了对象间的一种一对多的组合关系，以便一个对象的状态发生变化时，所有依赖于它的对象都得到通知并自动刷新。</p></div>
                     </li>
                 </ul>
             </div>
@@ -85,12 +85,13 @@
                     <div class="newsTitle"><h2>关于我们</h2></div>
                     <article>
                         <p>哔哩哔哩（bilibili）是中国领先的年轻人文化社区，该网站于2009年6月26日创建，被粉丝们亲切的称为“B站”。 根据数据公司QuestMobile发布的《移动互联网2017年Q2夏季报告》，B站位列24岁及以下年轻用户偏爱的十大APP榜首。<br>
-                        同时，在百度发布的2016热搜榜中，B站在00后十大新鲜关注APP中排名第一。
+                        同时，在百度发布的2016热搜榜中，B站在00后十大新鲜关注APP中排名第一。<br>
+                        B站的特色是悬浮于视频上方的实时评论功能，爱好者称其为“弹幕”，这种独特的视频体验让基于互联网的弹幕能够超越时空限制，构建出一种奇妙的共时性的关系，形成一种虚拟的部落式观影氛围，让B站成为极具互动分享和二次创造的文化社区。B站目前也是众多网络热门词汇的发源地之一。
                         <a href="pages/about.html">了解详情 &gt; &gt;</a></p>
                     </article>
                 </div>
                 <div class="rightNews">
-                    <div class="newsTitle"><h2>新闻资讯</h2><span><a href="javascript:;">more &#43;</a></span></div>
+                    <div class="newsTitle"><h2>新闻资讯</h2><span><a href="javascript:;" title="更多资讯">more &#43;</a></span></div>
                         <ul class="newsContent">
                             <li>
                                 <div class="date">
@@ -98,7 +99,17 @@
                                     <strong class="dateMon"></strong>
                                 </div>
                                 <div class="contentDetail">
-                                    <h3>B站用户免费观看现象级日本动画电影《你的名字》</h3>
+                                    <strong>bilibili获得东京电视台动画网络播放授权</strong>
+                                    <p>2016年1月8日，bilibili获得东京电视台动画网络播放授权，在未来两年内，观众能bilibili上观看由东京电视台制作并拥有版权的动画内容，其中包括了《火影忍者》等诸热门画。</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="date">
+                                    <div class="dateDay"></div>
+                                    <strong class="dateMon"></strong>
+                                </div>
+                                <div class="contentDetail">
+                                    <strong>B站用户免费观看现象级日本动画电影《你的名字》</strong>
                                     <p>bilibili 包下全国49座城市70个万达影城，请遍布全国的B站用户免费观看现象级日本动画电影《你的名字》，短短1个小时4分钟，11万多张电影票被B站的用户抢光，总计有超过40万的B站用户参与了本次配对活动。 2016年12月8日，bilibili 董事长陈睿获邀出席第四届中国网络视听大会并发表名为《文化可以触达内心》的演讲。</p>
                                 </div>
                             </li>
@@ -108,7 +119,7 @@
                                     <strong class="dateMon"></strong>
                                 </div>
                                 <div class="contentDetail">
-                                    <h3>Bilibili Macro Link世博展览馆</h3>
+                                    <strong>Bilibili Macro Link世博展览馆</strong>
                                     <p>Bilibili Macro Link 2017 在7月21日--7月23日的世博展览馆，全新线下活动品牌bilibili world加入BML，在白天为现场的观众们带来精彩的互动体验。7月21日-7月23日，现场共吸引了近10万名观众。</p>
                                 </div>
                             </li>
@@ -120,28 +131,46 @@
                 <div class="news">
                         <div class="rightNews">
                             <div class="newsTitle">
-                                <h2>案例展示</h2><span><a href="javascript:;">more &#43;</a></span>
+                                <h2>案例展示</h2><span><a href="pages/case.html" title="更多案例">more &#43;</a></span>
                             </div>
                             <div class="btn btn-left"></div>
                             <div class="contentShow">
                                 <ul id="contentShowUl">
-                                    <li class="show-list"><div class="list-pic list-pic1"></div>
-                                        <strong>案例1</strong>
+                                    <li class="show-list">
+                                        <a href="https://caicoleung.github.io/CaicoPage/">
+                                            <div class="list-pic list-pic1"></div>
+                                            <strong>CC Page</strong>
+                                        </a>
                                     </li>
-                                    <li class="show-list"><div class="list-pic list-pic2"></div>
-                                        <strong>案例2</strong>
+                                    <li class="show-list">
+                                        <a href="https://caicoleung.github.io/ZAZER/">
+                                            <div class="list-pic list-pic2"></div>
+                                            <strong>ZAZAR</strong>
+                                        </a>
                                     </li>
-                                    <li class="show-list"><div class="list-pic list-pic3"></div>
-                                        <strong>案例3</strong>
+                                    <li class="show-list">
+                                        <a href="CaicoLeung.github.io/Translate/">
+                                            <div class="list-pic list-pic3"></div>
+                                            <strong>TranslateOnline</strong>
+                                        </a>
                                     </li>
-                                    <li class="show-list"><div class="list-pic list-pic4"></div>
-                                        <strong>案例4</strong>
+                                    <li class="show-list">
+                                        <a href="CaicoLeung.github.io/UserManagement/">
+                                            <div class="list-pic list-pic4"></div>
+                                            <strong>Management</strong>
+                                        </a>
                                     </li>
-                                    <li class="show-list"><div class="list-pic list-pic5"></div>
-                                        <strong>案例5</strong>
+                                    <li class="show-list">
+                                        <a href="https://caicoleung.github.io/Clock/">
+                                            <div class="list-pic list-pic5"></div>
+                                            <strong>CanvasClock</strong>
+                                        </a>
                                     </li>
-                                    <li class="show-list"><div class="list-pic list-pic6"></div>
-                                        <strong>案例6</strong>
+                                    <li class="show-list">
+                                        <a href="https://caicoleung.github.io/Slideshow/">
+                                            <div class="list-pic list-pic6"></div>
+                                            <strong>SlideShow</strong>
+                                        </a>
                                     </li>
                                 </ul>
                          </div>
