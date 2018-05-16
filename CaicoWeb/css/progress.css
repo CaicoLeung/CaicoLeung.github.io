@@ -13,16 +13,17 @@
     box-shadow: none;
     border-radius: 0;
     position: relative;
-    -webkit-animation: animate-positive 2s linear;
-    animation: animate-positive 2s linear;
+    -webkit-animation: animate-positive .5s linear;
+    animation: animate-positive .5s linear;
     float: left;
     width: 0;
     font-size: 12px;
     line-height: 20px;
     color: #fff;
-    -webkit-transition: width 2s ease;
-    -o-transition: width 2s ease;
-    transition: width 2s ease;
+    width: 0%;
+    -webkit-transition: width .5s linear;
+    -o-transition: width .5s linear;
+    transition: width .5s linear;
 }
 
 .progress .progress-bar:after {

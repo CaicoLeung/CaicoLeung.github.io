@@ -225,14 +225,13 @@
             $progress = $(".progress-bar"),
             $progressVal = $(".progress-value"),
             len = imgs.length,
-            num1 = 0;
+            num = 0;
 
         $.preload(imgs, {
             each: function (count) {
-                num1 = Math.round((count + 1) / len * 100) + '%';
-                console.log(num1);
-                $progress.attr("width",num1);
-                $progressVal.text(num1);
+                num = Math.round((count + 1) / len * 100) + '%';
+                $progress.css("width",num);
+                $progressVal.text(num);
             },
             all: function () {
                 $("#loading").fadeOut("slow");
