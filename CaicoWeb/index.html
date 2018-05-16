@@ -115,7 +115,43 @@
                         </ul>
                 </div>
             </div>
+
+            <div class="content">
+                <div class="news">
+                        <div class="rightNews">
+                            <div class="newsTitle">
+                                <h2>案例展示</h2><span><a href="javascript:;">more &#43;</a></span>
+                            </div>
+                            <div class="btn btn-left"></div>
+                            <div class="contentShow">
+                                <ul id="contentShowUl">
+                                    <li class="show-list"><div class="list-pic list-pic1"></div>
+                                        <strong>案例1</strong>
+                                    </li>
+                                    <li class="show-list"><div class="list-pic list-pic2"></div>
+                                        <strong>案例2</strong>
+                                    </li>
+                                    <li class="show-list"><div class="list-pic list-pic3"></div>
+                                        <strong>案例3</strong>
+                                    </li>
+                                    <li class="show-list"><div class="list-pic list-pic4"></div>
+                                        <strong>案例4</strong>
+                                    </li>
+                                    <li class="show-list"><div class="list-pic list-pic5"></div>
+                                        <strong>案例5</strong>
+                                    </li>
+                                    <li class="show-list"><div class="list-pic list-pic6"></div>
+                                        <strong>案例6</strong>
+                                    </li>
+                                </ul>
+                         </div>
+                         <div class="btn btn-right"></div>
+                    </div>
+                </div>
+            </div>
     </main><!-- main  end -->
+
+    <hr>
 
     <footer>
         <div class="container">
@@ -188,83 +224,6 @@
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <script src="javascript/carousel.js" type="text/javascript"></script>
     <script src="javascript/preload.js" type="text/javascript"></script>
-    <script>
-        // window.addEventListener("load",function (){
-        //     $("#loading").fadeOut("slow");
-        // })
-
-        // document.onreadystatechange = function (){
-        //     if(document.readyState === "complete"){
-        //         $("#loading").fadeOut("slow");
-        //     }
-        // }
-        var imgs = [
-            'https://caicoleung.github.io/CaicoWeb/logo.png',
-            'https://caicoleung.github.io/CaicoWeb/Double Ring-1s-200px.svg',
-            'https://caicoleung.github.io/CaicoWeb/image/CN_sina_weibo.svg',
-            'https://caicoleung.github.io/CaicoWeb/image/Popular_Facebook_.svg',
-            'https://caicoleung.github.io/CaicoWeb/image/Popular_G+.svg',
-            'https://caicoleung.github.io/CaicoWeb/image/Popular_GitHub.svg',
-            'https://caicoleung.github.io/CaicoWeb/image/Popular_Twitter.svg',
-            'https://caicoleung.github.io/CaicoWeb/image/Popular_mail.svg',
-            'https://caicoleung.github.io/CaicoWeb/image/back.png',
-            'https://caicoleung.github.io/CaicoWeb/image/forward.png',
-            'https://caicoleung.github.io/CaicoWeb/image/head.png',
-            'https://caicoleung.github.io/CaicoWeb/image/myWechat.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/pic1.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/pic2.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/pic3.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/pic4.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/pic5.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/pic6.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/pic7.jpg',
-            'https://caicoleung.github.io/CaicoWeb/image/对.png',
-            'https://caicoleung.github.io/CaicoWeb/image/灯泡.png',
-            'https://caicoleung.github.io/CaicoWeb/image/钻石.png',
-        ],
-            $progress = $(".progress-bar"),
-            $progressVal = $(".progress-value"),
-            len = imgs.length,
-            num = 0;
-
-        $.preload(imgs, {
-            each: function (count) {
-                num = Math.round((count + 1) / len * 100) + '%';
-                $progress.css("width",num);
-                $progressVal.text(num);
-            },
-            all: function () {
-                $("#loading").fadeOut("slow");
-            }
-        })
-
-        $(function (){
-            Carousel.init($(".J_focus"));
-            
-            var lists = $("ul.contentItems").find("li.list"),
-                Mon = ["Jan","Feb","Mar","Apr","May","June","Aug","Sept","Oct","Nov","Dec"],
-                date = new Date(),
-                day = date.getUTCDate(),
-                month = date.getMonth();
-
-            $("div.dateDay").text(day);
-            $("strong.dateMon").text(Mon[month]);
-
-            lists.each(function (){
-                $(this).on("mouseenter",function (e){
-                    e.stopPropagation();
-                    $(this).children("article").animate({
-                        top: 0
-                    },300)
-                })
-                $(this).on("mouseleave",function (e){
-                    e.stopPropagation();
-                    $(this).children("article").animate({
-                        top: 91
-                    },300)
-                })
-            })
-        })
-    </script>
+    <script src="javascript/control.js" type="text/javascript"></script>
 </body>
 </html>

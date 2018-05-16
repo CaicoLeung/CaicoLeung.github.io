@@ -67,13 +67,13 @@ header nav ul li a:hover{
  /* ---------- <Footer> -------- */
  footer{
     width: 100%;
-    min-height: 100px;
+    min-height: 220px;
     background-color: #F6F6F6;
     display: flex;
-    margin-top: 1rem;
+    padding-top: 1rem;
  }
  footer .container{
-    width: 60vw;
+    width: 60%;
     margin: auto;
     display: flex;
     justify-content: space-between;
@@ -130,14 +130,14 @@ footer .container ul li .wechat{
 footer .container ul li .mail{
     background: url(../image/Popular_mail.svg) no-repeat center;
     background-size: 100% 100%;
-    position: relative;
 }
 footer .container ul li .wechatCode{
-    display: none;
     width: 6rem;
     height: 6rem;
     background: url(../image/myWechat.jpg) no-repeat center;
     background-size: 100% 100%;
+    position: relative;
+    display: none;
 }
 footer .container ul li.myWechat:hover .wechatCode{
     display: block;
