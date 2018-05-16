@@ -9,11 +9,18 @@
     <meta name="description" content="这是CaicoLeung的web前端项目展示主页">
     <meta name="keywords" content="个人主页,Github,简历模板,前端作品,Caico,梁开扩">
     <title>欢迎访问我的主页</title>
+    <link rel="stylesheet" href="css/progress.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
-    <div id="loading"><h1 class="progress">正在拼命加载0%</h1></div>
+    <div id="loading">
+        <div class="progress">
+            <div class="progress-bar" style="background-color:#FF7F50;">
+                <div class="progress-value">0%</div>
+            </div>
+        </div>
+    </div>
     <header>
         <div class="logo"></div>
         <nav>
@@ -180,7 +187,7 @@
 
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <script src="javascript/carousel.js" type="text/javascript"></script>
-    <script src="javascript/preload.js"></script>
+    <script src="javascript/preload.js" type="text/javascript"></script>
     <script>
         // window.addEventListener("load",function (){
         //     $("#loading").fadeOut("slow");
@@ -215,23 +222,19 @@
             'https://caicoleung.github.io/CaicoWeb/image/灯泡.png',
             'https://caicoleung.github.io/CaicoWeb/image/钻石.png',
         ],
-            $progress = $("h1.progress"),
+            $progress = $(".progress-bar"),
+            $progressVal = $(".progress-value"),
             len = imgs.length,
-            num1 = 0,
-            num2 = 0;
+            num1 = 0;
 
         $.preload(imgs, {
             each: function (count) {
-                num1 = Math.round((count + 1) / len * 100);
-                this._Timer = setInterval(function (){
-                    if(num2 <= num1){
-                        $progress.html("正在拼命加载" + num2 + "%");
-                        num2++;
-                    }
-                },30)
+                num1 = Math.round((count + 1) / len * 100) + '%';
+                console.log(num1);
+                $progress.attr("width",num1);
+                $progressVal.text(num1);
             },
             all: function () {
-                clearInterval(this._Timer);
                 $("#loading").fadeOut("slow");
             }
         })
