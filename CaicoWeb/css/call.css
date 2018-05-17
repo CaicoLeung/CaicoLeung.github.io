@@ -1,0 +1,150 @@
+/* **** Main **** */
+
+body {
+    font-family: '小米兰亭字体', 'Microsoft YaHei', "微软雅黑", Consolas, "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", Monaco, "Courier New", "monospace";
+}
+button{
+    color: #ffffff;
+    background-color: #FF7F50;
+    font-weight: 700;
+}
+button:hover{
+    background-color: #FF4500;
+}
+a:hover{
+    text-decoration: none;
+}
+main .mainTitlePic {
+    width: 100%;
+    height: 250px;
+    color: #ffffff;
+    background: url(../image/park_8-wallpaper-1920x1080.jpg) no-repeat center;
+    background-position: 100% 80%;
+    position: relative;
+}
+
+main .mainTitlePic h1 {
+    font-size: 35px;
+    position: absolute;
+}
+
+main .mainTitlePic h1.title1 {
+    left: 0;
+    top: 50px;
+}
+
+main .mainTitlePic h1.title2 {
+    right: 0;
+    top: 150px;
+}
+
+main .projectShow {
+    width: 1100px;
+    margin: 0 auto;
+    position: relative;
+}
+
+main .projectShow hr {
+    height: 7px;
+    background-color: #FF7F50;
+    margin: 20px 0;
+    position: relative;
+}
+
+main .projectShow span {
+    display: block;
+    width: 150px;
+    height: 15px;
+    background-color: #ffffff;
+    text-align: center;
+    color: #242424;
+    font-size: 17px;
+    font-weight: bold;
+    position: absolute;
+    left: 475px;
+    top: -7px;
+    z-index: 5;
+}
+ main .container{
+    width: 900px;
+    margin: 0 auto;
+ }
+ main .container ul{
+    width: 350px;
+    float: right;
+    border-bottom: 1px solid #444444;
+ }
+ main .container ul li{
+    padding: 10px;
+    width: 50%;
+    line-height: 30px;
+    font-size: 15px;
+    white-space: nowrap;
+    float: left;
+}
+main .container .ul2 li{
+    padding: 10px 20px 0 0;
+    width: 100%;
+    line-height: 30px;
+    text-align: center;
+    font-size: 15px;
+    white-space: nowrap;
+    float: left;
+}
+main .container ul li .ftlogo{
+    width: 35px;
+    height: 35px;
+    margin: 0 10px;
+    float: left;
+    background-color: #FF7F50;
+}
+main .container ul li .facebook{
+    background: url(../image/Popular_Facebook_.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .github{
+    background: url(../image/Popular_GitHub.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .google{
+    background: url(../image/Popular_G+.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .twitter{
+    background: url(../image/Popular_Twitter.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .weibo{
+    background: url(../image/CN_sina_weibo.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .zhihu{
+    background: url(../image/CN_zhihu.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .wechat{
+    background: url(../image/CN_tencent_wechat.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .mail{
+    background: url(../image/Popular_mail.svg) no-repeat center;
+    background-size: 100% 100%;
+}
+main .container ul li .wechatCode{
+    width: 100px;
+    height: 100px;
+    background: url(../image/myWechat.jpg) no-repeat center;
+    background-size: 100% 100%;
+    display: none;
+    margin-top: 10px;
+}
+main .container ul li.myWechat:hover .wechatCode{
+    display: block;
+}
+main *>a{
+    color: #444444;
+    font-weight: bold;
+}
+main *>a:hover{
+    color: #FF7F50;
+}

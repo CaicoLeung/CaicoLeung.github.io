@@ -1,99 +1,240 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <link rel="Bookmark" href="../logo.png"> 
+    <link rel="Bookmark" href="../logo.png">
     <link rel="icon" href="../logo.png" type="image/png">
     <meta name="Autor" content="Caico,lkk1053190902@gmail.com">
     <meta name="description" content="这是CaicoLeung的web前端项目展示主页">
     <meta name="keywords" content="个人主页,Github,简历模板,前端作品,Caico,梁开扩">
     <title>关于我们</title>
+    <link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/about.css">
+    <script src="https://cdn.bootcss.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 </head>
+
 <body>
     <header>
         <div class="logo"></div>
         <nav>
             <ul>
-                <li><a href="../index.html" title="Index">首页</a></li>
-                <li><a href="case.html" title="Case">案例</a></li>
-                <li><a href="javascript:;" title="About" class="bgvisited">关于我</a></li>
-                <li><a href="call.html" title="Call">联系我</a></li>
+                <li>
+                    <a href="../index.html" title="Index">首页</a>
+                </li>
+                <li>
+                    <a href="case.html" title="Case">案例</a>
+                </li>
+                <li>
+                    <a href="javascript:;" title="About" class="bgvisited">关于我</a>
+                </li>
+                <li>
+                    <a href="call.html" title="Call">联系我</a>
+                </li>
             </ul>
         </nav>
     </header>
     <main>
-        <h1>我是about</h1>
+        <div class="mainTitlePic">
+            <h1 class="title1">诚信 · 务实</h1>
+            <h1 class="title2">友善 · 发展</h1>
+        </div>
+        <div class="projectShow">
+            <hr>
+            <span>我的简历</span>
+            <table class="table .table-bordered .table-responsive" border="2">
+                <tbody>
+                    <tr>
+                        <td class="table-active">姓名</td>
+                        <td>梁开扩</td>
+                        <td class="table-active">英文名</td>
+                        <td>Caico Leung</td>
+                        <td rowspan="4" class="myHead">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">民族</td>
+                        <td>汉</td>
+                        <td class="table-active">性别</td>
+                        <td>男</td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">出生日期</td>
+                        <td>1993年05月01日</td>
+                        <td class="table-active">居住地</td>
+                        <td>广州</td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">学历</td>
+                        <td>大专</td>
+                        <td class="table-active">专业</td>
+                        <td>电子信息工程</td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">毕业院校</td>
+                        <td colspan="2">广东农工商职业技术学院</td>
+                        <td class="table-active">毕业时间</td>
+                        <td>2016年6月</td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">求职意向</td>
+                        <td colspan="2">Web前端开发</td>
+                        <td class="table-active">目前状态</td>
+                        <td>离职</td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">联系电话</td>
+                        <td>18620427950</td>
+                        <td class="table-active">联系邮箱</td>
+                        <td colspan="2">1053190902@qq.com</td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">语言能力</td>
+                        <td colspan="4">普通话：标准；粤语：标准；英语：大学英语四级</td>
+                    </tr>
+                    <tr>
+                        <td colspan="1" class="table-active">专业技能</td>
+                        <td colspan="4">
+                            1.掌握Javascript语言。<br>
+                            2.熟练运用Visual Studio Code、Sublime Text3、Dreamweaver、HBuild、Chrome等编程、调试工具。<br>
+                            3.精通HTML+CSS网页布局与样式，了解HTML5与CSS3.0。<br>
+                            4.熟练运用jQuery库、Bootstrap框架。<br>
+                            5.对Vuejs、Nodejs、Webpack有一定的了解。<br>
+                            6.看过微信小程序开发文档，并开发出一款天气工具小程序。<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">工作经历</td>
+                        <td colspan="4">
+                            <strong>
+                                1.2016/03 - 2016/06&nbsp;&nbsp;广东原创科技有限公司 | 通信线路设计师 | 实习生<br>
+                            </strong>
+                                私营企业 | 合资 | 规模：500-1000人 <br>
+                                &nbsp;&nbsp;设计及绘制FTTH光纤到户的工程施工图； <br>
+                                &nbsp;&nbsp;网络机房的运行维护； <br>
+                            <br>
+                            <strong>
+                                2.2016/07 – 2017-12&nbsp;&nbsp;中国通信服务股份有限公司 | 光纤网络建设 | 资料员<br>
+                            </strong>
+                                国有企业 | 控股 | 规模：100k-110k人 <br>
+                                &nbsp;&nbsp;负责通信光纤工程任务安排和进度监督；<br>
+                                &nbsp;&nbsp;负责通信光纤工程竣工资料的AutoCad图制作；<br>
+                                &nbsp;&nbsp;负责通信光纤工程光纤的资料录入提交；<br>
+                                &nbsp;&nbsp;负责工程的验收情况等。<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">教育经历</td>
+                        <td colspan="4">
+                            1.2007/09 – 2009/07 湛江农垦五一中学  |  普通初中 <br>
+                            2.2010/09 – 2012/07 广东省徐闻中学  |  县重点高中 <br>
+                            3.2012/09 – 2013/06 广东省高州中学  |  市重点高中 <br>
+                            4.2013/09 – 2016/06 广东农工商职业技术学院  |  全日制专科  |  电子信息工程<br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="table-active">证书/荣誉</td>
+                        <td colspan="4">
+                            1.计算机辅助设计绘图员（电子）中级证书<br>
+                            2.第四届大学生创业大赛院级选拔赛优胜奖<br>
+                        </td>
+                    </tr>
+                </tbody>
+                <div class="downLoad">
+                    <div class="downLogo"></div>
+                    <a href="../image/我的简历.pdf" download="梁开扩的简历">
+                        <button type="button" class="btn btn-liaght">下载简历</button>
+                    </a>
+                </div>
+            </table>
+        </div>
     </main>
     <footer>
         <div class="container">
             <ul class="ul2">
-                <li><a href="index.html" title="Index">首页</a></li>
-                <li><a href="pages/case.html" title="Case">案例</a></li>
-                <li><a href="pages/about.html" title="Title">关于我</a></li>
-                <li><a href="pages/call.html" title="Title">联系我</a></li>
+                <li>
+                    <a href="index.html" title="Index">首页</a>
+                </li>
+                <li>
+                    <a href="pages/case.html" title="Case">案例</a>
+                </li>
+                <li>
+                    <a href="pages/about.html" title="Title">关于我</a>
+                </li>
+                <li>
+                    <a href="pages/call.html" title="Title">联系我</a>
+                </li>
             </ul>
             <ul>
                 <li>
                     <a href="https://www.facebook.com/profile.php?id=100005050838198" target="_blank">
-                    <div class="ftlogo facebook"></div>
-                    Facebook</a>
+                        <div class="ftlogo facebook"></div>
+                        Facebook</a>
                 </li>
                 <li>
                     <a href="https://twitter.com/1053190902" target="_blank">
-                    <div class="ftlogo twitter"></div>
-                    Twitter</a>
-                    </li>
-                    <li>
-                        <a href="https://plus.google.com/+%E5%B0%8F%E5%A6%A5%E5%A6%A5" target="_blank">
+                        <div class="ftlogo twitter"></div>
+                        Twitter</a>
+                </li>
+                <li>
+                    <a href="https://plus.google.com/+%E5%B0%8F%E5%A6%A5%E5%A6%A5" target="_blank">
                         <div class="ftlogo google"></div>
                         Google+</a>
                 </li>
                 <li>
                     <a href="https://github.com/CaicoLeung/CaicoLeung.github.io" target="_blank">
-                    <div class="ftlogo github"></div>
-                    Github</a>
+                        <div class="ftlogo github"></div>
+                        Github</a>
                 </li>
             </ul>
             <ul>
                 <li>
                     <a href="https://weibo.com/2237547725" target="_blank">
-                    <div class="ftlogo weibo"></div>
-                    微博</a>
+                        <div class="ftlogo weibo"></div>
+                        微博</a>
                 </li>
                 <li>
                     <a href="https://www.zhihu.com/people/liang-kai-kuo/activities" target="_blank">
-                    <div class="ftlogo zhihu"></div>
-                    知乎</a>
+                        <div class="ftlogo zhihu"></div>
+                        知乎</a>
                 </li>
                 <li class="myWechat">
                     <div class="wechatCode"></div>
                     <a href="javascript:;">
-                    <div class="ftlogo wechat"></div>
-                    微信</a>
+                        <div class="ftlogo wechat"></div>
+                        微信</a>
                 </li>
                 <li>
                     <a href="mailto:1053190902@qq.com" title="邮箱联系我！">
-                    <div class="ftlogo mail"></div>
-                    邮箱</a>
+                        <div class="ftlogo mail"></div>
+                        邮箱</a>
                 </li>
             </ul>
             <ul class="ul2">
                 <li>
                     <address>
-                        <p><a href="mailto:lkk1053190902@gmail.com">Email me: lkk1053190902@gmail.com</a></p>
+                        <p>
+                            <a href="mailto:lkk1053190902@gmail.com">Email me: lkk1053190902@gmail.com</a>
+                        </p>
                         <p>Address: Tianhe District, Guangzhou.</p>
-                        <p>Page written by <strong>Caico Leung</strong>.</p>
-                        <p><time datetime="2018-5-11">11<sup>th</sup>, May, 2018</time>.</p>
+                        <p>Page written by
+                            <strong>Caico Leung</strong>.</p>
+                        <p>
+                            <time datetime="2018-5-11">11
+                                <sup>th</sup>, May, 2018</time>.</p>
                     </address>
                 </li>
                 <li></li>
                 <li></li>
             </ul>
         </div>
-    </footer><!-- footer  end -->
+    </footer>
+    <!-- footer  end -->
 
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="../javascript/casecontrol.js"></script>
 </body>
+
 </html>
