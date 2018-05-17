@@ -11,10 +11,18 @@
     <meta name="keywords" content="个人主页,Github,简历模板,前端作品,Caico,梁开扩">
     <title>联系我们</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/progress.css">
     <link rel="stylesheet" href="../css/call.css">
 </head>
 
 <body>
+    <div id="loading">
+        <div class="progress">
+            <div class="progress-bar" style="background-color:#FF7F50;">
+                <div class="progress-value">0%</div>
+            </div>
+        </div>
+    </div>
     <header>
         <div class="logo"></div>
         <nav>
@@ -120,6 +128,25 @@
         </div>
     </main>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+            var imgs = 
+            [
+                'https://caicoleung.github.io/CaicoWeb/logo.png',
+                'https://caicoleung.github.io/CaicoWeb/Double Ring-1s-200px.svg',
+                'https://caicoleung.github.io/CaicoWeb/image/CN_sina_weibo.svg',
+                'https://caicoleung.github.io/CaicoWeb/image/Popular_Facebook_.svg',
+                'https://caicoleung.github.io/CaicoWeb/image/Popular_G+.svg',
+                'https://caicoleung.github.io/CaicoWeb/image/Popular_GitHub.svg',
+                'https://caicoleung.github.io/CaicoWeb/image/Popular_Twitter.svg',
+                'https://caicoleung.github.io/CaicoWeb/image/Popular_mail.svg',
+                'https://caicoleung.github.io/CaicoWeb/image/back.png',
+                'https://caicoleung.github.io/CaicoWeb/image/forward.png',
+                'https://caicoleung.github.io/CaicoWeb/image/head.png',
+                'https://caicoleung.github.io/CaicoWeb/image/myWechat.jpg',
+                'https://caicoleung.github.io/CaicoWeb/image/park_8-wallpaper-1920x1080.jpg',
+            ];
+        </script>
+    <script src="../javascript/preload.js"></script>
     <script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
     <script src="../javascript/casecontrol.js"></script>
     <script src="../javascript/map.js"></script>
