@@ -52,7 +52,7 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .tappable{cursor:pointer}
 .tappable:active{background:var(--press)}
 .row-main{flex:1;min-width:0}
-.row-title{font-size:var(--fs-body);font-weight:500;display:flex;align-items:center;gap:6px}
+.row-title{font-size:var(--fs-body);font-weight:500;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .row-cap{margin-top:2px;font-size:12px;line-height:1.45;color:var(--text-2)}
 .row-trail{display:flex;align-items:center;gap:8px;flex:none}
 .row-val{font-size:14px;color:var(--text-2);max-width:150px;text-align:right;white-space:nowrap}
@@ -73,7 +73,7 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .tgl.on{background:var(--primary)}
 .tgl.on::after{transform:translateX(20px)}
 .seg{display:inline-flex;flex:none;padding:2px;border-radius:9px;background:var(--card-2)}
-.seg button{border:0;background:transparent;padding:5px 12px;border-radius:7px;font:13px var(--font-body);color:var(--text);cursor:pointer;white-space:nowrap}
+.seg button{border:0;background:transparent;padding:5px 10px;border-radius:7px;font:13px var(--font-body);color:var(--text);cursor:pointer;white-space:nowrap}
 .seg button.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.14)}
 .seg button[data-dev]{opacity:.4;pointer-events:none}
 .seg.wide{display:flex}
@@ -249,9 +249,14 @@ details.trouble .tb{padding:10px 0 0 14px;color:var(--text-2);line-height:1.6}
 .chips{display:flex;gap:10px;padding:14px 16px}
 .chipx{flex:1;display:flex;flex-direction:column;align-items:stretch;padding:10px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit;color:var(--text);text-align:left}
 .chipx.on{border-color:var(--primary);background:var(--primary-soft)}
-.chipx .kb{display:flex;flex-direction:column;gap:3px;padding:8px 6px;border-radius:8px;background:var(--sw-bg);margin-bottom:8px}
-.chipx .kb i{height:9px;flex:none;border-radius:2px;background:var(--sw-k)}
-.chipx .kb i.sp{width:46%;opacity:.35}
+.chipx .dots{display:flex;gap:5px;margin-bottom:8px}
+.chipx .dots i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.chipx .kb{display:flex;flex-direction:column;gap:3px;padding:7px 6px;border-radius:8px;background:var(--sw-bg);margin-bottom:8px;border:1px solid rgba(0,0,0,.06)}
+.chipx .kb .kr{display:flex;gap:3px;justify-content:center}
+.chipx .kb .kr:nth-child(2){padding:0 6%}
+.chipx .kb .kr:nth-child(3){padding:0 12%}
+.chipx .kb .kr i{height:8px;flex:1;border-radius:2px;background:var(--sw-k);box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.chipx .kb .kr i.sp{flex:0 0 46%;background:var(--sw-p);box-shadow:none}
 .chipx .n{font-size:13px;font-weight:600}
 .chipx .m{margin-top:1px;font-size:11px;color:var(--text-2)}
 .pk-h{padding:12px 0 4px;font-size:12px;color:var(--text-2)}
@@ -465,7 +470,7 @@ PAGES.fuzzy={render(arg){const id=arg||'rime-ice',sw=swOf(id),G=[['zh','zh ↔ z
 const LIC={'rime-ice':{t:'GPL 3.0',body:'GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\n……（节选）\n\n——\n上游：https://github.com/iDvel/rime-ice'},wanxiang:{t:'CC BY 4.0',body:'Creative Commons Attribution 4.0 International\n\n你可以自由地共享与改编，任何用途，包括商业用途；须署名、提供许可链接并标明是否修改。\n\n……（节选）\n\n——\n上游：https://github.com/amzxyz/rime-wanxiang'}};
 PAGES.license={render(arg){const id=arg||'rime-ice',l=LIC[id];return nav(l.t)+head(l.t,PKG[id].name+' · 许可全文随安装内容落地，此处为节选')+`<div class="lic">${esc(l.body)}</div>`}};
 PAGES.personal={render(){return `<div class="ltitle" style="padding-top:12px">个性化</div>${content(glabel('外观主题')+card(themeChips()+row({title:'主 App 深色模式',control:seg([['system','跟随系统'],['light','浅色'],['dark','深色']],S.appMode,'appMode')})+row({title:'键盘主题',dev:true,cap:'当前主题下微调键帽颜色',act:'dev',arg:'键盘主题'})))+content(glabel('统计')+card(row({tile:'stats',title:'统计看板',act:'push',page:'stats',chev:true})+row({title:'输入统计',lock:!S.fa,cap:S.fa?'只在本机记录，不上传':'需要允许完全访问才能跨会话累计',control:tog(S.statsOn,'stats',null,false,!S.fa)})))}${foot('三套主题键盘与主 App 同步派生，亮暗各一套。')}`}};
-function themeChips(){return `<div class="chips">${THEMES.map(t=>`<button class="chipx ${S.theme===t[0]?'on':''}" data-act="theme" data-arg="${t[0]}"><span class="kb" style="--sw-bg:${t[3]};--sw-k:${t[2]}"><i></i><i></i><i></i><i class="sp"></i></span><span class="n">${t[1]}</span><span class="m">${t[2]}</span></button>`).join('')}</div>`}
+function themeChips(){const kr=()=>'<span class="kr"><i></i><i></i><i></i><i></i><i></i></span>';return `<div class="chips">${THEMES.map(t=>{const [id,n,m,c]=t,[p,a,bg,card]=c;return `<button class="chipx ${S.theme===id?'on':''}" data-act="theme" data-arg="${id}" aria-label="主题 ${n}"><span class="dots">${c.map(x=>`<i style="background:${x}"></i>`).join('')}</span><span class="kb" style="--sw-bg:${bg};--sw-k:${card};--sw-p:${p}">${kr()}${kr()}${kr()}<span class="kr"><i class="sp"></i></span></span><span class="n">${n}</span><span class="m">${m}</span></button>`}).join('')}</div>`}
 PAGES.stats={render(){if(!S.fa)return nav('统计看板')+emptyHTML('lock','需要允许完全访问','输入统计要跨会话累计字数，只有开启完全访问后才能保存。','faStats',null,'去开启');if(!S.statsOn)return nav('统计看板')+emptyHTML('stats','输入统计已关闭','开启后，在这里看今日字数、首选命中率与已用天数。','stats',null,'开启');return nav('统计看板')+head('统计看板','只在本机记录，不上传。')+`<div class="bignum"><div class="v">1,286</div><div class="l">今日字数</div></div><div class="statgrid"><div class="statbox"><div class="v">8,420</div><div class="l">本周字数</div></div><div class="statbox"><div class="v">71%</div><div class="l">首选命中率</div></div><div class="statbox"><div class="v">48,210</div><div class="l">累计字数</div></div><div class="statbox"><div class="v">42</div><div class="l">已用天数</div></div></div><div class="chart">${[38,52,44,70,58,90,46].map(h=>`<i style="height:${h}%"></i>`).join('')}</div><div class="milestone">还差 1,790 字到 5 万字</div>`}};
 Object.assign(ACT,{faStats:()=>faSheet('输入统计')});
 PAGES.general={render(){const ins=inService();return `<div class="aboutlogo">${svg('wing')}<div class="an">蜻蜓</div><div class="av">1.0 (0) · iOS 第三方中文 Rime 输入法</div><div class="av" style="margin-top:6px;line-height:1.5;text-align:center">引擎在设备上运行，离线，不上传任何输入。</div></div>`+content(glabel('数据与隐私')+card(row({title:'允许完全访问',cap:S.fa?'已开启。键盘可保存学到的词、提供触感反馈':'未开启。不影响打字；学到的词只在本次会话保留',value:S.fa?'已开启':'未开启',act:S.fa?null:'faGeneral',chev:!S.fa})+row({title:'隐私说明',act:'privacyToggle',chev:true})+(S.privacyOpen?`<div class="row" style="display:block;padding-top:0;border-top:0"><div class="row-cap" style="font-size:13px;line-height:1.65;color:var(--text-2)">引擎在设备上运行，键盘没有网络权限，也不记录你输入的内容。学到的词只存本机，开启完全访问后才会跨会话保存。主 App 只在你主动操作时联网下载方案包。</div></div>`:'')+row({title:'占用总览',value:ins?'约 '+(PKG[ins].unzip+(S.grammar.installed?GRAMMAR.size:0))+' MB':'—',act:'push',page:'storage',chev:true})+row({title:'删除全部数据',act:'delAll'})))+content(glabel('键盘与帮助')+card(row({tile:'gear',title:'启用与管理键盘',value:S.kbAdded?'已添加':'未添加',act:'push',page:'kbsetup',chev:true})+row({tile:'help',title:'帮助与自检',cap:'为什么没有中文候选？',act:'push',page:'help',chev:true})+row({title:'宿主 App 兼容性',dev:true,cap:'密码框只有英文、个别 App 不出联想',act:'dev',arg:'宿主 App 兼容性'})+row({title:'反馈问题',cap:'GitHub Issues · 可附诊断包',act:'feedback',chev:true})))+content(glabel('关于')+card(row({title:'开源组件致谢',cap:'librime、语法插件、rime-ice、万象拼音',act:'push',page:'credits',chev:true})+row({title:'许可全文',value:ins?PKG[ins].licenseName:'',act:'push',page:'license',arg:ins||'rime-ice',chev:true})+row({title:'使用中方案包',value:ins?PKG[ins].name:'未安装',act:ins?'push':null,page:'detail',arg:ins,chev:!!ins})+row({title:'重看首启引导',act:'replay'})))}};
