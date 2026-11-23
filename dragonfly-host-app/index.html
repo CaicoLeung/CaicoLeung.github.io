@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dragonfly · 主 App 设计预览</title>
+<style id="css-core">
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+:root{--font-body:"PingFang SC","Hiragino Sans GB",-apple-system,BlinkMacSystemFont,"Helvetica Neue","Microsoft YaHei",sans-serif}
+body{background:var(--sh-bg);color:var(--sh-fg);font:14px/1.5 var(--font-body);-webkit-font-smoothing:antialiased}
+body[data-mode=light]{--sh-bg:#E9E7E2;--sh-fg:#1C1C1E;--sh-line:#D6D3CC;--sh-card:#F6F4EF}
+body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card:#15171B}
+.bar{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;padding:10px 20px;background:var(--sh-card);border-bottom:1px solid var(--sh-line)}
+.bar h1{font-size:14px;font-weight:600;margin-right:6px}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl label{font-size:12px;opacity:.6}
+.rseg{display:inline-flex;padding:2px;border-radius:8px;background:var(--sh-line)}
+.rseg button{border:0;background:transparent;padding:4px 10px;border-radius:6px;font:12px var(--font-body);color:var(--sh-fg);cursor:pointer}
+.rseg button.on{background:var(--sh-card);font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+.rbtn,.rselect{font:12px var(--font-body);color:var(--sh-fg);background:var(--sh-line);border:0;border-radius:6px;padding:5px 10px;cursor:pointer}
+.chk{font-size:12px;display:flex;align-items:center;gap:6px}
+.rlink{font-size:12px;color:var(--sh-fg);opacity:.7}
+.stage{display:flex;justify-content:center;padding:24px 16px 40px}
+.wrap{position:relative}
+.phone{width:390px;height:844px;padding:10px;border-radius:54px;background:#0b0b0c;box-shadow:0 0 0 2px #2a2a2e,0 30px 80px rgba(0,0,0,.35);transform-origin:top left}
+.screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body)}
+.island{position:absolute;left:50%;top:11px;width:118px;height:33px;margin-left:-59px;border-radius:20px;background:#000;z-index:21}
+.sbar{position:absolute;top:0;left:0;right:0;height:50px;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:4px 30px 0 34px;font-size:15px;font-weight:600;pointer-events:none}
+.sbar svg{width:18px;height:12px}
+.homebar{position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:var(--text);opacity:.9;z-index:22;pointer-events:none}
+.viewport{position:absolute;inset:0;overflow:hidden}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);padding-bottom:44px;transition:transform .28s cubic-bezier(.32,.72,0,1);will-change:transform}
+.page.enter{transform:translateX(100%)}
+.page.under{transform:translateX(-28%)}
+.page.under::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.09)}
+.page.home{padding-top:50px}
+.nav{position:sticky;top:0;z-index:5;display:flex;align-items:flex-end;justify-content:space-between;padding:50px 10px 8px;min-height:94px}
+.page.collapsed .nav{background:var(--nav-bg);box-shadow:0 1px 0 var(--line)}
+.nav .nt{position:absolute;left:60px;right:60px;bottom:12px;text-align:center;font-size:17px;font-weight:600;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.page.collapsed .nt{opacity:1}
+.back{display:flex;align-items:center;border:0;background:none;color:var(--primary);font:17px var(--font-body);cursor:pointer;padding:2px 4px}
+.back svg{width:22px;height:22px}
+.ltitle{padding:8px 20px 4px;font-family:var(--font-display);font-size:var(--fs-title);font-weight:var(--fw-title);letter-spacing:var(--tr-title);line-height:1.15}
+.lsub{padding:0 20px;margin-top:4px;font-size:13px;color:var(--text-2);line-height:1.5}
+.content{padding:0 16px}
+.glabel{padding:22px 4px 8px;font-size:12px;color:var(--text-2);letter-spacing:.02em}
+.card{background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);overflow:hidden}
+.row{position:relative;display:flex;align-items:center;gap:12px;padding:12px 16px;min-height:52px}
+.row+.row::before{content:'';position:absolute;left:16px;right:0;top:0;height:1px;background:var(--line)}
+.row.has-tile+.row.has-tile::before{left:58px}
+.tappable{cursor:pointer}
+.tappable:active{background:var(--press)}
+.row-main{flex:1;min-width:0}
+.row-title{font-size:var(--fs-body);font-weight:500;display:flex;align-items:center;gap:6px}
+.row-cap{margin-top:2px;font-size:12px;line-height:1.45;color:var(--text-2)}
+.row-trail{display:flex;align-items:center;gap:8px;flex:none}
+.row-val{font-size:14px;color:var(--text-2);max-width:150px;text-align:right;white-space:nowrap}
+.chev{width:16px;height:16px;color:var(--text-3)}
+.lock-ic{width:13px;height:13px;color:var(--text-3)}
+.tile{flex:none;width:30px;height:30px;border-radius:var(--r-tile);display:grid;place-items:center;background:hsl(var(--h) var(--tbs) var(--tbl));color:hsl(var(--h) var(--ts) var(--tl))}
+.tile svg{width:18px;height:18px}
+.tile.lg{width:40px;height:40px}
+.tile.lg svg{width:22px;height:22px}
+.tile.neutral{background:var(--card-2);color:var(--text-2)}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px}
+.bcard{display:flex;flex-direction:column;gap:10px;min-height:118px;padding:14px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);cursor:pointer;transition:transform .12s}
+.bcard:active{transform:scale(.98)}
+.bcard .t{margin-top:auto;font-size:16px;font-weight:600}
+.bcard .c{font-size:12px;color:var(--text-2);line-height:1.4}
+.tgl{position:relative;flex:none;width:50px;height:30px;border:0;border-radius:15px;background:var(--tgl-off);cursor:pointer;transition:background .18s}
+.tgl::after{content:'';position:absolute;top:2px;left:2px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:transform .18s}
+.tgl.on{background:var(--primary)}
+.tgl.on::after{transform:translateX(20px)}
+.seg{display:inline-flex;flex:none;padding:2px;border-radius:9px;background:var(--card-2)}
+.seg button{border:0;background:transparent;padding:5px 12px;border-radius:7px;font:13px var(--font-body);color:var(--text);cursor:pointer;white-space:nowrap}
+.seg button.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.seg.wide{display:flex}
+.seg.wide button{flex:1}
+.dev .tgl,.dev .seg{opacity:.4;pointer-events:none}
+.pill{flex:none;padding:4px 7px;border-radius:999px;border:1px solid var(--pill-br);background:var(--pill-bg);color:var(--pill-fg);font-size:11px;line-height:1;white-space:nowrap}
+.chip{flex:none;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:600}
+.banner{display:flex;align-items:flex-start;gap:10px;margin:12px 16px 0;padding:12px 14px;border-radius:14px;background:var(--accent-soft);font-size:13px;line-height:1.45}
+.banner.dev{background:var(--card-2);color:var(--text-2)}
+.banner .ic{flex:none;width:18px;height:18px;margin-top:1px;color:var(--accent)}
+.banner.dev .ic{color:var(--text-2)}
+.banner .btxt{flex:1}
+.blink{border:0;background:none;color:var(--accent);font:600 13px var(--font-body);white-space:nowrap;cursor:pointer}
+.foot{padding:14px 24px 0;font-size:12px;line-height:1.55;color:var(--text-3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;width:100%;height:50px;border:0;border-radius:var(--r-btn);font:600 16px var(--font-body);cursor:pointer;transition:transform .12s,opacity .12s}
+.btn:active{transform:scale(.985)}
+.btn.primary{background:var(--primary);color:var(--on-primary)}
+.btn.secondary{background:var(--card-2);color:var(--text)}
+.btn.text{height:44px;background:none;color:var(--text-2);font-weight:500;font-size:15px}
+.btn.destructive{background:var(--card-2);color:var(--danger)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.layer{position:absolute;inset:0;z-index:40;pointer-events:none}
+.scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .22s}
+.sheet{position:absolute;left:8px;right:8px;bottom:8px;max-height:82%;overflow:auto;padding:10px 20px 30px;border-radius:22px;background:var(--card);transform:translateY(110%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
+.layer.show{pointer-events:auto}
+.layer.show .scrim{opacity:1}
+.layer.show .sheet{transform:none}
+.grab{width:36px;height:5px;margin:0 auto 14px;border-radius:3px;background:var(--line)}
+.sheet h3{font-size:17px;font-weight:600;text-align:center}
+.sheet .msg{margin:8px 0 16px;font-size:14px;line-height:1.5;color:var(--text-2);text-align:center;white-space:pre-line}
+.sheet .acts{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.sheet .acts .btn{height:48px}
+.acts .gap{height:6px}
+.toast{position:absolute;top:64px;left:50%;z-index:45;max-width:330px;padding:10px 16px;border-radius:999px;background:var(--text);color:var(--bg);font-size:13px;text-align:center;opacity:0;transform:translate(-50%,-12px);transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.cover{position:absolute;inset:0;z-index:15;display:flex;flex-direction:column;background:var(--bg);transform:translateY(100%);transition:transform .36s cubic-bezier(.32,.72,0,1)}
+.cover.show{transform:none}
+.cbody{flex:1;overflow-y:auto;padding:66px 20px 20px}
+.cfoot{padding:12px 20px 46px;background:var(--bg);box-shadow:0 -1px 0 var(--line)}
+.screen[data-theme=a]{--font-display:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;--font-num:var(--font-display);--fs-title:32px;--fw-title:600;--tr-title:0;--fs-body:15px;--lh-body:1.45;--r-card:18px;--r-tile:10px;--r-btn:14px;--ts:50%;--tl:38%;--tbs:42%;--tbl:94%;--pill-br:var(--line);--pill-fg:var(--text-2);--pill-bg:transparent;--shadow:0 1px 2px rgba(28,28,30,.05),0 6px 20px rgba(28,28,30,.05);--press:var(--card-2)}
+.screen[data-theme=a][data-mode=light]{--bg:#F6F4EF;--card:#FFFFFF;--card-2:#EEECE6;--text:#1C1C1E;--text-2:#6B6B70;--text-3:#A3A3A8;--line:#E6E3DC;--primary:#2E6460;--on-primary:#FFFFFF;--primary-soft:#E2EDEB;--accent:#C8503A;--accent-soft:#F6E3DE;--danger:#B3362A;--tgl-off:#D9D6CF;--nav-bg:#F6F4EF}
+.screen[data-theme=a][data-mode=dark]{--bg:#121615;--card:#1B201F;--card-2:#242A29;--text:#ECEAE4;--text-2:#9AA29F;--text-3:#666E6B;--line:#2A302F;--primary:#6FA79F;--on-primary:#0E1514;--primary-soft:#1D2E2B;--accent:#E07A5F;--accent-soft:#3A2622;--danger:#E5675A;--tgl-off:#3A4140;--nav-bg:#121615;--ts:45%;--tl:74%;--tbs:25%;--tbl:19%;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25)}
+.screen[data-theme=b]{--font-display:var(--font-body);--font-num:"SF Mono",ui-monospace,Menlo,Consolas,monospace;--fs-title:30px;--fw-title:700;--tr-title:-.02em;--fs-body:15px;--lh-body:1.45;--r-card:14px;--r-tile:8px;--r-btn:10px;--ts:70%;--tl:40%;--tbs:60%;--tbl:93%;--pill-br:transparent;--pill-fg:var(--accent);--pill-bg:var(--accent-soft);--shadow:none;--press:var(--card-2)}
+.screen[data-theme=b][data-mode=light]{--bg:#F2F3F5;--card:#FFFFFF;--card-2:#E8EAEE;--text:#14171C;--text-2:#6B7280;--text-3:#9AA0AA;--line:#E4E6EA;--primary:#1F2733;--on-primary:#FFFFFF;--primary-soft:#E3E6EB;--accent:#1A9C84;--accent-soft:#DDF3EE;--danger:#C0392B;--tgl-off:#D5D8DE;--nav-bg:#F2F3F5}
+.screen[data-theme=b][data-mode=dark]{--bg:#0E1013;--card:#171A1F;--card-2:#1F2329;--text:#E8EAED;--text-2:#8A9099;--text-3:#5C626B;--line:#262A31;--primary:#F2F4F7;--on-primary:#0E1013;--primary-soft:#1F2329;--accent:#37C9AE;--accent-soft:#0F2E2A;--danger:#FF6B5B;--tgl-off:#2A2F36;--nav-bg:#0E1013;--ts:75%;--tl:66%;--tbs:40%;--tbl:18%}
+.screen[data-theme=b] .card,.screen[data-theme=b] .bcard,.screen[data-theme=b] .sheet,.screen[data-theme=b] .opt,.screen[data-theme=b] .statbox{border:1px solid var(--line)}
+.screen[data-theme=b] .phead{background-image:radial-gradient(var(--line) 1px,transparent 1.4px);background-size:11px 11px;background-position:12px 8px}
+.screen[data-theme=c]{--font-display:var(--font-body);--font-num:var(--font-body);--fs-title:30px;--fw-title:600;--tr-title:0;--fs-body:16px;--lh-body:1.55;--r-card:22px;--r-tile:12px;--r-btn:16px;--ts:52%;--tl:40%;--tbs:55%;--tbl:92%;--pill-br:transparent;--pill-fg:var(--primary);--pill-bg:var(--primary-soft);--shadow:0 2px 6px rgba(60,40,20,.06),0 10px 30px rgba(60,40,20,.06);--press:var(--card-2)}
+.screen[data-theme=c][data-mode=light]{--bg:#FAF6EF;--card:#FFFFFF;--card-2:#F1EBE1;--text:#2B2622;--text-2:#7A716A;--text-3:#A89F96;--line:#ECE5DA;--primary:#A8552F;--on-primary:#FFFFFF;--primary-soft:#F5E6DE;--accent:#2E8C86;--accent-soft:#DDF0EE;--danger:#B5402C;--tgl-off:#DDD5CA;--nav-bg:#FAF6EF}
+.screen[data-theme=c][data-mode=dark]{--bg:#1A1614;--card:#24201D;--card-2:#2E2926;--text:#F3EDE6;--text-2:#A69A90;--text-3:#766C64;--line:#332D29;--primary:#D9906A;--on-primary:#1A1210;--primary-soft:#3A2A22;--accent:#5BB3AC;--accent-soft:#1D3331;--danger:#E8775F;--tgl-off:#3E3833;--nav-bg:#1A1614;--ts:48%;--tl:74%;--tbs:30%;--tbl:20%}
+.phead{padding-bottom:4px}
+.status{display:flex;align-items:center;gap:8px;margin:8px 20px 0;font-size:13px;color:var(--text-2)}
+.status.jobstat{color:var(--accent);cursor:pointer}
+.status svg{width:18px;height:18px;flex:none}
+.status.warn{margin:12px 16px 0;padding:12px 14px;border-radius:14px;background:var(--accent-soft);color:var(--text);cursor:pointer}
+.status.warn .blink{margin-left:auto}
+.trycard{display:flex;align-items:center;gap:12px;margin:14px 16px 0;padding:14px 16px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);cursor:pointer}
+.trycard .tt{font-size:15px;font-weight:600}
+.trycard .tc{margin-top:2px;font-size:12px;color:var(--text-2)}
+.trycard .fld{flex:1;min-height:36px;padding:8px 12px;border-radius:10px;background:var(--card-2);font-size:15px;color:var(--text-3);outline:none}
+.trycard .fld.has{color:var(--text)}
+.trycard.open{flex-direction:column;align-items:stretch;cursor:default}
+.trycard.open .fld{min-height:72px}
+.trycard .hint{margin-top:6px;font-size:12px;color:var(--text-3)}
+@keyframes hover{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.5px) scale(1.05)}}
+@keyframes rot{to{transform:rotate(360deg)}}
+.wing-hover{animation:hover 1.6s ease-in-out infinite}
+.spin{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--accent-soft);border-top-color:var(--accent);animation:rot 1s linear infinite;vertical-align:middle}
+@media (prefers-reduced-motion:reduce){.wing-hover,.spin{animation:none}.page,.cover,.sheet,.toast{transition:none}}
+.job{padding:16px}
+.jhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.jhead svg{width:22px;height:22px;color:var(--accent);flex:none}
+.jt{font-size:16px;font-weight:600}
+.js{margin-top:2px;font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.steps{display:flex;flex-direction:column;gap:10px}
+.step{display:flex;align-items:flex-start;gap:10px;font-size:14px}
+.step .dot{flex:none;width:20px;height:20px;margin-top:1px;display:grid;place-items:center;border-radius:50%;border:1.5px solid var(--text-3);color:var(--text-3)}
+.step .dot svg{width:12px;height:12px}
+.step .dot .spin{width:12px;height:12px;border-width:1.5px}
+.step.done .dot{background:var(--accent);border-color:var(--accent);color:#fff}
+.step.cur .dot{border-color:var(--accent)}
+.step.fail .dot{border-color:var(--danger);color:var(--danger)}
+.step.todo{color:var(--text-3)}
+.hint{margin-top:2px;font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.pbar{height:6px;margin:8px 0 0 30px;border-radius:3px;background:var(--card-2)}
+.pbar i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .2s linear}
+.substeps{display:flex;flex-direction:column;gap:6px;margin:8px 0 0 30px;font-size:12px}
+.substep{display:flex;align-items:center;gap:8px;color:var(--text-3)}
+.substep svg{width:12px;height:12px;color:var(--accent)}
+.substep.done,.substep.cur{color:var(--text)}
+.substep .spin{width:11px;height:11px;border-width:1.5px}
+.substep.el{margin-top:4px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.jacts{display:flex;gap:8px;margin-top:16px}
+.jacts .btn{height:44px;font-size:15px}
+.opt{display:flex;align-items:center;gap:14px;margin-top:12px;padding:14px;border-radius:18px;background:var(--card);border:1.5px solid transparent;box-shadow:var(--shadow);cursor:pointer}
+.opt.on{border-color:var(--primary);background:var(--primary-soft)}
+.opt .ot{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600}
+.opt .oc{margin-top:2px;font-size:12px;color:var(--text-2)}
+.mini26{flex:none;width:118px;display:flex;flex-direction:column;gap:3px}
+.mini26 .mr{display:flex;gap:3px;justify-content:center}
+.mini26 .mk{height:15px;flex:1;border-radius:3px;background:var(--text);opacity:.8}
+.mini26 .mk.fn{flex:.9;opacity:.3}
+.mini26 .mk.sp{flex:4}
+.mini9{flex:none;width:86px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.mini9 .k9{height:23px;display:grid;place-items:center;border-radius:5px;background:var(--text);opacity:.8;color:var(--bg);font-size:9px;font-weight:600}
+.ob-step{font-size:12px;color:var(--text-2);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.ob-title{margin-top:8px;font-family:var(--font-display);font-size:30px;font-weight:var(--fw-title);letter-spacing:var(--tr-title);line-height:1.15}
+.ob-sub{margin:8px 0 4px;font-size:13px;color:var(--text-2);line-height:1.55}
+.cfoot .btn+.btn{margin-top:6px}
+.infocard{margin-top:14px;padding:14px 16px;border-radius:16px;background:var(--card-2);font-size:13px;line-height:1.65;color:var(--text-2)}
+.infocard b{color:var(--text);font-weight:600}
+.empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:36px 24px;text-align:center;color:var(--text-2);font-size:13px}
+.empty svg{width:44px;height:44px;color:var(--text-3)}
+.empty .et{font-size:15px;font-weight:500;color:var(--text)}
+.empty .btn{width:auto;height:40px;margin-top:6px;padding:0 18px;font-size:14px}
+.bignum{padding:20px 20px 16px}
+.bignum .v{font-family:var(--font-num);font-size:54px;font-weight:600;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.bignum .l{margin-top:6px;font-size:13px;color:var(--text-2)}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px}
+.statbox{padding:14px 16px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow)}
+.statbox .v{font-family:var(--font-num);font-size:26px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.statbox .l{margin-top:4px;font-size:12px;color:var(--text-2)}
+.chart{display:flex;align-items:flex-end;gap:6px;height:84px;margin-top:12px}
+.chart i{flex:1;min-height:4px;border-radius:4px 4px 2px 2px;background:var(--primary);opacity:.85}
+.milestone{margin:0 16px;padding:12px 14px;border-radius:14px;background:var(--primary-soft);font-size:13px}
+.lic{padding:16px 20px;font:12px/1.65 var(--font-num);white-space:pre-wrap}
+.aboutlogo{display:flex;flex-direction:column;align-items:center;gap:8px;padding:26px 0 10px}
+.aboutlogo svg{width:56px;height:56px;color:var(--primary)}
+.aboutlogo .an{font-family:var(--font-display);font-size:26px;font-weight:var(--fw-title)}
+.aboutlogo .av{font-size:12px;color:var(--text-2)}
+.swatches{display:flex;gap:10px;padding:14px 16px}
+.swatch{flex:1;overflow:hidden;border-radius:12px;border:1.5px solid var(--line)}
+.swatch .kb{display:flex;flex-direction:column;gap:3px;padding:10px 8px;background:var(--sw-bg)}
+.swatch .kb i{height:10px;flex:1;border-radius:2px;background:var(--sw-k)}
+.swatch .sl{padding:6px 8px;font-size:12px;color:var(--text-2);background:var(--card)}
+.radio{flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;border:1.5px solid var(--text-3);color:transparent}
+.radio.on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.radio svg{width:12px;height:12px}
+/* @@CSS@@ */
+</style>
+</head>
+<body data-mode="light">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+<symbol id="i-wing" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><ellipse cx="12" cy="6.6" rx="2" ry="5.8" transform="rotate(-28 12 12)"/><ellipse cx="12" cy="6.6" rx="2" ry="5.8" transform="rotate(28 12 12)"/><ellipse cx="12" cy="7.4" rx="2.5" ry="4.9" transform="rotate(-142 12 12)"/><ellipse cx="12" cy="7.4" rx="2.5" ry="4.9" transform="rotate(142 12 12)"/></g><circle cx="12" cy="12" r="1.1" fill="currentColor"/><circle cx="12" cy="2.6" r=".9" fill="currentColor"/></symbol>
+<symbol id="i-layout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="5" width="18" height="4" rx="1.4"/><rect x="5.5" y="11" width="13" height="4" rx="1.4"/><rect x="9" y="17" width="6" height="4" rx="1.4"/></symbol>
+<symbol id="i-cand" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="4.5" rx="2.25" fill="currentColor"/><rect x="3" y="11.5" width="18" height="3.5" rx="1.75" fill="currentColor" opacity=".55"/><rect x="3" y="17" width="9" height="3.5" rx="1.75" fill="currentColor" opacity=".3"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8.5" width="10" height="10" rx="2.5"/><path d="M4 9a9 9 0 0 1 3.2-4.6M20 9a9 9 0 0 0-3.2-4.6"/></symbol>
+<symbol id="i-punct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="7.5" cy="16" r="2.4"/><path d="M14.5 6.5c-1.6.4-2.5 1.7-2.5 3.5M19 6.5c-1.6.4-2.5 1.7-2.5 3.5"/></symbol>
+<symbol id="i-appearance" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="6" y="5" width="12" height="15" rx="2"/><rect x="9" y="3" width="6" height="4" rx="1.2"/></symbol>
+<symbol id="i-stats" viewBox="0 0 24 24" fill="currentColor"><rect x="4.5" y="12" width="3.2" height="7.5" rx="1.1"/><rect x="10.4" y="8" width="3.2" height="11.5" rx="1.1"/><rect x="16.3" y="4" width="3.2" height="15.5" rx="1.1"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.8v.2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
+<symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+<symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></symbol>
+<symbol id="i-status" viewBox="0 0 26 14" fill="currentColor"><rect x="0" y="8" width="3" height="5" rx="1"/><rect x="4.5" y="6" width="3" height="7" rx="1"/><rect x="9" y="3.5" width="3" height="9.5" rx="1"/><rect x="13.5" y="1" width="3" height="12" rx="1"/><rect x="19.5" y="1.5" width="6" height="11" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.1"/><rect x="21" y="3.2" width="3.6" height="7.6" rx="1.2"/></symbol>
+</svg>
+<header class="bar">
+<h1>Dragonfly · 主 App 设计预览</h1>
+<div class="ctl"><label>方向</label><div class="rseg" id="ctlTheme"><button data-v="a" class="on">A 素翼</button><button data-v="b">B 夜航</button><button data-v="c">C 晨光</button></div></div>
+<div class="ctl"><label>模式</label><div class="rseg" id="ctlMode"><button data-v="light" class="on">浅色</button><button data-v="dark">深色</button></div></div>
+<div class="ctl"><label>场景</label><select class="rselect" id="ctlScene"><option value="normal">正常</option><option value="cellular">蜂窝网络</option><option value="disk">磁盘不足（预检失败）</option><option value="drop">下载中断</option><option value="compiling">编译中（立即触发）</option></select></div>
+<label class="chk"><input type="checkbox" id="ctlFa"> 模拟已开启完全访问</label>
+<button class="rbtn" id="ctlReplay">重播首启引导</button>
+<button class="rbtn" id="ctlHome">回到首页</button>
+<a class="rlink" href="DESIGN.md" target="_blank">DESIGN.md</a>
+</header>
+<main class="stage"><div class="wrap" id="wrap"><div class="phone" id="phone"><div class="screen" id="screen" data-theme="a" data-mode="light">
+<div class="island"></div>
+<div class="sbar"><span>9:41</span><svg viewBox="0 0 26 14"><use href="#i-status"/></svg></div>
+<div class="viewport" id="viewport"></div>
+<div class="cover" id="cover"></div>
+<div class="layer" id="layer"></div>
+<div class="toast" id="toast"></div>
+<div class="homebar"></div>
+</div></div></div></main>
+<script>
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const svg=(id,cls='')=>`<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+const screen=$('#screen'), viewport=$('#viewport'), layer=$('#layer'), toastEl=$('#toast'), cover=$('#cover'), phone=$('#phone'), wrap=$('#wrap');
+const PKG={
+ 'rime-ice':{name:'雾凇拼音',src:'rime-ice',license:'GPL-3.0',size:'47 MB',unzip:'124 MB',peak:500,ver:'nightly 2026-11-24',instant:true,desc:'全拼 + 自然码双拼，切换即时生效',types:[{id:'quanpin',n:'全拼（雾凇）'},{id:'zrm',n:'自然码双拼'}]},
+ wanxiang:{name:'万象拼音',src:'amzxyz/rime-wanxiang',license:'CC-BY-4.0',size:'31 MB',unzip:'95 MB',peak:700,ver:'v18.1.14',instant:false,grammar:true,desc:'9 种输入类型 + 辅助码，切换需重新编译',types:[{id:'quanpin',n:'全拼'},{id:'zrm',n:'自然码'},{id:'flypy',n:'小鹤双拼'},{id:'mspy',n:'微软双拼'},{id:'sogou',n:'搜狗双拼'},{id:'znabc',n:'智能ABC'},{id:'ziguang',n:'紫光双拼'},{id:'pyjj',n:'拼音加加'},{id:'sdpy',n:'首道双拼'}]}
+};
+const GRAMMAR={size:'391 MB',ver:'LTS 2026-11-20'};
+const PHASES={install:['获取版本信息','下载','校验文件完整性','解压文件','替换词库','编译词库'],grammar:['获取版本信息','下载','校验文件完整性','放置为保留文件']};
+const HINTS={install:['','','','','几秒完成','约 2–5 分钟，期间键盘只能打英文'],grammar:['','','','不打扰正在使用旧版本的键盘']};
+const DEPLOY=['关闭当前输入引擎','编译词库','检查编译结果','记录版本信息','重启输入引擎'];
+const HAPTIC=[['off','关'],['soft','弱'],['light','中'],['heavy','强']];
+const TILES={layout:{h:185,i:'layout'},scheme:{h:165,i:'wing'},cand:{n:1,i:'cand'},keys:{h:12,i:'key'},punct:{h:35,i:'punct'},appearance:{h:350,i:'appearance'},clip:{n:1,i:'clip'},stats:{h:225,i:'stats'},privacy:{n:1,i:'shield'},about:{n:1,i:'wing'}};
+const KEY='dragonfly-host-app-preview';
+function fresh(){return {theme:'a',mode:'light',scenario:'normal',fa:false,onboarded:false,layout:'26',inline:true,haptic:'off',defaultKb:'zh',types:{'rime-ice':'quanpin',wanxiang:'zrm'},pkgs:{'rime-ice':{st:'none'},wanxiang:{st:'none'}},grammar:{installed:false,on:true},statsOn:false,clipboardOn:false,tryOpen:false,tryText:''}}
+function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return fresh();return Object.assign(fresh(),JSON.parse(raw),{scenario:'normal'})}catch(e){return fresh()}}
+function save(){const {scenario,...rest}=S;try{localStorage.setItem(KEY,JSON.stringify(rest))}catch(e){}}
+let S=load(), JOB=null, tickTimer=null, toastTimer=null, OB=null;
+const inService=()=>Object.keys(S.pkgs).find(k=>S.pkgs[k].st==='inservice');
+const typeName=(p,t)=>(PKG[p].types.find(x=>x.id===t)||PKG[p].types[0]).n;
+const sizeText=(p,g)=>PKG[p].size+(PKG[p].grammar&&g?' + 语法 '+GRAMMAR.size:'');
+const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const sinceDays=t=>Math.max(1,Math.floor((Date.now()-t)/864e5)+1);
+const PAGES={}, stack=[];
+function push(id,arg){const p=PAGES[id];if(!p)return;const el=document.createElement('div');el.className='page enter'+(id==='home'?' home':'');el.dataset.page=id;el.innerHTML=p.render(arg);viewport.appendChild(el);const top=stack[stack.length-1];if(top){top.el.classList.add('under');top.el.style.pointerEvents='none'}stack.push({id,el,arg});el.addEventListener('scroll',()=>el.classList.toggle('collapsed',el.scrollTop>34),{passive:true});requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('enter')))}
+function pop(){if(stack.length<2)return;const top=stack.pop(),under=stack[stack.length-1];top.el.classList.add('enter');under.el.classList.remove('under');under.el.style.pointerEvents='';const el=top.el;setTimeout(()=>el.remove(),320)}
+function popAll(){while(stack.length>1){stack.pop().el.remove()}const u=stack[0];if(u){u.el.classList.remove('under');u.el.style.pointerEvents=''}}
+function rerender(){const top=stack[stack.length-1];if(!top)return;const st=top.el.scrollTop;top.el.innerHTML=PAGES[top.id].render(top.arg);top.el.scrollTop=st;top.el.classList.toggle('collapsed',st>34)}
+function rerenderAll(){stack.forEach(p=>{p.el.innerHTML=PAGES[p.id].render(p.arg)});const top=stack[stack.length-1];if(top)top.el.classList.remove('under')}
+function refreshLive(){$$('[data-joblive]').forEach(el=>{el.outerHTML=statusHTML()})}
+const nav=(title,right)=>`<div class="nav"><button class="back" data-act="back">${svg('back')}返回</button><div class="nt">${title}</div>${right||''}</div>`;
+const head=(title,sub)=>`<div class="phead"><div class="ltitle">${title}</div>${sub?`<div class="lsub">${sub}</div>`:''}</div>`;
+function sheet(o){layer.innerHTML=`<div class="scrim" data-act="dismiss"></div><div class="sheet" role="dialog"><div class="grab"></div><h3>${o.title}</h3>${o.tag?`<div style="text-align:center;margin-top:6px">${o.tag}</div>`:''}${o.msg?`<div class="msg">${o.msg}</div>`:''}${o.html||''}<div class="acts">${(o.acts||[]).map(a=>`${a.gap?'<div class="gap"></div>':''}<button class="btn ${a.k||'secondary'}" data-act="${a.act||'dismiss'}" data-arg="${esc(a.arg||'')}">${a.l}</button>`).join('')}</div></div>`;layer.classList.add('show')}
+function dismissSheet(){layer.classList.remove('show');setTimeout(()=>{if(!layer.classList.contains('show'))layer.innerHTML=''},320)}
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2400)}
+function devSheet(name){sheet({tag:'<span class="pill">开发中</span>',title:name,msg:`「${name}」正在开发中，预计随 V1.1 提供。\n当前版本不会生效，现有打字不受影响。`,acts:[{l:'知道了',k:'primary'}]})}
+function faSheet(){sheet({title:'需要允许完全访问',msg:'按键触感反馈由系统触感接口提供，iOS 只在键盘获得「允许完全访问」后才允许调用。\n不开启也能正常打字。完全访问只解锁触感反馈与以后的数据持久化。',html:'<div class="infocard">设置 → 键盘 → 蜻蜓 → 允许完全访问</div>',acts:[{l:'打开系统设置',k:'primary',act:'openSettings'},{gap:1,l:'暂不开启',k:'secondary'}]})}
+const pill=()=>'<span class="pill">开发中</span>', chip=()=>'<span class="chip">在役</span>';
+const glabel=t=>`<div class="glabel">${t}</div>`, card=c=>`<div class="card">${c}</div>`, content=c=>`<div class="content">${c}</div>`, foot=t=>`<div class="foot">${t}</div>`;
+function tile(k,lg){const t=TILES[k];return `<span class="tile ${lg?'lg':''} ${t.n?'neutral':''}"${t.h?` style="--h:${t.h}"`:''}>${svg(t.i)}</span>`}
+function row(o){const a=o.act?` data-act="${o.act}"${o.arg!==undefined?` data-arg="${esc(o.arg)}"`:''}`:'';return `<div class="row ${o.tile?'has-tile':''} ${o.dev?'dev':''} ${o.act?'tappable':''}"${a}>${o.tile?tile(o.tile):''}<div class="row-main"><div class="row-title">${o.title}${o.lock?svg('lock','lock-ic'):''}</div>${o.cap?`<div class="row-cap">${o.cap}</div>`:''}</div><div class="row-trail">${o.dev?pill():''}${o.chip?chip():''}${o.value!==undefined?`<span class="row-val">${o.value}</span>`:''}${o.control||''}${o.radio!==undefined?`<span class="radio ${o.radio?'on':''}">${svg('check')}</span>`:''}${o.chev?svg('chev','chev'):''}</div></div>`}
+function tog(on,key,dev){return `<button class="tgl ${on?'on':''}" ${dev?'disabled':''} data-act="tog" data-key="${key}" aria-pressed="${!!on}"></button>`}
+function seg(opts,val,act,key,wide){const at=act?` data-act="${act}" data-key="${key||''}"`:'';return `<div class="seg ${wide?'wide':''}">${opts.map(o=>`<button class="${o[0]===val?'on':''}"${at} data-val="${esc(o[0])}"${o[2]?` data-dev="${esc(o[2])}"`:''}>${o[1]}</button>`).join('')}</div>`}
+const ACT={};
+screen.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;const fn=ACT[el.dataset.act];if(fn){e.stopPropagation();fn(el,e)}});
+Object.assign(ACT,{
+ back:()=>pop(), dismiss:()=>dismissSheet(), push:el=>push(el.dataset.arg), dev:el=>devSheet(el.dataset.arg),
+ tog:el=>{S[el.dataset.key]=!S[el.dataset.key];save();rerender()},
+ seg:el=>{S[el.dataset.key]=el.dataset.val;save();rerender()},
+ haptic:el=>{if(!S.fa){faSheet();return}S.haptic=el.dataset.val;save();rerender();toast(S.haptic==='off'?'按键触感反馈已关闭，重新弹出键盘即生效':'按键触感反馈：'+el.textContent+'，重新弹出键盘即生效')},
+ openSettings:()=>{dismissSheet();toast('预览：此处跳转系统设置 → 键盘 → 蜻蜓 → 允许完全访问')},
+ goJob:()=>{if(!inService()){openCover(3)}else push('scheme')},
+});
+function applyChrome(){screen.dataset.theme=S.theme;screen.dataset.mode=S.mode;document.body.dataset.mode=S.mode;$$('#ctlTheme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));$$('#ctlMode button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.mode));$('#ctlFa').checked=S.fa;save()}
+$('#ctlTheme').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;applyChrome()});
+$('#ctlMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.mode=b.dataset.v;applyChrome()});
+$('#ctlFa').addEventListener('change',e=>{S.fa=e.target.checked;applyChrome();rerenderAll();toast(S.fa?'已模拟开启完全访问':'已模拟关闭完全访问')});
+$('#ctlScene').addEventListener('change',e=>{S.scenario=e.target.value;if(S.scenario==='compiling')triggerCompileScenario();else toast('场景：'+e.target.selectedOptions[0].textContent+'（下次装包时生效）')});
+$('#ctlReplay').addEventListener('click',()=>{stopTick();JOB=null;const {theme,mode,fa}=S;S=Object.assign(fresh(),{theme,mode,fa});save();popAll();openCover()});
+$('#ctlHome').addEventListener('click',()=>{closeCover();S.onboarded=true;save();popAll();rerender()});
+function fit(){const bar=$('.bar');const s=Math.min(1,(innerHeight-bar.offsetHeight-64)/844,(innerWidth-40)/390);phone.style.transform=`scale(${s})`;wrap.style.width=390*s+'px';wrap.style.height=844*s+'px'}
+addEventListener('resize',fit);
+PHASES.compile=['保存输入类型','编译词库'];HINTS.compile=['','约 2–5 分钟，期间键盘只能打英文'];
+function statusHTML(){
+ if(JOB){const label=JOB.failed?(JOB.kind==='install'?'安装失败':JOB.kind==='compile'?'编译失败':'更新失败'):JOB.kind==='compile'?'正在编译词库':JOB.kind==='grammar'?'正在下载语法模型':'正在安装'+PKG[JOB.pkg].name;
+  const detail=JOB.failed?'点按查看':(JOB.kind==='install'&&JOB.phase===1)?Math.round(JOB.progress*100)+'%':'已耗时 '+fmt(JOB.elapsed);
+  return `<div class="status jobstat" data-joblive data-act="goJob">${JOB.failed?svg('x'):`<span class="wing-hover" style="display:inline-flex;width:18px;height:18px">${svg('wing')}</span>`}<span>${label} · ${detail}</span></div>`}
+ const ins=inService();
+ if(!ins)return `<div class="status warn" data-joblive data-act="goJob">${svg('info')}<span>未安装方案包，键盘目前只能打英文</span><button class="blink">去装包</button></div>`;
+ return `<div class="status" data-joblive>${svg('wing')}<span>${PKG[ins].name} · ${typeName(ins,S.types[ins])} · 引擎就绪</span></div>`;
+}
+function jobStatusText(){const pct=Math.round(JOB.progress*100);if(JOB.kind==='compile'||(JOB.kind==='install'&&JOB.phase>=5))return '正在编译词库 · 已耗时 '+fmt(JOB.elapsed);if(JOB.phase===1)return '下载中 · '+pct+'%';return PHASES[JOB.kind][JOB.phase]+'…'}
+function jobHTML(){
+ if(!JOB)return'';
+ const phases=PHASES[JOB.kind],hints=HINTS[JOB.kind],cur=JOB.phase,done=JOB.done,failed=JOB.failed,pct=Math.round(JOB.progress*100);
+ const showSub=(JOB.kind==='install'&&cur>=5)||(JOB.kind==='compile'&&cur>=1);
+ let h=`<div class="card job" data-job><div class="jhead">${failed?svg('x'):`<span class="wing-hover" style="display:inline-flex;width:22px;height:22px">${svg('wing')}</span>`}<div><div class="jt">${failed?JOB.failTitle:JOB.title}</div><div class="js">${failed?esc(failed):done?'已完成':jobStatusText()}</div></div></div><div class="steps">`;
+ phases.forEach((t,i)=>{const cls=done||i<cur?'done':i===cur?(failed?'fail':'cur'):'todo';const inner=done||i<cur?svg('check'):failed&&i===cur?svg('x'):i===cur?'<span class="spin"></span>':'';
+  h+=`<div class="step ${cls}"><span class="dot">${inner}</span><div><div>${t}</div>${i===cur&&!failed&&!done&&hints[i]?`<div class="hint">${hints[i]}</div>`:''}${i===cur&&!failed&&!done&&i===1&&JOB.kind!=='compile'?`<div class="pbar"><i style="width:${pct}%"></i></div><div class="hint">${pct}% · 约 ${JOB.kind==='grammar'?GRAMMAR.size:PKG[JOB.pkg].size} 流量</div>`:''}</div></div>`});
+ if(showSub){h+='<div class="substeps">'+DEPLOY.map((s,i)=>{const c=done||i<JOB.sub?'done':i===JOB.sub?'cur':'';return `<div class="substep ${c}">${c==='done'?svg('check'):c==='cur'?'<span class="spin"></span>':''}${s}</div>`}).join('')+'</div>'}
+ h+='</div>';
+ if(failed)h+='<div class="jacts"><button class="btn secondary" data-act="retryJob">重试</button></div>';
+ else if(!done&&JOB.cancellable)h+='<div class="jacts"><button class="btn text" data-act="cancelJob">取消安装</button></div>';
+ return h+'</div>';
+}
+function refreshJob(){$$('[data-job]').forEach(el=>{el.outerHTML=jobHTML()});refreshLive();if(OB&&OB.step===3)obFooter()}
+function tryCard(){
+ if(S.tryOpen)return `<div class="trycard open"><div style="display:flex;align-items:center"><div style="flex:1"><div class="tt">试打</div><div class="tc">在真机上，这里会弹出蜻蜓键盘</div></div><button class="blink" data-act="tryClose">收起</button></div><div class="fld has" contenteditable="true">${esc(S.tryText)}</div><div class="hint">换包、切输入类型、改布局后，在这里验证效果</div></div>`;
+ return `<div class="trycard" data-act="tryOpen"><div style="flex:1"><div class="tt">试打</div><div class="tc">换包或切类型后验证</div></div><div class="fld" style="max-width:150px">在这里试打一句…</div></div>`;
+}
+function bcard(id,t,c){return `<div class="bcard" data-act="push" data-arg="${id}">${tile(id,1)}<div class="t">${t}</div><div class="c">${c}</div></div>`}
+PAGES.home={render(){
+ const ins=inService(),hapticTxt=HAPTIC.find(h=>h[0]===S.haptic)[1];
+ return `<div class="ltitle" style="padding-top:12px">蜻蜓</div>${statusHTML()}${tryCard()}<div class="glabel" style="padding-top:18px">个性化</div><div class="bgrid">${bcard('layout','键盘布局',(S.layout==='26'?'二十六键':'九宫格')+' · 默认'+(S.defaultKb==='zh'?'中文':'英文'))}${bcard('scheme','输入方案',ins?PKG[ins].name+' · '+typeName(ins,S.types[ins]):'未装包 · 去安装')}${bcard('keys','按键与手势','触感反馈 · '+hapticTxt+(S.fa?'':' · 需完全访问'))}${bcard('appearance','外观','跟随系统 · 2 项开发中')}</div><div class="glabel">更多</div>${content(card(row({tile:'cand',title:'候选栏',value:S.inline?'显示拼音 · 开':'显示拼音 · 关',act:'push',arg:'candidates'})+row({tile:'punct',title:'标点与符号',value:'4 项开发中',act:'push',arg:'punct'})+row({tile:'clip',title:'剪贴板',value:'开发中',act:'push',arg:'clipboard'})+row({tile:'stats',title:'统计',value:'开发中',act:'push',arg:'stats'})+row({tile:'privacy',title:'数据与隐私',value:S.fa?'完全访问 · 已开启':'完全访问 · 未开启',act:'push',arg:'privacy'})+row({tile:'about',title:'关于',value:'1.0',act:'push',arg:'about'})))}${foot('蜻蜓 1.0 · 词库不随 App 提供，按需下载 · 引擎在本机运行，不联网')}`;
+}};
+Object.assign(ACT,{tryOpen:()=>{S.tryOpen=true;rerender()},tryClose:()=>{S.tryOpen=false;save();rerender()}});
+screen.addEventListener('input',e=>{if(e.target.hasAttribute&&e.target.hasAttribute('contenteditable')){S.tryText=e.target.textContent;save()}});
+ACT.goJob=()=>{if(JOB)openCover(3);else if(!inService())openCover(2);else push('scheme')};
+function startTick(){stopTick();tickTimer=setInterval(tick,120)}
+function stopTick(){clearInterval(tickTimer);tickTimer=null}
+const DUR={install:[900,6000,900,1400,900,0],grammar:[900,8000,900,1200],compile:[600,0]};
+const SUBDUR=[600,9000,800,500,1000];
+function newJob(kind,pkgId,extra){JOB=Object.assign({kind,pkg:pkgId,phase:0,progress:0,sub:0,startedAt:Date.now(),elapsed:0,phaseStart:Date.now(),subStart:null,failed:null,failTitle:'',done:false,cancellable:kind!=='compile',title:''},extra);startTick()}
+function tick(){
+ if(!JOB){stopTick();return}
+ const now=Date.now();JOB.elapsed=now-JOB.startedAt;
+ const durs=DUR[JOB.kind],t=now-JOB.phaseStart;
+ const isDeploy=(JOB.kind==='install'&&JOB.phase>=5)||(JOB.kind==='compile'&&JOB.phase>=1);
+ if(isDeploy){JOB.cancellable=false;if(!JOB.subStart)JOB.subStart=now;let acc=0,i=0;for(;i<SUBDUR.length;i++){acc+=SUBDUR[i];if(now-JOB.subStart<acc)break}JOB.sub=Math.min(i,SUBDUR.length);if(now-JOB.subStart>=SUBDUR.reduce((a,b)=>a+b,0)){JOB.sub=SUBDUR.length;finishJob();return}refreshJob();return}
+ if(JOB.phase===1&&durs[1]>0){JOB.progress=Math.min(1,t/durs[1]);if(S.scenario==='drop'&&JOB.progress>=0.62){failJob('下载中断：网络连接中断。已清理，未占用空间。');return}}
+ const d=durs[JOB.phase];
+ if(d>0&&t>=d){JOB.phase++;JOB.phaseStart=now;JOB.progress=0;if(JOB.phase>=PHASES[JOB.kind].length){finishJob();return}}
+ refreshJob();
+}
+function finishJob(){
+ const j=JOB;JOB.done=true;JOB.cancellable=false;stopTick();refreshJob();
+ setTimeout(()=>{if(JOB!==j)return;
+  if(j.kind==='install'){const prev=inService();if(prev&&prev!==j.pkg)S.pkgs[prev].st='installed';S.pkgs[j.pkg]={st:'inservice',since:Date.now(),ver:PKG[j.pkg].ver};if(j.grammar)S.grammar.installed=true;S.onboarded=true;toast(PKG[j.pkg].name+'已就绪，回到任何输入框即可打字');closeCover()}
+  else if(j.kind==='compile'){S.types[j.pkg]=j.type;toast('输入类型已切换为'+typeName(j.pkg,j.type)+'，重新弹出键盘即生效')}
+  else if(j.kind==='grammar'){S.grammar.installed=true;toast('语法模型已就绪，下次键盘唤起生效')}
+  JOB=null;save();rerenderAll();if(OB)obRender()},700);
+}
+function failJob(msg){JOB.failed=msg;JOB.failTitle=JOB.kind==='install'?'安装失败':JOB.kind==='compile'?'编译失败':'更新失败';JOB.cancellable=false;stopTick();refreshJob()}
+function cancelJob(){const p=JOB.pkg;JOB=null;stopTick();S.pkgs[p].fail=null;save();toast('已取消，未产生任何残留');rerenderAll();if(OB)obRender()}
+function retryJob(){const j=JOB;JOB=null;stopTick();if(j.kind==='install')startInstall(j.pkg,{grammar:j.grammar,cellular:true});else if(j.kind==='grammar')startGrammar(true);else startCompile(j.pkg,j.type)}
+function startInstall(pkgId,o={}){
+ dismissSheet();const pk=PKG[pkgId],g=!!o.grammar;
+ if(S.scenario==='disk'){const need=pk.peak+(pk.grammar&&g?390:0),needTxt=need>=1000?(need/1000).toFixed(1)+' GB':need+' MB';S.pkgs[pkgId].fail=`磁盘空间不足：安装峰值约需 ${needTxt}，当前可用 312 MB。已取消，未产生任何残留。`;rerenderAll();if(OB&&OB.step===3)obRender();return}
+ if(S.scenario==='cellular'&&!o.cellular){sheet({title:'蜂窝网络下载',msg:`${pk.name} 资产约 ${sizeText(pkgId,g)}，当前为蜂窝/计费网络。继续下载将消耗流量。`,acts:[{l:'继续下载（蜂窝）',k:'primary',act:'installGo',arg:pkgId+(g?'+g':'')},{gap:1,l:'等 Wi-Fi 再下',k:'secondary'}]});return}
+ S.pkgs[pkgId].fail=null;newJob('install',pkgId,{grammar:g,title:'正在安装'+pk.name});if(OB&&OB.step===3)obRender();else rerenderAll();
+}
+function startCompile(pkgId,typeId){dismissSheet();newJob('compile',pkgId,{type:typeId,title:'正在切换输入类型'});rerenderAll()}
+function startGrammar(cellular){
+ dismissSheet();
+ if(S.scenario==='disk'){toast('磁盘空间不足：语法模型约需 391 MB，当前可用 312 MB。已取消，未产生任何残留。');return}
+ if(S.scenario==='cellular'&&!cellular){sheet({title:'蜂窝网络下载',msg:`语法模型约 ${GRAMMAR.size}，当前为蜂窝/计费网络。继续下载将消耗流量。`,acts:[{l:'继续下载（蜂窝）',k:'primary',act:'grammarGo'},{gap:1,l:'等 Wi-Fi 再下',k:'secondary'}]});return}
+ newJob('grammar','wanxiang',{title:'正在下载语法模型'});rerenderAll();
+}
+function triggerCompileScenario(){const ins=inService();if(!ins){toast('先装一个方案包，再触发编译场景');return}const other=PKG[ins].types.find(t=>t.id!==S.types[ins]);startCompile(ins,other.id)}
+function licenseSheet(id,ob){
+ const pk=PKG[id],gOn=ob?OB.grammar:S.grammar.on;
+ const html=pk.grammar?`<div class="row" style="padding:12px 0;min-height:0"><div class="row-main"><div class="row-title">随包安装语法模型</div><div class="row-cap">~${GRAMMAR.size}，建议 Wi-Fi；不装不影响打字</div></div><button class="tgl ${gOn?'on':''}" data-act="${ob?'obGrammar':'tog'}" data-key="grammar.on" data-resheet="${ob?'licenseob':'license'}:${id}" aria-pressed="${gOn}"></button></div>`:'';
+ const msg=pk.grammar?'万象拼音（上游 amzxyz/rime-wanxiang）以 CC-BY-4.0 分发（下载即分发：本 App 为你从官方渠道获取并安装）。\n源码与署名：github.com/amzxyz/rime-wanxiang。\n许可全文将随安装内容落地（App Group 内 LICENSE）。':'rime-ice 以 GPL-3.0 分发（下载即分发：本 App 为你从官方渠道获取并安装）。\n源码：github.com/iDvel/rime-ice（nightly 构建，GitHub Releases）。\n许可全文随下载内容一同落地（App Group 内 LICENSE），也可在此查看。';
+ sheet({title:pk.license+' 条款确认',msg,html,acts:[{l:'同意并下载',k:'primary',act:ob?'obInstallGo':'installReq',arg:id},{l:'查看许可全文',k:'secondary',act:'licenseView',arg:id},{gap:1,l:'取消',k:'secondary'}]});
+}
+ACT.tog=el=>{const k=el.dataset.key.split('.');let o=S;for(let i=0;i<k.length-1;i++)o=o[k[i]];o[k[k.length-1]]=!o[k[k.length-1]];save();if(el.dataset.resheet){const [fn,arg]=el.dataset.resheet.split(':');({license:licenseSheet,licenseob:(a)=>licenseSheet(a,true)})[fn](arg)}else rerender()};
+Object.assign(ACT,{
+ installReq:el=>startInstall(el.dataset.arg),
+ installGo:el=>{const a=el.dataset.arg;startInstall(a.replace('+g',''),{cellular:true,grammar:a.endsWith('+g')})},
+ grammarGo:()=>startGrammar(true), licenseView:el=>{dismissSheet();push('license',el.dataset.arg)},
+ cancelJob:()=>cancelJob(), retryJob:()=>retryJob(),
+ compileGo:el=>{const [p,t]=el.dataset.arg.split(':');startCompile(p,t)},
+ typeTap:el=>{const id=el.dataset.pkg,t=el.dataset.arg;if(JOB||t===S.types[id])return;if(PKG[id].instant){S.types[id]=t;save();rerenderAll();toast('已切换为'+typeName(id,t)+'，打下一个词就用新方案')}else sheet({title:'切换输入类型',msg:`${typeName(id,t)} 需要重新编译词库，约 2–5 分钟，期间键盘只能打英文。现在切换？`,acts:[{l:'现在切换',k:'primary',act:'compileGo',arg:id+':'+t},{gap:1,l:'取消',k:'secondary'}]})},
+ pkgTap:el=>{const id=el.dataset.arg,st=S.pkgs[id].st;if(JOB||st==='inservice')return;if(st==='installed'){const prev=inService();if(prev)S.pkgs[prev].st='installed';S.pkgs[id].st='inservice';S.pkgs[id].since=S.pkgs[id].since||Date.now();save();rerender();toast('已切换到'+PKG[id].name+'，重新弹出键盘即生效');return}licenseSheet(id)},
+ checkUpdate:el=>{const id=el.dataset.arg;S.pkgs[id].check='checking';rerender();setTimeout(()=>{if(S.pkgs[id]){S.pkgs[id].check=null;save();rerenderAll();toast(PKG[id].name+'已是最新版本')}},1200)},
+ grammarAction:el=>{const a=el.dataset.arg;if(a==='dl')startGrammar(false);else if(a==='check'){S.grammar.check='checking';rerender();setTimeout(()=>{S.grammar.check=null;rerenderAll();toast('语法模型已是最新（LTS 2026-11-20）')},1200)}else if(a==='del')sheet({title:'删除语法模型',msg:`将删除语法模型文件与安装记录（~${GRAMMAR.size}），不影响在役方案包与词库；键盘回基线排序，之后可随时重新下载。`,acts:[{l:'删除模型',k:'destructive',act:'grammarDel'},{gap:1,l:'取消',k:'secondary'}]})},
+ grammarDel:()=>{dismissSheet();S.grammar.installed=false;S.grammar.on=true;save();rerenderAll();toast('语法模型已删除，键盘回基线排序')},
+});
+function openCover(step){OB={step:step||1,layout:S.layout||'26',pkg:'rime-ice',haptic:S.haptic||'off',grammar:true};cover.classList.add('show');obRender()}
+function closeCover(){cover.classList.remove('show')}
+function mini26(){const row=n=>`<div class="mr">${'<span class="mk"></span>'.repeat(n)}</div>`;return `<div class="mini26">${row(10)}${row(9)}${row(7)}<div class="mr"><span class="mk fn"></span><span class="mk sp"></span><span class="mk fn"></span></div></div>`}
+function mini9(){return `<div class="mini9">${['2','3','4','5','6','7','8','9','符'].map(l=>`<span class="k9">${l}</span>`).join('')}</div>`}
+function failCard(msg){return `<div class="card job"><div class="jhead">${svg('x')}<div><div class="jt">预检未通过</div><div class="js">${esc(msg)}</div></div></div></div>`}
+function obFootHTML(){
+ const fail=S.pkgs[OB.pkg].fail;
+ if(OB.step===1)return '<button class="btn primary" data-act="obNext">下一步</button><button class="btn text" data-act="obSkip">稍后在设置中安装</button>';
+ if(OB.step===2)return `<button class="btn primary" data-act="obInstall">开始装包 · 约 ${sizeText(OB.pkg,OB.pkg==='wanxiang'&&OB.grammar)}</button><button class="btn text" data-act="obSkip">稍后在设置中安装</button>`;
+ if(fail)return '<button class="btn primary" data-act="obRetry">重试</button><button class="btn text" data-act="obSkip">稍后在设置中安装</button>';
+ if(JOB)return '<button class="btn text" data-act="obBackground">在后台继续，先去看看</button>';
+ return '<button class="btn text" data-act="obSkip">稍后在设置中安装</button>';
+}
+function obFooter(){if(!OB||OB.step!==3)return;const f=cover.querySelector('.cfoot');if(f)f.innerHTML=obFootHTML()}
+function obRender(){
+ if(!OB)return;const pk=PKG[OB.pkg];let body='';
+ if(OB.step===1){body=`<div class="ob-step">1 / 3</div><h1 class="ob-title">先选键盘布局</h1><p class="ob-sub">选定后，只给你看这个布局相关的配置。之后可以随时改。</p><div class="opt ${OB.layout==='26'?'on':''}" data-act="obLayout" data-arg="26">${mini26()}<div><div class="ot">二十六键</div><div class="oc">全拼、双拼都在这个布局上</div></div></div><div class="opt ${OB.layout==='9'?'on':''}" data-act="obLayout" data-arg="9">${mini9()}<div><div class="ot">九宫格 ${pill()}</div><div class="oc">开发中。先按二十六键完成，就绪后在「键盘布局」里切换</div></div></div>${OB.layout==='9'?`<div class="banner dev" style="margin-top:16px">${svg('info','ic')}<div class="btxt">九宫格开发中，键盘当前仍按二十六键运行。下一步只列通用项与九宫格预告项。</div></div>`:''}`}
+ else if(OB.step===2){body=`<div class="ob-step">2 / 3</div><h1 class="ob-title">推荐配置</h1><p class="ob-sub">按「${OB.layout==='26'?'二十六键':'九宫格（开发中）'}」预选好了，都可以改。</p><div style="margin-top:14px">${card(row({title:'方案包',control:seg([['rime-ice','雾凇拼音'],['wanxiang','万象拼音']],OB.pkg,'obPkg')})+row({title:'输入类型',value:'全拼',cap:OB.pkg==='wanxiang'?'装好后可在 9 种输入类型里切换，切换需重新编译':'装好后可切到自然码双拼，即时生效'})+row({title:'触感反馈',lock:true,cap:S.fa?'已开启完全访问，选择后重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」；不开也能打字',control:seg(HAPTIC,OB.haptic,'obHaptic')})+(OB.layout==='9'?row({title:'九宫格首选上屏',value:'空格上屏',dev:true,act:'dev',arg:'九宫格首选上屏'}):'')+(OB.pkg==='wanxiang'?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(OB.grammar,'x').replace('data-act="tog"','data-act="obGrammar"')}):''))}</div><div class="infocard"><b>为什么要装包</b><br>词库不随 App 提供，安装包更小、许可更干净。下载后在设备上编译，几分钟，期间键盘只能打英文。装完即用，之后可随时换包或更新。</div>`}
+ else{const fail=S.pkgs[OB.pkg].fail;body=`<div class="ob-step">3 / 3</div><h1 class="ob-title">${JOB&&JOB.pkg===OB.pkg?'正在安装'+pk.name:fail?'装包未开始':'安装'+pk.name}</h1><p class="ob-sub">装完会自动收起。离开本页也会继续。</p><div style="margin-top:14px">${JOB&&JOB.pkg===OB.pkg?jobHTML():fail?failCard(fail):''}</div>`}
+ cover.innerHTML=`<div class="cbody">${body}</div><div class="cfoot">${obFootHTML()}</div>`;
+}
+Object.assign(ACT,{
+ obLayout:el=>{OB.layout=el.dataset.arg;obRender()},
+ obPkg:el=>{OB.pkg=el.dataset.val;obRender()},
+ obHaptic:el=>{if(!S.fa){faSheet();return}OB.haptic=el.dataset.val;obRender()},
+ obGrammar:el=>{OB.grammar=!OB.grammar;if(el.dataset.resheet)licenseSheet(el.dataset.resheet.split(':')[1],true);else obRender()},
+ obNext:()=>{OB.step=2;obRender()},
+ obSkip:()=>{S.onboarded=true;S.layout=OB.layout;save();closeCover();rerenderAll();toast('跳过后键盘先按英文直通使用，装包前不出中文候选')},
+ obInstall:()=>{S.layout=OB.layout;S.haptic=OB.haptic;licenseSheet(OB.pkg,true)},
+ obInstallGo:()=>{OB.step=3;obRender();startInstall(OB.pkg,{grammar:OB.pkg==='wanxiang'&&OB.grammar});obRender()},
+ obRetry:()=>{S.pkgs[OB.pkg].fail=null;startInstall(OB.pkg,{grammar:OB.pkg==='wanxiang'&&OB.grammar});obRender()},
+ obBackground:()=>{S.onboarded=true;save();closeCover();rerenderAll()},
+});
+PAGES.layout={render(){
+ const t9=S.layout==='9';
+ return nav('键盘布局')+head('键盘布局','决定按键排列。选定后只显示与该布局相关的设置。')+(t9?`<div class="banner dev">${svg('info','ic')}<div class="btxt">九宫格开发中，键盘当前仍按二十六键运行。以下九宫格项就绪后自动生效。</div></div>`:'')+content(glabel('布局')+card(row({title:'布局',cap:'选定后只显示该布局相关的设置',control:seg([['26','二十六键'],['9','九宫格','九宫格']],S.layout,'seg','layout')})))+content(glabel(t9?'九宫格':'二十六键')+card(t9?row({title:'九宫格首选上屏',value:'空格上屏',dev:true,act:'dev',arg:'九宫格首选上屏'})+row({title:'九宫格分词符',value:'开',dev:true,act:'dev',arg:'九宫格分词符'}):row({title:'键序预设',value:'QWERTY',dev:true,act:'dev',arg:'键序预设'})))+content(glabel('通用')+card(row({title:'默认键盘',cap:'键盘弹出与切换输入框时先落中文还是英文。手动切回的布局保留到键盘收起。',control:seg([['zh','中文'],['en','英文']],S.defaultKb,'seg','defaultKb')})+row({title:'键盘高度',value:'标准',dev:true,act:'dev',arg:'键盘高度'})))+foot('键盘高度随布局生效，不改按键比例。');
+}};
+PAGES.keys={render(){
+ const faCap=S.fa?'已开启完全访问。重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」才会生效；不开也能打字';
+ return nav('按键与手势')+head('按键与手势','手感与手势。带锁标的项需要系统授予「允许完全访问」。')+content(glabel('按键')+card(row({title:'按键触感反馈',lock:!S.fa,cap:faCap,control:seg(HAPTIC,S.haptic,'haptic')})+row({title:'按键音',value:'关',dev:true,act:'dev',arg:'按键音'})))+content(glabel(S.layout==='26'?'手势 · 二十六键':'手势 · 通用')+card(row({title:'手势预设',value:'默认预设',dev:true,act:'dev',arg:'手势预设'})+(S.layout==='26'?row({title:'上划输入符号',value:'开',dev:true,act:'dev',arg:'上划输入符号'})+row({title:'长按字母变音',value:'关',dev:true,act:'dev',arg:'长按字母变音'}):'')+row({title:'双指触摸板光标',value:'开',dev:true,act:'dev',arg:'双指触摸板光标'})+row({title:'Shift 双击锁定',value:'开',dev:true,act:'dev',arg:'Shift 双击锁定'})))+foot('当前手势：长按空格移动光标 · 长按回车换行 · 候选栏左滑滚动、右侧展开 · ⌫ 上滑整词删除 · 候选区次选 / 三选滑动上屏');
+}};
+ACT.push=el=>{const [p,a]=el.dataset.arg.split(':');push(p,a)};
+function pkgRows(){
+ let h='';for(const id of Object.keys(PKG)){const st=S.pkgs[id],pk=PKG[id];
+  if(st.st==='inservice'){const d=st.since?sinceDays(st.since):42;h+=`<div class="row tappable has-tile" data-act="push" data-arg="detail:${id}">${tile('scheme',1)}<div class="row-main"><div class="row-title">${pk.name} ${chip()}</div><div class="row-cap">${st.ver||pk.ver} · 在役第 ${d} 天</div></div><div class="row-trail"><span class="row-val">${typeName(id,S.types[id])}</span>${svg('chev','chev')}</div></div>`}
+  else{const cap=st.fail?`失败：${esc(st.fail)}`:st.st==='installed'?`已下载 · ${st.ver||pk.ver} · 点按切换使用（秒级，不重编译）`:`未下载 · 约 ${sizeText(id,true)} · ${pk.license} · 点按安装并在役`;h+=row({tile:'scheme',title:pk.name,cap,value:st.st==='installed'?'已下载':'',act:JOB?null:'pkgTap',arg:id,chev:!JOB})}}
+ return h;
+}
+PAGES.scheme={render(){
+ const ins=inService(),busy=!!JOB;
+ let h=nav('输入方案')+head('输入方案','同一时刻只有一个包在役。已下载的包秒级切回，不重编译。');
+ if(JOB)h+=`<div style="margin:14px 16px 0">${jobHTML()}</div>`;
+ h+=content(glabel('方案包')+card(pkgRows()));
+ if(ins)h+=content(glabel('输入类型')+card(PKG[ins].types.map(t=>row({title:t.n,cap:t.id===S.types[ins]?(PKG[ins].instant?'当前使用。切换即时生效，打下一个词就用新方案':'当前使用。切换需重新编译词库，约 2–5 分钟，期间键盘只能打英文'):undefined,radio:t.id===S.types[ins],act:busy||t.id===S.types[ins]?null:'typeTap',arg:t.id}).replace('data-act="typeTap"',`data-act="typeTap" data-pkg="${ins}"`)).join('')));
+ const g=S.grammar,gState=g.check==='checking'?'检查中…':g.installed?'已装':'未装';
+ const gBtn=g.installed?`<button class="btn secondary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="check">检查</button>`:`<button class="btn primary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="dl">下载</button>`;
+ h+=content(glabel('语法')+card(row({title:'语法模型',cap:'万象 LTS 语法模型 '+GRAMMAR.ver+' · 约 '+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',value:gState,control:gBtn})+(g.installed?row({title:'语法排序',cap:'按上下文搭配重排候选。下次键盘唤起生效，无需重新部署',control:tog(g.on,'grammar.on')}):'')+(g.installed?row({title:'删除语法模型',act:'grammarAction',arg:'del',value:'~'+GRAMMAR.size}):'')));
+ h+=content(glabel('更多')+card((ins==='wanxiang'?row({title:'辅助码',value:'开',dev:true,act:'dev',arg:'辅助码'}):'')+row({title:'模糊音',value:'全关',dev:true,act:'dev',arg:'模糊音'})+row({title:'简繁切换',value:'简体',dev:true,act:'dev',arg:'简繁切换'})+row({title:'联想词',value:'开',dev:true,act:'dev',arg:'联想词'})+row({title:'自定义方案包导入',cap:'暂不支持 yaml / lua 导入',dev:true,act:'dev',arg:'自定义方案包导入'})));
+ return h+foot('已下载的其他包保留在设备上，旧版本只在新版下载成功后清除。下载后设备端编译（分钟级）期间键盘英文直通。键盘内输入 /zrm 之类的切换指令不会生效，请在 App 内切换。');
+}};
+PAGES.detail={render(arg){
+ const id=(arg||'').split(':')[1]||'rime-ice',st=S.pkgs[id],pk=PKG[id];
+ const status=st.st==='inservice'?'在役 · '+(st.ver||pk.ver):st.st==='installed'?'已下载 · '+(st.ver||pk.ver):st.fail?'失败：'+esc(st.fail):'未下载';
+ const manage=JOB?row({title:'安装进行中',value:'回上一页看步骤'}):st.st!=='none'?row({title:'检查版本',act:'checkUpdate',arg:id,value:st.check==='checking'?'检查中…':''}):row({title:'下载并使用',act:'pkgTap',arg:id,value:sizeText(id,true)});
+ return nav(pk.name)+head(pk.name,pk.desc)+content(glabel('状态')+card(row({title:'包',value:pk.src})+row({title:'状态',value:status})+row({title:'许可',value:pk.license})+row({title:st.st==='none'?'安装峰值预检':'占用',value:st.st==='none'?'约 '+pk.peak+' MB':'下载 '+pk.size+' · 解压 '+pk.unzip})))+content(glabel('管理')+card(manage+(pk.grammar?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(S.grammar.on,'grammar.on')}):'')+row({title:'查看许可全文',act:'push',arg:'license:'+id,chev:true})))+foot(st.fail?esc(st.fail):'装好后回到「输入方案」点该包即可秒级切换使用。旧版本只在新版下载成功后清除。');
+}};
+const LIC={
+ 'rime-ice':{t:'GPL-3.0',body:'GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n\nCopyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n……（全文随下载内容落地于 App Group 内 LICENSE，此处为节选）\n\n——\n上游源码：https://github.com/iDvel/rime-ice（nightly 构建）'},
+ wanxiang:{t:'CC-BY-4.0',body:'Creative Commons Attribution 4.0 International (CC BY 4.0)\n\n你可以自由地：\n· 共享 — 在任何媒介以任何形式复制、发行本作品\n· 改编 — 修改、转换或以本作品为基础进行创作\n在任何用途下，甚至商业性使用。\n\n惟须遵守下列条件：\n· 署名 — 你必须给出适当的署名，提供指向本许可协议的链接，同时标明是否（对原作）作了修改。你可以用任何合理的方式来署名，但不得以任何方式暗示许可人为你或你的使用背书。\n· 没有附加限制 — 你不得适用法律术语或技术措施从而限制其他人做许可协议允许的事情。\n\n……（全文随安装内容落地于 App Group 内 LICENSE，此处为要点摘录）\n\n——\n上游源码：https://github.com/amzxyz/rime-wanxiang（tag 构建）'}};
+PAGES.license={render(arg){const id=(arg||'').split(':')[1]||'rime-ice',l=LIC[id];return nav(l.t)+head(l.t,id==='rime-ice'?'雾凇拼音 · 随下载内容一同落地':'万象拼音 · 随安装内容落地')+`<div class="lic">${esc(l.body)}</div>`}};
+PAGES.candidates={render(){return nav('候选栏')+head('候选栏','拼音串显示在哪里、一屏几个候选。')+content(glabel('组码显示')+card(row({title:'在输入框内显示拼音',cap:'开启时拼音串直接显示在输入框内，同系统键盘；关闭或密码框时显示在候选栏。组码清空后的下一词起生效。',control:tog(S.inline,'inline')})))+content(glabel('候选')+card(row({title:'候选数量',value:'4',dev:true,act:'dev',arg:'候选数量'})+row({title:'还原全拼显示',value:'关',dev:true,act:'dev',arg:'还原全拼显示'})))+foot('候选栏右侧展开完整候选面板，展开后可连续滚动、懒拉窗口。')}};
+PAGES.punct={render(){return nav('标点与符号')+head('标点与符号','中文态全角成对，英文态一律半角。')+content(card(row({title:'中文态全角标点',value:'开',dev:true,act:'dev',arg:'中文态全角标点'})+row({title:'成对符号自动补全',value:'开',dev:true,act:'dev',arg:'成对符号自动补全'})+row({title:'双击空格输入句号',value:'开',dev:true,act:'dev',arg:'双击空格输入句号'})+row({title:'符号页常用符号',value:'默认集',dev:true,act:'dev',arg:'符号页常用符号'})))+foot('中文态标点：，。？！、；：“”‘’（）《》〈〉【】——…… · 123 页与 #+= 页含中文常用符号。')}};
+PAGES.appearance={render(){
+ const sw=[['素白','#FFFFFF','#D6D6DB'],['石墨','#3A3A41','#141417'],['夜','#141417','#26262A']];
+ return nav('外观')+head('外观','键盘的键帽配色。主 App 当前跟随系统深色模式。')+content(glabel('主 App')+card(row({title:'主 App 深色模式',value:'跟随系统',dev:true,act:'dev',arg:'主 App 深色模式'})))+content(glabel('键盘')+card(row({title:'键盘主题',value:'素白',dev:true,act:'dev',arg:'键盘主题'})+`<div class="swatches">${sw.map((s,i)=>`<div class="swatch"><div class="kb" style="--sw-bg:${s[1]};--sw-k:${s[2]}"><i></i><i></i><i style="flex:3"></i></div><div class="sl">${s[0]}${i===0?' · 当前':''}</div></div>`).join('')}</div>`))+foot('键盘主题开发中，预计随 V1.1 提供。');
+}};
+PAGES.clipboard={render(){return nav('剪贴板')+head('剪贴板','复制过的文字与常用短语，只存本机。')+`<div class="banner dev">${svg('info','ic')}<div class="btxt">剪贴板开发中 · 当前版本不读取剪贴板。以下为完成后的样子。</div></div>`+content(glabel('剪贴板')+card(row({title:'剪贴板历史',lock:true,cap:'需允许完全访问。iOS 只允许开了完全访问的键盘读取剪贴板。内容只存本机，退出即清',value:'关',dev:true,act:'dev',arg:'剪贴板历史'})+row({title:'常用短语',cap:'在主 App 里编辑，键盘只读，不需要完全访问',value:'空',dev:true,act:'dev',arg:'常用短语'})))+`<div class="empty" style="margin:0 16px">${svg('clip')}<div class="et">还没有内容</div><div>开启剪贴板历史后，复制过的文字会出现在这里。</div><button class="btn secondary" data-act="dev" data-arg="常用短语">添加常用短语</button></div>`+foot('剪贴板内容不会离开设备。')}};
+PAGES.stats={render(){
+ const bars=[38,52,44,61,58,70,64,77,72,85,80,92];
+ return nav('统计')+head('统计','只在本机记录，不上传。')+`<div class="banner dev">${svg('info','ic')}<div class="btxt">输入统计开发中 · 当前版本不记录任何数据。以下是完成后的样子。</div></div><div class="card bignum" style="margin:12px 16px 0"><div class="v">1,284</div><div class="l">今日字数 · 在役第 42 天</div></div><div class="statgrid" style="margin-top:12px"><div class="statbox"><div class="v">7,930</div><div class="l">本周字数</div></div><div class="statbox"><div class="v">48,210</div><div class="l">累计字数</div></div><div class="statbox"><div class="v">87%</div><div class="l">首选命中率 · 第一候选就是想要的词</div></div><div class="statbox"><div class="v">12</div><div class="l">连续使用周数</div></div></div><div class="card" style="margin:12px 16px 0;padding:14px 16px"><div class="row-cap" style="margin:0">近 12 周字数</div><div class="chart">${bars.map(b=>`<i style="height:${b}%"></i>`).join('')}</div></div><div class="milestone" style="margin-top:12px">距离累计 5 万字还差 1,790 字。</div>`+content(glabel('设置')+card(row({title:'输入统计',value:'关',dev:true,act:'dev',arg:'输入统计'})+row({title:'清除统计数据',dev:true,act:'dev',arg:'清除统计数据'})))+foot('统计只存本机，不上传，不用于推荐。关闭后删除已有记录。');
+}};
+PAGES.privacy={render(){return nav('数据与隐私')+head('数据与隐私','引擎离线，键盘无网络，输入内容不上传。')+content(glabel('系统授权')+card(row({title:'允许完全访问',cap:S.fa?'已开启。触感反馈与持久化可用':'只解锁触感反馈与以后的持久化。不开也能完整打字',value:S.fa?'已开启':'未开启',act:'faTap',chev:true})))+content(glabel('用户词')+card(row({title:'用户词',cap:'仅本次打字会话有效。未开启完全访问时，自造词与词频不跨会话保留',value:'会话级'})+row({title:'用户词持久化',lock:true,cap:'开启后自造词跨会话保留',value:'关',dev:true,act:'dev',arg:'用户词持久化'})+row({title:'iCloud 同步',lock:true,cap:'同步用户词与设置，不同步统计',value:'关',dev:true,act:'dev',arg:'iCloud 同步'})))+content(glabel('数据')+card(row({title:'删除已下载的方案包',cap:'删除后可随时重新下载；在役包需先切换',dev:true,act:'dev',arg:'删除已下载的方案包'})+row({title:'自定义配置导入',cap:'暂不支持 yaml / lua 导入',dev:true,act:'dev',arg:'自定义配置导入'})+row({title:'隐私说明',act:'push',arg:'privacyNote',chev:true})))+foot('无需账户，无分析 SDK。')}};
+ACT.faTap=()=>faSheet();
+PAGES.privacyNote={render(){return nav('隐私说明')+head('隐私说明','蜻蜓不收集、不上传任何输入内容。')+content(card(['引擎在本机运行，不联网。','键盘扩展没有网络权限，输入内容不会离开设备。','主 App 只在下载或更新方案包、语法模型时连接 GitHub Releases；除此之外没有网络请求。','不需要账户，没有分析 SDK，没有广告。','输入统计（开发中）只存本机，不上传。','「允许完全访问」由系统控制，App 无法自行开启；不开也能完整打字。'].map(t=>row({title:t})).join('')))+foot('隐私清单随 App 与键盘扩展各自附带（PrivacyInfo.xcprivacy）。')}};
+PAGES.about={render(){const ins=inService();return nav('关于')+`<div class="aboutlogo">${svg('wing')}<div class="an">蜻蜓</div><div class="av">1.0 (0) · iOS 第三方中文 Rime 输入法</div></div>`+content(card(row({title:'版本',value:'1.0 (0)'})+row({title:'引擎',value:'librime · 进程内 · 离线'})+row({title:'在役包',value:ins?PKG[ins].name+(S.pkgs[ins].ver?' · '+S.pkgs[ins].ver:''):'未安装',act:ins?'push':null,arg:ins?'detail:'+ins:undefined,chev:!!ins})+row({title:'方案包许可全文',act:'push',arg:'license:'+(ins||'rime-ice'),chev:true})+row({title:'开源组件致谢',cap:'librime、语法插件、rime-ice、万象拼音、语法模型',dev:true,act:'dev',arg:'开源组件致谢'})+row({title:'反馈问题',cap:'GitHub Issues',dev:true,act:'dev',arg:'反馈问题'})+row({title:'重看首启引导',cap:'重新走一遍布局选择与推荐配置，不影响已装内容',dev:true,act:'dev',arg:'重看首启引导'})))+foot('词库不随 App 提供，按需下载。')}};
+applyChrome();fit();push('home');if(!S.onboarded)openCover();
+</script>
+</body>
+</html>
