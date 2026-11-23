@@ -24,7 +24,7 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .stage{display:flex;justify-content:center;padding:24px 16px 40px}
 .wrap{position:relative}
 .phone{width:390px;height:844px;padding:10px;border-radius:54px;background:#0b0b0c;box-shadow:0 0 0 2px #2a2a2e,0 30px 80px rgba(0,0,0,.35);transform-origin:top left}
-.screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body)}
+.screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:var(--fs-body);line-height:var(--lh-body);--tab-bg:var(--bg)}
 .island{position:absolute;left:50%;top:11px;width:118px;height:33px;margin-left:-59px;border-radius:20px;background:#000;z-index:21}
 .sbar{position:absolute;top:0;left:0;right:0;height:50px;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:4px 30px 0 34px;font-size:15px;font-weight:600;pointer-events:none}
 .sbar svg{width:18px;height:12px}
@@ -211,6 +211,41 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .radio{flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;border:1.5px solid var(--text-3);color:transparent}
 .radio.on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
 .radio svg{width:12px;height:12px}
+.page.root{padding-top:50px}
+.page{padding-bottom:100px}
+.tabbar{position:absolute;left:0;right:0;bottom:34px;z-index:12;display:flex;padding-top:6px;background:var(--tab-bg);box-shadow:0 -1px 0 var(--line)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:49px;padding:6px 0 0;border:0;background:none;color:var(--text-2);font:10px var(--font-body);cursor:pointer}
+.tab svg{width:24px;height:24px}
+.tab.on{color:var(--primary)}
+.tabbar .pad{position:absolute;left:0;right:0;bottom:-34px;height:34px;background:var(--tab-bg)}
+.cat{padding:14px 4px 6px;font-size:12px;color:var(--text-2);letter-spacing:.02em}
+.row.catrow{min-height:0;padding:12px 16px 4px}
+.inscard{margin:12px 16px 0;padding:16px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);cursor:pointer}
+.inscard:active{background:var(--press)}
+.inscard .h{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:600}
+.inscard .h>div{flex:1;min-width:0}
+.inscard .d{margin-top:2px;font-size:12px;font-weight:400;color:var(--text-2)}
+.inscard .kv{display:flex;gap:12px;margin-top:14px}
+.inscard .kv>div{flex:1}
+.inscard .k{font-size:11px;color:var(--text-3)}
+.inscard .v{margin-top:2px;font-size:14px;font-weight:500;white-space:nowrap}
+.chips{display:flex;gap:10px;padding:14px 16px}
+.chipx{flex:1;display:flex;flex-direction:column;align-items:flex-start;padding:10px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit;color:var(--text);text-align:left}
+.chipx.on{border-color:var(--primary);background:var(--primary-soft)}
+.chipx .dots{display:flex;gap:4px;margin-bottom:8px}
+.chipx .dots i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.chipx .n{font-size:13px;font-weight:600}
+.chipx .m{margin-top:2px;font-size:11px;color:var(--text-2)}
+.icons{display:flex;gap:14px;padding:14px 16px}
+.iconx{position:relative;width:58px;height:58px;display:grid;place-items:center;border-radius:14px;color:#fff;cursor:pointer}
+.iconx svg{width:34px;height:34px}
+.iconx.on::after{content:'';position:absolute;inset:-6px;border:2px solid var(--primary);border-radius:19px}
+.iconl{margin-top:7px;font-size:11px;color:var(--text-2);text-align:center}
+.pk-h{padding:12px 0 4px;font-size:12px;color:var(--text-2)}
+.pk-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.pk-row:last-child{border-bottom:0}
+.pk-row .row-title{font-size:15px}
+.pk-row.on .row-title{color:var(--primary)}
 /* @@CSS@@ */
 </style>
 </head>
@@ -249,6 +284,7 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 <div class="island"></div>
 <div class="sbar"><span>9:41</span><svg viewBox="0 0 26 14"><use href="#i-status"/></svg></div>
 <div class="viewport" id="viewport"></div>
+<div class="tabbar" id="tabbar"></div>
 <div class="cover" id="cover"></div>
 <div class="layer" id="layer"></div>
 <div class="toast" id="toast"></div>
@@ -280,12 +316,17 @@ const typeName=(p,t)=>(PKG[p].types.find(x=>x.id===t)||PKG[p].types[0]).n;
 const sizeText=(p,g)=>PKG[p].size+(PKG[p].grammar&&g?' + 语法 '+GRAMMAR.size:'');
 const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 const sinceDays=t=>Math.max(1,Math.floor((Date.now()-t)/864e5)+1);
-const PAGES={}, stack=[];
-function push(id,arg){const p=PAGES[id];if(!p)return;const el=document.createElement('div');el.className='page enter'+(id==='home'?' home':'');el.dataset.page=id;el.innerHTML=p.render(arg);viewport.appendChild(el);const top=stack[stack.length-1];if(top){top.el.classList.add('under');top.el.style.pointerEvents='none'}stack.push({id,el,arg});el.addEventListener('scroll',()=>el.classList.toggle('collapsed',el.scrollTop>34),{passive:true});requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('enter')))}
-function pop(){if(stack.length<2)return;const top=stack.pop(),under=stack[stack.length-1];top.el.classList.add('enter');under.el.classList.remove('under');under.el.style.pointerEvents='';const el=top.el;setTimeout(()=>el.remove(),320)}
-function popAll(){while(stack.length>1){stack.pop().el.remove()}const u=stack[0];if(u){u.el.classList.remove('under');u.el.style.pointerEvents=''}}
-function rerender(){const top=stack[stack.length-1];if(!top)return;const st=top.el.scrollTop;top.el.innerHTML=PAGES[top.id].render(top.arg);top.el.scrollTop=st;top.el.classList.toggle('collapsed',st>34)}
-function rerenderAll(){stack.forEach(p=>{p.el.innerHTML=PAGES[p.id].render(p.arg)});const top=stack[stack.length-1];if(top)top.el.classList.remove('under')}
+const PAGES={}, TABS=['keyboard','packages','personal','about'], stacks={keyboard:[],packages:[],personal:[],about:[]}, TABICON={keyboard:'layout',packages:'wing',personal:'appearance',about:'info'}, TABNAME={keyboard:'键盘',packages:'方案包',personal:'个性化',about:'关于'};
+let cur='keyboard';
+const tabbar=$('#tabbar');
+function renderTabbar(){tabbar.innerHTML=TABS.map(t=>`<button class="tab ${t===cur?'on':''}" data-act="tab" data-arg="${t}">${svg(TABICON[t])}<span>${TABNAME[t]}</span></button>`).join('')+'<div class="pad"></div>'}
+function mount(el){el.addEventListener('scroll',()=>el.classList.toggle('collapsed',el.scrollTop>34),{passive:true});viewport.appendChild(el);requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('enter')))}
+function push(id,arg){const p=PAGES[id];if(!p)return;const st=stacks[cur],root=st.length===0;const el=document.createElement('div');el.className='page'+(root?' root':' enter');el.dataset.page=id;el.innerHTML=p.render(arg);const top=st[st.length-1];if(top){top.el.classList.add('under');top.el.style.pointerEvents='none'}st.push({id,el,arg});mount(el)}
+function pop(){const st=stacks[cur];if(st.length<2)return;const top=st.pop(),under=st[st.length-1];top.el.classList.add('enter');under.el.classList.remove('under');under.el.style.pointerEvents='';const el=top.el;setTimeout(()=>el.remove(),320)}
+function popAll(){Object.values(stacks).forEach(st=>{while(st.length>1)st.pop().el.remove();const u=st[0];if(u){u.el.classList.remove('under');u.el.style.pointerEvents=''}})}
+function switchTab(t){if(!stacks[t]||t===cur&&stacks[t].length)return;const prev=stacks[cur][stacks[cur].length-1];if(prev)prev.el.style.display='none';cur=t;if(!stacks[t].length)push(t);else stacks[t][stacks[t].length-1].el.style.display='';renderTabbar()}
+function rerender(){const top=stacks[cur][stacks[cur].length-1];if(!top)return;const st=top.el.scrollTop;top.el.innerHTML=PAGES[top.id].render(top.arg);top.el.scrollTop=st;top.el.classList.toggle('collapsed',st>34)}
+function rerenderAll(){Object.values(stacks).forEach(st=>st.forEach(p=>{p.el.innerHTML=PAGES[p.id].render(p.arg)}))}
 function refreshLive(){$$('[data-joblive]').forEach(el=>{el.outerHTML=statusHTML()})}
 const nav=(title,right)=>`<div class="nav"><button class="back" data-act="back">${svg('back')}返回</button><div class="nt">${title}</div>${right||''}</div>`;
 const head=(title,sub)=>`<div class="phead"><div class="ltitle">${title}</div>${sub?`<div class="lsub">${sub}</div>`:''}</div>`;
@@ -348,10 +389,19 @@ function tryCard(){
  return `<div class="trycard" data-act="tryOpen"><div style="flex:1"><div class="tt">试打</div><div class="tc">换包或切类型后验证</div></div><div class="fld" style="max-width:150px">在这里试打一句…</div></div>`;
 }
 function bcard(id,t,c){return `<div class="bcard" data-act="push" data-arg="${id}">${tile(id,1)}<div class="t">${t}</div><div class="c">${c}</div></div>`}
-PAGES.home={render(){
- const ins=inService(),hapticTxt=HAPTIC.find(h=>h[0]===S.haptic)[1];
- return `<div class="ltitle" style="padding-top:12px">蜻蜓</div>${statusHTML()}${tryCard()}<div class="glabel" style="padding-top:18px">个性化</div><div class="bgrid">${bcard('layout','键盘布局',(S.layout==='26'?'二十六键':'九宫格')+' · 默认'+(S.defaultKb==='zh'?'中文':'英文'))}${bcard('scheme','输入方案',ins?PKG[ins].name+' · '+typeName(ins,S.types[ins]):'未装包 · 去安装')}${bcard('keys','按键与手势','触感反馈 · '+hapticTxt+(S.fa?'':' · 需完全访问'))}${bcard('appearance','外观','跟随系统 · 2 项开发中')}</div><div class="glabel">更多</div>${content(card(row({tile:'cand',title:'候选栏',value:S.inline?'显示拼音 · 开':'显示拼音 · 关',act:'push',arg:'candidates'})+row({tile:'punct',title:'标点与符号',value:'4 项开发中',act:'push',arg:'punct'})+row({tile:'clip',title:'剪贴板',value:'开发中',act:'push',arg:'clipboard'})+row({tile:'stats',title:'统计',value:'开发中',act:'push',arg:'stats'})+row({tile:'privacy',title:'数据与隐私',value:S.fa?'完全访问 · 已开启':'完全访问 · 未开启',act:'push',arg:'privacy'})+row({tile:'about',title:'关于',value:'1.0',act:'push',arg:'about'})))}${foot('蜻蜓 1.0 · 词库不随 App 提供，按需下载 · 引擎在本机运行，不联网')}`;
-}};
+TILES.cand={h:225,i:'cand'};TILES.packages={h:165,i:'wing'};
+PKG['rime-ice'].cat='拼音';PKG.wanxiang.cat='拼音';
+const PLANNED=[['拼音','luna','朙月拼音','Rime 经典全拼，含简化字模式'],['拼音','terra','地球拼音','带声调全拼'],['拼音','pinyin_simp','袖珍简化字拼音','大词库简化字拼音'],['双拼','flypy','小鹤双拼','小鹤音形，单独成包'],['双拼','mspy','微软双拼','微软拼音双拼键位'],['双拼','sogou','搜狗双拼','搜狗拼音双拼键位'],['形码','wubi86','五笔 86','86 版五笔字形'],['形码','wubi_pinyin','五笔·拼音','五笔与拼音混输'],['形码','cangjie5','仓颉','仓颉五代，繁体'],['形码','quick5','速成','仓颉速成，繁体'],['方言与其他','jyutping','粤拼','粤语罗马字拼音'],['方言与其他','wugniu','吴语','吴语拼音'],['方言与其他','bopomofo','注音','注音符号输入'],['方言与其他','emoji','Emoji','表情符号输入']];
+const CATS=['拼音','双拼','形码','方言与其他'];
+function groupedPackages(recommend){const by={};Object.keys(PKG).forEach(id=>{(by[recommend?'推荐':PKG[id].cat]??=[]).push(id)});PLANNED.forEach(p=>{(by[p[0]]??=[]).push(p)});return by}
+function deployCard(){const ins=inService(),eng=JOB?'编译中':ins?'就绪':'未初始化',dep=JOB?'已耗时 '+fmt(JOB.elapsed):ins?'上次部署 '+new Date(S.pkgs[ins].since||Date.now()).toLocaleDateString('zh-CN'):'—';return `<div class="cat">部署状态</div>${content(card(row({title:'引擎',value:eng})+row({title:'在役包',value:ins?PKG[ins].name:'无'})+row({title:'部署',value:dep})))}${JOB?`<div style="margin:12px 16px 0">${jobHTML()}</div>`:''}`}
+function inServiceCard(id){const st=S.pkgs[id],pk=PKG[id],d=st.since?sinceDays(st.since):42;return `<div class="cat">在役</div><div class="inscard" data-act="push" data-arg="detail:${id}"><div class="h">${tile('packages',1)}<div><div>${pk.name}</div><div class="d">${pk.desc}</div></div>${chip()}</div><div class="kv"><div><div class="k">输入类型</div><div class="v">${typeName(id,S.types[id])}</div></div><div><div class="k">版本</div><div class="v">${st.ver||pk.ver}</div></div><div><div class="k">在役</div><div class="v">第 ${d} 天</div></div></div></div>`}
+function pkgListRows(){let h='';const by=groupedPackages(false);for(const c of CATS){const items=by[c]||[];if(!items.length)continue;h+=`<div class="row catrow"><div class="row-main"><div class="row-title" style="font-size:12px;color:var(--text-2);font-weight:500">${c}</div></div></div>`;for(const it of items){if(typeof it==='string'){const st=S.pkgs[it],pk=PKG[it];if(st.st==='inservice')h+=`<div class="row tappable has-tile" data-act="push" data-arg="detail:${it}">${tile('packages')}<div class="row-main"><div class="row-title">${pk.name} ${chip()}</div><div class="row-cap">${st.ver||pk.ver} · 在役第 ${st.since?sinceDays(st.since):42} 天</div></div>${svg('chev','chev')}</div>`;else h+=row({tile:'packages',title:pk.name,cap:st.fail?`失败：${esc(st.fail)}`:st.st==='installed'?'已下载 · 点按切换使用（秒级，不重编译）':`约 ${sizeText(it,true)} · ${pk.license} · 点按安装并在役`,value:st.st==='installed'?'已下载':'',act:JOB?null:'pkgTap',arg:it,chev:!JOB})}else h+=row({title:it[2],cap:it[3],value:'未上架',dev:true,act:'dev',arg:it[2]})}}return h}
+function pickerSheet(){let html='';const by=groupedPackages(true);for(const c of ['推荐',...CATS]){const items=by[c]||[];if(!items.length)continue;html+=`<div class="pk-h">${c}</div>`;for(const it of items){if(typeof it==='string'){const pk=PKG[it];html+=`<div class="pk-row ${OB.pkg===it?'on':''}" data-act="obPick" data-arg="${it}"><div class="row-main"><div class="row-title">${pk.name}</div><div class="row-cap">${pk.desc} · 约 ${sizeText(it,true)} · ${pk.license}</div></div><span class="radio ${OB.pkg===it?'on':''}">${svg('check')}</span></div>`}else html+=`<div class="pk-row dev" data-act="dev" data-arg="${it[2]}"><div class="row-main"><div class="row-title">${it[2]}</div><div class="row-cap">${it[3]}</div></div>${pill()}</div>`}}sheet({title:'选择方案包',html,acts:[{l:'取消',k:'secondary'}]})}
+PAGES.keyboard={render(){const hapticTxt=HAPTIC.find(h=>h[0]===S.haptic)[1];return `<div class="ltitle" style="padding-top:12px">键盘</div>${statusHTML()}${tryCard()}<div class="glabel" style="padding-top:18px">打字</div><div class="bgrid">${bcard('layout','键盘布局',(S.layout==='26'?'二十六键':'九宫格')+' · 默认'+(S.defaultKb==='zh'?'中文':'英文'))}${bcard('cand','候选栏',S.inline?'显示拼音 · 开':'显示拼音 · 关')}${bcard('keys','按键与手势','触感反馈 · '+hapticTxt)}${bcard('punct','标点与符号','4 项开发中')}</div><div class="glabel">输入辅助</div>${content(card(row({tile:'clip',title:'剪贴板',value:'开发中',act:'push',arg:'clipboard'})))}${foot('当前手势：长按空格移动光标 · 长按回车换行 · 候选栏左滑滚动、右侧展开 · ⌫ 上滑整词删除')}`}};
+PAGES.packages={render(){const ins=inService();return `<div class="ltitle" style="padding-top:12px">方案包</div>${ins?'':statusHTML()}${deployCard()}${ins?inServiceCard(ins):''}<div class="cat">全部方案包</div>${content(card(pkgListRows()))}${foot('同一时刻只有一个包在役。已下载的包秒级切回，不重编译；旧版本只在新版下载成功后清除。标「未上架」的开源方案在开发中，当前版本不能安装。')}`}};
+Object.assign(ACT,{tab:el=>switchTab(el.dataset.arg),openPicker:()=>pickerSheet(),obPick:el=>{OB.pkg=el.dataset.arg;OB.grammar=true;dismissSheet();obRender()}});
+ACT.goJob=()=>{if(JOB)openCover(3);else if(!inService())openCover(2);else switchTab('packages')};
 Object.assign(ACT,{tryOpen:()=>{S.tryOpen=true;rerender()},tryClose:()=>{S.tryOpen=false;save();rerender()}});
 screen.addEventListener('input',e=>{if(e.target.hasAttribute&&e.target.hasAttribute('contenteditable')){S.tryText=e.target.textContent;save()}});
 ACT.goJob=()=>{if(JOB)openCover(3);else if(!inService())openCover(2);else push('scheme')};
@@ -432,7 +482,7 @@ function obFooter(){if(!OB||OB.step!==3)return;const f=cover.querySelector('.cfo
 function obRender(){
  if(!OB)return;const pk=PKG[OB.pkg];let body='';
  if(OB.step===1){body=`<div class="ob-step">1 / 3</div><h1 class="ob-title">先选键盘布局</h1><p class="ob-sub">选定后，只给你看这个布局相关的配置。之后可以随时改。</p><div class="opt ${OB.layout==='26'?'on':''}" data-act="obLayout" data-arg="26">${mini26()}<div><div class="ot">二十六键</div><div class="oc">全拼、双拼都在这个布局上</div></div></div><div class="opt ${OB.layout==='9'?'on':''}" data-act="obLayout" data-arg="9">${mini9()}<div><div class="ot">九宫格 ${pill()}</div><div class="oc">开发中。先按二十六键完成，就绪后在「键盘布局」里切换</div></div></div>${OB.layout==='9'?`<div class="banner dev" style="margin-top:16px">${svg('info','ic')}<div class="btxt">九宫格开发中，键盘当前仍按二十六键运行。下一步只列通用项与九宫格预告项。</div></div>`:''}`}
- else if(OB.step===2){body=`<div class="ob-step">2 / 3</div><h1 class="ob-title">推荐配置</h1><p class="ob-sub">按「${OB.layout==='26'?'二十六键':'九宫格（开发中）'}」预选好了，都可以改。</p><div style="margin-top:14px">${card(row({title:'方案包',control:seg([['rime-ice','雾凇拼音'],['wanxiang','万象拼音']],OB.pkg,'obPkg')})+row({title:'输入类型',value:'全拼',cap:OB.pkg==='wanxiang'?'装好后可在 9 种输入类型里切换，切换需重新编译':'装好后可切到自然码双拼，即时生效'})+row({title:'触感反馈',lock:true,cap:S.fa?'已开启完全访问，选择后重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」；不开也能打字',control:seg(HAPTIC,OB.haptic,'obHaptic')})+(OB.layout==='9'?row({title:'九宫格首选上屏',value:'空格上屏',dev:true,act:'dev',arg:'九宫格首选上屏'}):'')+(OB.pkg==='wanxiang'?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(OB.grammar,'x').replace('data-act="tog"','data-act="obGrammar"')}):''))}</div><div class="infocard"><b>为什么要装包</b><br>词库不随 App 提供，安装包更小、许可更干净。下载后在设备上编译，几分钟，期间键盘只能打英文。装完即用，之后可随时换包或更新。</div>`}
+ else if(OB.step===2){const pk=PKG[OB.pkg];body=`<div class="ob-step">2 / 3</div><h1 class="ob-title">推荐配置</h1><p class="ob-sub">按「${OB.layout==='26'?'二十六键':'九宫格（开发中）'}」预选好了，都可以改。方案包以后会有很多，先装一个顺手的，之后随时换。</p><div style="margin-top:14px">${card(row({title:'方案包',cap:`${pk.desc} · ${pk.license}`,value:pk.name,act:'openPicker',chev:true})+row({title:'输入类型',value:'全拼',cap:OB.pkg==='wanxiang'?'装好后可在 9 种输入类型里切换，切换需重新编译':'装好后可切到自然码双拼，即时生效'})+row({title:'触感反馈',lock:true,cap:S.fa?'已开启完全访问，选择后重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」；不开也能打字',control:seg(HAPTIC,OB.haptic,'obHaptic')})+(OB.layout==='9'?row({title:'九宫格首选上屏',value:'空格上屏',dev:true,act:'dev',arg:'九宫格首选上屏'}):'')+(OB.pkg==='wanxiang'?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(OB.grammar,'x').replace('data-act="tog"','data-act="obGrammar"')}):''))}</div><div class="infocard"><b>为什么要装包</b><br>词库不随 App 提供，安装包更小、许可更干净。下载后在设备上编译，几分钟，期间键盘只能打英文。装完即用，之后可随时换包或更新。</div>`}
  else{const fail=S.pkgs[OB.pkg].fail;body=`<div class="ob-step">3 / 3</div><h1 class="ob-title">${JOB&&JOB.pkg===OB.pkg?'正在安装'+pk.name:fail?'装包未开始':'安装'+pk.name}</h1><p class="ob-sub">装完会自动收起。离开本页也会继续。</p><div style="margin-top:14px">${JOB&&JOB.pkg===OB.pkg?jobHTML():fail?failCard(fail):''}</div>`}
  cover.innerHTML=`<div class="cbody">${body}</div><div class="cfoot">${obFootHTML()}</div>`;
 }
@@ -457,50 +507,34 @@ PAGES.keys={render(){
  return nav('按键与手势')+head('按键与手势','手感与手势。带锁标的项需要系统授予「允许完全访问」。')+content(glabel('按键')+card(row({title:'按键触感反馈',lock:!S.fa,cap:faCap,control:seg(HAPTIC,S.haptic,'haptic')})+row({title:'按键音',value:'关',dev:true,act:'dev',arg:'按键音'})))+content(glabel(S.layout==='26'?'手势 · 二十六键':'手势 · 通用')+card(row({title:'手势预设',value:'默认预设',dev:true,act:'dev',arg:'手势预设'})+(S.layout==='26'?row({title:'上划输入符号',value:'开',dev:true,act:'dev',arg:'上划输入符号'})+row({title:'长按字母变音',value:'关',dev:true,act:'dev',arg:'长按字母变音'}):'')+row({title:'双指触摸板光标',value:'开',dev:true,act:'dev',arg:'双指触摸板光标'})+row({title:'Shift 双击锁定',value:'开',dev:true,act:'dev',arg:'Shift 双击锁定'})))+foot('当前手势：长按空格移动光标 · 长按回车换行 · 候选栏左滑滚动、右侧展开 · ⌫ 上滑整词删除 · 候选区次选 / 三选滑动上屏');
 }};
 ACT.push=el=>{const [p,a]=el.dataset.arg.split(':');push(p,a)};
-function pkgRows(){
- let h='';for(const id of Object.keys(PKG)){const st=S.pkgs[id],pk=PKG[id];
-  if(st.st==='inservice'){const d=st.since?sinceDays(st.since):42;h+=`<div class="row tappable has-tile" data-act="push" data-arg="detail:${id}">${tile('scheme',1)}<div class="row-main"><div class="row-title">${pk.name} ${chip()}</div><div class="row-cap">${st.ver||pk.ver} · 在役第 ${d} 天</div></div><div class="row-trail"><span class="row-val">${typeName(id,S.types[id])}</span>${svg('chev','chev')}</div></div>`}
-  else{const cap=st.fail?`失败：${esc(st.fail)}`:st.st==='installed'?`已下载 · ${st.ver||pk.ver} · 点按切换使用（秒级，不重编译）`:`未下载 · 约 ${sizeText(id,true)} · ${pk.license} · 点按安装并在役`;h+=row({tile:'scheme',title:pk.name,cap,value:st.st==='installed'?'已下载':'',act:JOB?null:'pkgTap',arg:id,chev:!JOB})}}
- return h;
-}
-PAGES.scheme={render(){
- const ins=inService(),busy=!!JOB;
- let h=nav('输入方案')+head('输入方案','同一时刻只有一个包在役。已下载的包秒级切回，不重编译。');
- if(JOB)h+=`<div style="margin:14px 16px 0">${jobHTML()}</div>`;
- h+=content(glabel('方案包')+card(pkgRows()));
- if(ins)h+=content(glabel('输入类型')+card(PKG[ins].types.map(t=>row({title:t.n,cap:t.id===S.types[ins]?(PKG[ins].instant?'当前使用。切换即时生效，打下一个词就用新方案':'当前使用。切换需重新编译词库，约 2–5 分钟，期间键盘只能打英文'):undefined,radio:t.id===S.types[ins],act:busy||t.id===S.types[ins]?null:'typeTap',arg:t.id}).replace('data-act="typeTap"',`data-act="typeTap" data-pkg="${ins}"`)).join('')));
- const g=S.grammar,gState=g.check==='checking'?'检查中…':g.installed?'已装':'未装';
- const gBtn=g.installed?`<button class="btn secondary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="check">检查</button>`:`<button class="btn primary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="dl">下载</button>`;
- h+=content(glabel('语法')+card(row({title:'语法模型',cap:'万象 LTS 语法模型 '+GRAMMAR.ver+' · 约 '+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',value:gState,control:gBtn})+(g.installed?row({title:'语法排序',cap:'按上下文搭配重排候选。下次键盘唤起生效，无需重新部署',control:tog(g.on,'grammar.on')}):'')+(g.installed?row({title:'删除语法模型',act:'grammarAction',arg:'del',value:'~'+GRAMMAR.size}):'')));
- h+=content(glabel('更多')+card((ins==='wanxiang'?row({title:'辅助码',value:'开',dev:true,act:'dev',arg:'辅助码'}):'')+row({title:'模糊音',value:'全关',dev:true,act:'dev',arg:'模糊音'})+row({title:'简繁切换',value:'简体',dev:true,act:'dev',arg:'简繁切换'})+row({title:'联想词',value:'开',dev:true,act:'dev',arg:'联想词'})+row({title:'自定义方案包导入',cap:'暂不支持 yaml / lua 导入',dev:true,act:'dev',arg:'自定义方案包导入'})));
- return h+foot('已下载的其他包保留在设备上，旧版本只在新版下载成功后清除。下载后设备端编译（分钟级）期间键盘英文直通。键盘内输入 /zrm 之类的切换指令不会生效，请在 App 内切换。');
-}};
 PAGES.detail={render(arg){
- const id=(arg||'').split(':')[1]||'rime-ice',st=S.pkgs[id],pk=PKG[id];
- const status=st.st==='inservice'?'在役 · '+(st.ver||pk.ver):st.st==='installed'?'已下载 · '+(st.ver||pk.ver):st.fail?'失败：'+esc(st.fail):'未下载';
- const manage=JOB?row({title:'安装进行中',value:'回上一页看步骤'}):st.st!=='none'?row({title:'检查版本',act:'checkUpdate',arg:id,value:st.check==='checking'?'检查中…':''}):row({title:'下载并使用',act:'pkgTap',arg:id,value:sizeText(id,true)});
- return nav(pk.name)+head(pk.name,pk.desc)+content(glabel('状态')+card(row({title:'包',value:pk.src})+row({title:'状态',value:status})+row({title:'许可',value:pk.license})+row({title:st.st==='none'?'安装峰值预检':'占用',value:st.st==='none'?'约 '+pk.peak+' MB':'下载 '+pk.size+' · 解压 '+pk.unzip})))+content(glabel('管理')+card(manage+(pk.grammar?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(S.grammar.on,'grammar.on')}):'')+row({title:'查看许可全文',act:'push',arg:'license:'+id,chev:true})))+foot(st.fail?esc(st.fail):'装好后回到「输入方案」点该包即可秒级切换使用。旧版本只在新版下载成功后清除。');
+ const id=(arg||'').split(':')[1]||'rime-ice',st=S.pkgs[id],pk=PKG[id],ins=st.st==='inservice',busy=!!JOB,d=st.since?sinceDays(st.since):42;
+ const status=ins?'在役':st.st==='installed'?'已下载':st.fail?'失败：'+esc(st.fail):'未下载';
+ let h=nav(pk.name)+head(pk.name,pk.desc)+content(glabel('状态')+card(row({title:'包',value:pk.src})+row({title:'版本',value:st.ver||pk.ver})+row({title:'状态',value:status})+row({title:'许可',value:pk.license})+row({title:ins?'在役':'安装峰值预检',value:ins?'第 '+d+' 天':'约 '+pk.peak+' MB'})));
+ if(ins){
+  if(JOB&&JOB.pkg===id)h+=`<div style="margin:12px 16px 0">${jobHTML()}</div>`;
+  h+=content(glabel('输入类型')+card(pk.types.map(t=>row({title:t.n,cap:t.id===S.types[id]?(pk.instant?'当前使用。切换即时生效，打下一个词就用新方案':'当前使用。切换需重新编译词库，约 2–5 分钟，期间键盘只能打英文'):undefined,radio:t.id===S.types[id],act:busy||t.id===S.types[id]?null:'typeTap',arg:t.id}).replace('data-act="typeTap"',`data-act="typeTap" data-pkg="${id}"`)).join('')));
+  if(pk.grammar){const g=S.grammar,gState=g.check==='checking'?'检查中…':g.installed?'已装':'未装';const gBtn=g.installed?'<button class="btn secondary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="check">检查</button>':'<button class="btn primary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="dl">下载</button>';
+   h+=content(glabel('语法')+card(row({title:'语法模型',cap:'万象 LTS 语法模型 '+GRAMMAR.ver+' · 约 '+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',value:gState,control:gBtn})+(g.installed?row({title:'语法排序',cap:'按上下文搭配重排候选。下次键盘唤起生效，无需重新部署',control:tog(g.on,'grammar.on')}):'')+(g.installed?row({title:'删除语法模型',act:'grammarAction',arg:'del',value:'~'+GRAMMAR.size}):'')));}
+  h+=content(glabel('方案设置')+card((pk.grammar?row({title:'辅助码',value:'开',dev:true,act:'dev',arg:'辅助码'}):'')+row({title:'模糊音',value:'全关',dev:true,act:'dev',arg:'模糊音'})+row({title:'简繁切换',value:'简体',dev:true,act:'dev',arg:'简繁切换'})+row({title:'联想词',value:'开',dev:true,act:'dev',arg:'联想词'})));}
+ const manage=JOB?row({title:'安装进行中',value:'回「方案包」看步骤'}):st.st!=='none'?row({title:'检查版本',act:'checkUpdate',arg:id,value:st.check==='checking'?'检查中…':''}):row({title:'下载并使用',act:'pkgTap',arg:id,value:sizeText(id,true)});
+ h+=content(glabel('管理')+card(manage+(pk.grammar&&!ins?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(S.grammar.on,'grammar.on')}):'')+row({title:'查看许可全文',act:'push',arg:'license:'+id,chev:true})));
+ return h+foot('切换输入类型请在 App 内操作；键盘内输入 /zrm 之类的指令不会生效。');
 }};
+
 const LIC={
  'rime-ice':{t:'GPL-3.0',body:'GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n\nCopyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n……（全文随下载内容落地于 App Group 内 LICENSE，此处为节选）\n\n——\n上游源码：https://github.com/iDvel/rime-ice（nightly 构建）'},
  wanxiang:{t:'CC-BY-4.0',body:'Creative Commons Attribution 4.0 International (CC BY 4.0)\n\n你可以自由地：\n· 共享 — 在任何媒介以任何形式复制、发行本作品\n· 改编 — 修改、转换或以本作品为基础进行创作\n在任何用途下，甚至商业性使用。\n\n惟须遵守下列条件：\n· 署名 — 你必须给出适当的署名，提供指向本许可协议的链接，同时标明是否（对原作）作了修改。你可以用任何合理的方式来署名，但不得以任何方式暗示许可人为你或你的使用背书。\n· 没有附加限制 — 你不得适用法律术语或技术措施从而限制其他人做许可协议允许的事情。\n\n……（全文随安装内容落地于 App Group 内 LICENSE，此处为要点摘录）\n\n——\n上游源码：https://github.com/amzxyz/rime-wanxiang（tag 构建）'}};
 PAGES.license={render(arg){const id=(arg||'').split(':')[1]||'rime-ice',l=LIC[id];return nav(l.t)+head(l.t,id==='rime-ice'?'雾凇拼音 · 随下载内容一同落地':'万象拼音 · 随安装内容落地')+`<div class="lic">${esc(l.body)}</div>`}};
 PAGES.candidates={render(){return nav('候选栏')+head('候选栏','拼音串显示在哪里、一屏几个候选。')+content(glabel('组码显示')+card(row({title:'在输入框内显示拼音',cap:'开启时拼音串直接显示在输入框内，同系统键盘；关闭或密码框时显示在候选栏。组码清空后的下一词起生效。',control:tog(S.inline,'inline')})))+content(glabel('候选')+card(row({title:'候选数量',value:'4',dev:true,act:'dev',arg:'候选数量'})+row({title:'还原全拼显示',value:'关',dev:true,act:'dev',arg:'还原全拼显示'})))+foot('候选栏右侧展开完整候选面板，展开后可连续滚动、懒拉窗口。')}};
 PAGES.punct={render(){return nav('标点与符号')+head('标点与符号','中文态全角成对，英文态一律半角。')+content(card(row({title:'中文态全角标点',value:'开',dev:true,act:'dev',arg:'中文态全角标点'})+row({title:'成对符号自动补全',value:'开',dev:true,act:'dev',arg:'成对符号自动补全'})+row({title:'双击空格输入句号',value:'开',dev:true,act:'dev',arg:'双击空格输入句号'})+row({title:'符号页常用符号',value:'默认集',dev:true,act:'dev',arg:'符号页常用符号'})))+foot('中文态标点：，。？！、；：“”‘’（）《》〈〉【】——…… · 123 页与 #+= 页含中文常用符号。')}};
-PAGES.appearance={render(){
- const sw=[['素白','#FFFFFF','#D6D6DB'],['石墨','#3A3A41','#141417'],['夜','#141417','#26262A']];
- return nav('外观')+head('外观','键盘的键帽配色。主 App 当前跟随系统深色模式。')+content(glabel('主 App')+card(row({title:'主 App 深色模式',value:'跟随系统',dev:true,act:'dev',arg:'主 App 深色模式'})))+content(glabel('键盘')+card(row({title:'键盘主题',value:'素白',dev:true,act:'dev',arg:'键盘主题'})+`<div class="swatches">${sw.map((s,i)=>`<div class="swatch"><div class="kb" style="--sw-bg:${s[1]};--sw-k:${s[2]}"><i></i><i></i><i style="flex:3"></i></div><div class="sl">${s[0]}${i===0?' · 当前':''}</div></div>`).join('')}</div>`))+foot('键盘主题开发中，预计随 V1.1 提供。');
-}};
-PAGES.clipboard={render(){return nav('剪贴板')+head('剪贴板','复制过的文字与常用短语，只存本机。')+`<div class="banner dev">${svg('info','ic')}<div class="btxt">剪贴板开发中 · 当前版本不读取剪贴板。以下为完成后的样子。</div></div>`+content(glabel('剪贴板')+card(row({title:'剪贴板历史',lock:true,cap:'需允许完全访问。iOS 只允许开了完全访问的键盘读取剪贴板。内容只存本机，退出即清',value:'关',dev:true,act:'dev',arg:'剪贴板历史'})+row({title:'常用短语',cap:'在主 App 里编辑，键盘只读，不需要完全访问',value:'空',dev:true,act:'dev',arg:'常用短语'})))+`<div class="empty" style="margin:0 16px">${svg('clip')}<div class="et">还没有内容</div><div>开启剪贴板历史后，复制过的文字会出现在这里。</div><button class="btn secondary" data-act="dev" data-arg="常用短语">添加常用短语</button></div>`+foot('剪贴板内容不会离开设备。')}};
-PAGES.stats={render(){
- const bars=[38,52,44,61,58,70,64,77,72,85,80,92];
- return nav('统计')+head('统计','只在本机记录，不上传。')+`<div class="banner dev">${svg('info','ic')}<div class="btxt">输入统计开发中 · 当前版本不记录任何数据。以下是完成后的样子。</div></div><div class="card bignum" style="margin:12px 16px 0"><div class="v">1,284</div><div class="l">今日字数 · 在役第 42 天</div></div><div class="statgrid" style="margin-top:12px"><div class="statbox"><div class="v">7,930</div><div class="l">本周字数</div></div><div class="statbox"><div class="v">48,210</div><div class="l">累计字数</div></div><div class="statbox"><div class="v">87%</div><div class="l">首选命中率 · 第一候选就是想要的词</div></div><div class="statbox"><div class="v">12</div><div class="l">连续使用周数</div></div></div><div class="card" style="margin:12px 16px 0;padding:14px 16px"><div class="row-cap" style="margin:0">近 12 周字数</div><div class="chart">${bars.map(b=>`<i style="height:${b}%"></i>`).join('')}</div></div><div class="milestone" style="margin-top:12px">距离累计 5 万字还差 1,790 字。</div>`+content(glabel('设置')+card(row({title:'输入统计',value:'关',dev:true,act:'dev',arg:'输入统计'})+row({title:'清除统计数据',dev:true,act:'dev',arg:'清除统计数据'})))+foot('统计只存本机，不上传，不用于推荐。关闭后删除已有记录。');
-}};
-PAGES.privacy={render(){return nav('数据与隐私')+head('数据与隐私','引擎离线，键盘无网络，输入内容不上传。')+content(glabel('系统授权')+card(row({title:'允许完全访问',cap:S.fa?'已开启。触感反馈与持久化可用':'只解锁触感反馈与以后的持久化。不开也能完整打字',value:S.fa?'已开启':'未开启',act:'faTap',chev:true})))+content(glabel('用户词')+card(row({title:'用户词',cap:'仅本次打字会话有效。未开启完全访问时，自造词与词频不跨会话保留',value:'会话级'})+row({title:'用户词持久化',lock:true,cap:'开启后自造词跨会话保留',value:'关',dev:true,act:'dev',arg:'用户词持久化'})+row({title:'iCloud 同步',lock:true,cap:'同步用户词与设置，不同步统计',value:'关',dev:true,act:'dev',arg:'iCloud 同步'})))+content(glabel('数据')+card(row({title:'删除已下载的方案包',cap:'删除后可随时重新下载；在役包需先切换',dev:true,act:'dev',arg:'删除已下载的方案包'})+row({title:'自定义配置导入',cap:'暂不支持 yaml / lua 导入',dev:true,act:'dev',arg:'自定义配置导入'})+row({title:'隐私说明',act:'push',arg:'privacyNote',chev:true})))+foot('无需账户，无分析 SDK。')}};
-ACT.faTap=()=>faSheet();
-PAGES.privacyNote={render(){return nav('隐私说明')+head('隐私说明','蜻蜓不收集、不上传任何输入内容。')+content(card(['引擎在本机运行，不联网。','键盘扩展没有网络权限，输入内容不会离开设备。','主 App 只在下载或更新方案包、语法模型时连接 GitHub Releases；除此之外没有网络请求。','不需要账户，没有分析 SDK，没有广告。','输入统计（开发中）只存本机，不上传。','「允许完全访问」由系统控制，App 无法自行开启；不开也能完整打字。'].map(t=>row({title:t})).join('')))+foot('隐私清单随 App 与键盘扩展各自附带（PrivacyInfo.xcprivacy）。')}};
-PAGES.about={render(){const ins=inService();return nav('关于')+`<div class="aboutlogo">${svg('wing')}<div class="an">蜻蜓</div><div class="av">1.0 (0) · iOS 第三方中文 Rime 输入法</div></div>`+content(card(row({title:'版本',value:'1.0 (0)'})+row({title:'引擎',value:'librime · 进程内 · 离线'})+row({title:'在役包',value:ins?PKG[ins].name+(S.pkgs[ins].ver?' · '+S.pkgs[ins].ver:''):'未安装',act:ins?'push':null,arg:ins?'detail:'+ins:undefined,chev:!!ins})+row({title:'方案包许可全文',act:'push',arg:'license:'+(ins||'rime-ice'),chev:true})+row({title:'开源组件致谢',cap:'librime、语法插件、rime-ice、万象拼音、语法模型',dev:true,act:'dev',arg:'开源组件致谢'})+row({title:'反馈问题',cap:'GitHub Issues',dev:true,act:'dev',arg:'反馈问题'})+row({title:'重看首启引导',cap:'重新走一遍布局选择与推荐配置，不影响已装内容',dev:true,act:'dev',arg:'重看首启引导'})))+foot('词库不随 App 提供，按需下载。')}};
-applyChrome();fit();push('home');if(!S.onboarded)openCover();
+const THEMES=[['a','素翼','知性 · 克制',['#2E6460','#C8503A','#F6F4EF']],['b','夜航','专注 · 锐利',['#1F2733','#1FA88E','#F2F3F5']],['c','晨光','温柔 · 纸感',['#A8552F','#2E8C86','#FAF6EF']]];
+function themeChips(){return `<div class="chips">${THEMES.map(t=>`<button class="chipx ${S.theme===t[0]?'on':''}" data-act="theme" data-arg="${t[0]}"><span class="dots">${t[3].map(c=>`<i style="background:${c}"></i>`).join('')}</span><span class="n">${t[1]}</span><span class="m">${t[2]}</span></button>`).join('')}</div>`}
+PAGES.personal={render(){return `<div class="ltitle" style="padding-top:12px">个性化</div><div class="lsub" style="padding:0 20px;margin-top:4px">外观主题、App 图标与统计。三套主题各一个主色、一个强调色，键盘与主 App 同步。</div>${content(glabel('外观主题')+card(themeChips()+row({title:'主 App 深色模式',value:'跟随系统',dev:true,act:'dev',arg:'主 App 深色模式'})+row({title:'键盘主题',value:'素白',dev:true,act:'dev',arg:'键盘主题'})+row({title:'App 图标',value:(THEMES.find(t=>t[0]===S.icon)||THEMES[0])[1],act:'push',arg:'icon',chev:true})))}${content(glabel('统计')+card(row({tile:'stats',title:'统计看板',value:'开发中',act:'push',arg:'stats',chev:true})+row({title:'输入统计',value:'关',dev:true,act:'dev',arg:'输入统计'})))}${foot('预览中外观主题与 App 图标可直接切换以便对比；正式版随主题系统一起提供（开发中）。')}`}};
+PAGES.icon={render(){const I=[['a','素翼','#2E6460','#fff'],['b','夜航','#0E1013','#37C9AE'],['c','晨光','#FAF6EF','#A8552F'],['d','墨','#1C1C1E','#F4F4F5']];return nav('App 图标')+head('App 图标','默认随主题，也可以单独固定一个。')+content(card(`<div class="icons">${I.map(i=>`<div><div class="iconx ${S.icon===i[0]?'on':''}" style="background:${i[2]};color:${i[3]}" data-act="icon" data-arg="${i[0]}">${svg('wing')}</div><div class="iconl">${i[1]}</div></div>`).join('')}</div>`))+`<div class="banner dev">${svg('info','ic')}<div class="btxt">App 图标切换开发中 · 预览里可先选。</div></div>`}};
+Object.assign(ACT,{theme:el=>{S.theme=el.dataset.arg;applyChrome();rerenderAll();toast('主题：'+THEMES.find(t=>t[0]===S.theme)[1])},icon:el=>{S.icon=el.dataset.arg;save();rerenderAll();toast('App 图标已选择，回到主屏幕生效（开发中）')}});
+PAGES.about={render(){const ins=inService();return `<div class="aboutlogo">${svg('wing')}<div class="an">蜻蜓</div><div class="av">1.0 (0) · iOS 第三方中文 Rime 输入法</div><div class="av" style="margin-top:6px;line-height:1.5">引擎在设备上运行，离线，不上传任何输入。</div></div>`+content(card(row({title:'版本',value:'1.0 (0)'})+row({title:'引擎',value:'librime · 进程内 · 离线'})+row({title:'在役包',value:ins?PKG[ins].name:'未安装',act:ins?'push':null,arg:ins?'detail:'+ins:undefined,chev:!!ins})))+content(glabel('数据与隐私')+card(row({title:'数据与隐私',cap:S.fa?'完全访问已开启':'完全访问未开启',act:'push',arg:'privacy',chev:true})+row({title:'隐私说明',act:'push',arg:'privacyNote',chev:true})))+content(glabel('许可与反馈')+card(row({title:'方案包许可全文',act:'push',arg:'license:'+(ins||'rime-ice'),chev:true})+row({title:'开源组件致谢',cap:'librime、语法插件、rime-ice、万象拼音、语法模型',dev:true,act:'dev',arg:'开源组件致谢'})+row({title:'反馈问题',cap:'GitHub Issues',dev:true,act:'dev',arg:'反馈问题'})+row({title:'重看首启引导',cap:'重新走一遍布局选择与推荐配置，不影响已装内容',dev:true,act:'dev',arg:'重看首启引导'})))+foot('词库不随 App 提供，按需下载。')}};
+applyChrome();fit();switchTab('keyboard');if(!S.onboarded)openCover();
 </script>
 </body>
 </html>
