@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dragonfly · 主 App 设计预览</title>
+<title>Dragonfly · 主 App 设计预览 v3</title>
 <style id="css-core">
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -30,11 +30,11 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .sbar svg{width:18px;height:12px}
 .homebar{position:absolute;left:50%;bottom:8px;width:134px;height:5px;margin-left:-67px;border-radius:3px;background:var(--text);opacity:.9;z-index:22;pointer-events:none}
 .viewport{position:absolute;inset:0;overflow:hidden}
-.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);padding-bottom:44px;transition:transform .28s cubic-bezier(.32,.72,0,1);will-change:transform}
+.page{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;background:var(--bg);padding-bottom:100px;transition:transform .28s cubic-bezier(.32,.72,0,1);will-change:transform}
 .page.enter{transform:translateX(100%)}
 .page.under{transform:translateX(-28%)}
 .page.under::after{content:'';position:absolute;inset:0;background:rgba(0,0,0,.09)}
-.page.home{padding-top:50px}
+.page.root{padding-top:50px}
 .nav{position:sticky;top:0;z-index:5;display:flex;align-items:flex-end;justify-content:space-between;padding:50px 10px 8px;min-height:94px}
 .page.collapsed .nav{background:var(--nav-bg);box-shadow:0 1px 0 var(--line)}
 .nav .nt{position:absolute;left:60px;right:60px;bottom:12px;text-align:center;font-size:17px;font-weight:600;opacity:0;transition:opacity .15s;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -75,17 +75,20 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .seg{display:inline-flex;flex:none;padding:2px;border-radius:9px;background:var(--card-2)}
 .seg button{border:0;background:transparent;padding:5px 12px;border-radius:7px;font:13px var(--font-body);color:var(--text);cursor:pointer;white-space:nowrap}
 .seg button.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.seg button[data-dev]{opacity:.4;pointer-events:none}
 .seg.wide{display:flex}
 .seg.wide button{flex:1}
-.dev .tgl,.dev .seg{opacity:.4;pointer-events:none}
-.pill{flex:none;padding:4px 7px;border-radius:999px;border:1px solid var(--pill-br);background:var(--pill-bg);color:var(--pill-fg);font-size:11px;line-height:1;white-space:nowrap}
+.dev .tgl,.dev .seg,.dev .secbtn{opacity:.4;pointer-events:none}
+.pill{flex:none;padding:4px 7px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--text-2);font-size:11px;line-height:1;white-space:nowrap}
 .chip{flex:none;padding:3px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:11px;font-weight:600}
-.banner{display:flex;align-items:flex-start;gap:10px;margin:12px 16px 0;padding:12px 14px;border-radius:14px;background:var(--accent-soft);font-size:13px;line-height:1.45}
-.banner.dev{background:var(--card-2);color:var(--text-2)}
+.banner{display:flex;align-items:flex-start;gap:10px;margin:12px 16px 0;padding:12px 14px;border-radius:14px;background:var(--accent-soft);font-size:13px;line-height:1.45;color:var(--text)}
+.banner.danger{background:color-mix(in srgb,var(--danger) 12%,var(--card));color:var(--danger)}
 .banner .ic{flex:none;width:18px;height:18px;margin-top:1px;color:var(--accent)}
-.banner.dev .ic{color:var(--text-2)}
+.banner.danger .ic{color:var(--danger)}
 .banner .btxt{flex:1}
+.banner .blink{margin-left:auto}
 .blink{border:0;background:none;color:var(--accent);font:600 13px var(--font-body);white-space:nowrap;cursor:pointer}
+.banner.danger .blink{color:var(--danger)}
 .foot{padding:14px 24px 0;font-size:12px;line-height:1.55;color:var(--text-3)}
 .btn{display:inline-flex;align-items:center;justify-content:center;width:100%;height:50px;border:0;border-radius:var(--r-btn);font:600 16px var(--font-body);cursor:pointer;transition:transform .12s,opacity .12s}
 .btn:active{transform:scale(.985)}
@@ -94,6 +97,8 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .btn.text{height:44px;background:none;color:var(--text-2);font-weight:500;font-size:15px}
 .btn.destructive{background:var(--card-2);color:var(--danger)}
 .btn[disabled]{opacity:.45;pointer-events:none}
+.secbtn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 14px;border:0;border-radius:12px;background:var(--primary);color:var(--on-primary);font:600 15px var(--font-body);cursor:pointer;white-space:nowrap}
+.secbtn.ghost{background:var(--card-2);color:var(--text)}
 .layer{position:absolute;inset:0;z-index:40;pointer-events:none}
 .scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .22s}
 .sheet{position:absolute;left:8px;right:8px;bottom:8px;max-height:82%;overflow:auto;padding:10px 20px 30px;border-radius:22px;background:var(--card);transform:translateY(110%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
@@ -112,41 +117,48 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .cover.show{transform:none}
 .cbody{flex:1;overflow-y:auto;padding:66px 20px 20px}
 .cfoot{padding:12px 20px 46px;background:var(--bg);box-shadow:0 -1px 0 var(--line)}
-.screen[data-theme=a]{--font-display:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;--font-num:var(--font-display);--fs-title:32px;--fw-title:600;--tr-title:0;--fs-body:15px;--lh-body:1.45;--r-card:18px;--r-tile:10px;--r-btn:14px;--ts:50%;--tl:38%;--tbs:42%;--tbl:94%;--pill-br:var(--line);--pill-fg:var(--text-2);--pill-bg:transparent;--shadow:0 1px 2px rgba(28,28,30,.05),0 6px 20px rgba(28,28,30,.05);--press:var(--card-2)}
-.screen[data-theme=a][data-mode=light]{--bg:#F6F4EF;--card:#FFFFFF;--card-2:#EEECE6;--text:#1C1C1E;--text-2:#6B6B70;--text-3:#A3A3A8;--line:#E6E3DC;--primary:#2E6460;--on-primary:#FFFFFF;--primary-soft:#E2EDEB;--accent:#C8503A;--accent-soft:#F6E3DE;--danger:#B3362A;--tgl-off:#D9D6CF;--nav-bg:#F6F4EF}
-.screen[data-theme=a][data-mode=dark]{--bg:#121615;--card:#1B201F;--card-2:#242A29;--text:#ECEAE4;--text-2:#9AA29F;--text-3:#666E6B;--line:#2A302F;--primary:#6FA79F;--on-primary:#0E1514;--primary-soft:#1D2E2B;--accent:#E07A5F;--accent-soft:#3A2622;--danger:#E5675A;--tgl-off:#3A4140;--nav-bg:#121615;--ts:45%;--tl:74%;--tbs:25%;--tbl:19%;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25)}
-.screen[data-theme=b]{--font-display:var(--font-body);--font-num:"SF Mono",ui-monospace,Menlo,Consolas,monospace;--fs-title:30px;--fw-title:700;--tr-title:-.02em;--fs-body:15px;--lh-body:1.45;--r-card:14px;--r-tile:8px;--r-btn:10px;--ts:70%;--tl:40%;--tbs:60%;--tbl:93%;--pill-br:transparent;--pill-fg:var(--accent);--pill-bg:var(--accent-soft);--shadow:none;--press:var(--card-2)}
-.screen[data-theme=b][data-mode=light]{--bg:#F2F3F5;--card:#FFFFFF;--card-2:#E8EAEE;--text:#14171C;--text-2:#6B7280;--text-3:#9AA0AA;--line:#E4E6EA;--primary:#1F2733;--on-primary:#FFFFFF;--primary-soft:#E3E6EB;--accent:#1A9C84;--accent-soft:#DDF3EE;--danger:#C0392B;--tgl-off:#D5D8DE;--nav-bg:#F2F3F5}
-.screen[data-theme=b][data-mode=dark]{--bg:#0E1013;--card:#171A1F;--card-2:#1F2329;--text:#E8EAED;--text-2:#8A9099;--text-3:#5C626B;--line:#262A31;--primary:#F2F4F7;--on-primary:#0E1013;--primary-soft:#1F2329;--accent:#37C9AE;--accent-soft:#0F2E2A;--danger:#FF6B5B;--tgl-off:#2A2F36;--nav-bg:#0E1013;--ts:75%;--tl:66%;--tbs:40%;--tbl:18%}
-.screen[data-theme=b] .card,.screen[data-theme=b] .bcard,.screen[data-theme=b] .sheet,.screen[data-theme=b] .opt,.screen[data-theme=b] .statbox{border:1px solid var(--line)}
+.cfoot .btn+.btn{margin-top:6px}
+.screen[data-theme=a]{--font-display:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;--font-num:var(--font-display);--fs-title:32px;--fw-title:600;--tr-title:0;--fs-body:15px;--lh-body:1.45;--r-card:18px;--r-tile:10px;--r-btn:14px;--ts:50%;--tl:38%;--tbs:42%;--tbl:94%;--shadow:0 1px 2px rgba(28,28,30,.05),0 6px 20px rgba(28,28,30,.05);--press:var(--card-2)}
+.screen[data-theme=a][data-mode=light]{--bg:#F6F4EF;--card:#FFFFFF;--card-2:#EEECE6;--text:#1C1C1E;--text-2:#5E5E63;--text-3:#8E8E93;--line:#E6E3DC;--primary:#2E6460;--on-primary:#FFFFFF;--primary-soft:#E2EDEB;--accent:#B2452F;--accent-soft:#F6E3DE;--danger:#B3362A;--tgl-off:#D9D6CF;--nav-bg:#F6F4EF}
+.screen[data-theme=a][data-mode=dark]{--bg:#121615;--card:#1B201F;--card-2:#242A29;--text:#ECEAE4;--text-2:#A9B1AE;--text-3:#7C8481;--line:#2A302F;--primary:#6FA79F;--on-primary:#0E1514;--primary-soft:#1D2E2B;--accent:#E07A5F;--accent-soft:#3A2622;--danger:#E5675A;--tgl-off:#3A4140;--nav-bg:#121615;--ts:45%;--tl:74%;--tbs:25%;--tbl:19%;--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25)}
+.screen[data-theme=b]{--font-display:var(--font-body);--font-num:"SF Mono",ui-monospace,Menlo,Consolas,monospace;--fs-title:30px;--fw-title:700;--tr-title:-.02em;--fs-body:15px;--lh-body:1.45;--r-card:14px;--r-tile:8px;--r-btn:10px;--ts:70%;--tl:40%;--tbs:60%;--tbl:93%;--shadow:none;--press:var(--card-2)}
+.screen[data-theme=b][data-mode=light]{--bg:#F2F3F5;--card:#FFFFFF;--card-2:#E8EAEE;--text:#14171C;--text-2:#5B6270;--text-3:#8A919B;--line:#E4E6EA;--primary:#1F2733;--on-primary:#FFFFFF;--primary-soft:#E3E6EB;--accent:#15866F;--accent-soft:#DDF3EE;--danger:#C0392B;--tgl-off:#D5D8DE;--nav-bg:#F2F3F5}
+.screen[data-theme=b][data-mode=dark]{--bg:#0E1013;--card:#171A1F;--card-2:#1F2329;--text:#E8EAED;--text-2:#9CA3AC;--text-3:#6C737C;--line:#262A31;--primary:#F2F4F7;--on-primary:#0E1013;--primary-soft:#1F2329;--accent:#37C9AE;--accent-soft:#0F2E2A;--danger:#FF6B5B;--tgl-off:#2A2F36;--nav-bg:#0E1013;--ts:75%;--tl:66%;--tbs:40%;--tbl:18%}
+.screen[data-theme=b] .card,.screen[data-theme=b] .bcard,.screen[data-theme=b] .sheet,.screen[data-theme=b] .opt,.screen[data-theme=b] .statbox,.screen[data-theme=b] .kcard{border:1px solid var(--line)}
 .screen[data-theme=b] .phead{background-image:radial-gradient(var(--line) 1px,transparent 1.4px);background-size:11px 11px;background-position:12px 8px}
-.screen[data-theme=c]{--font-display:var(--font-body);--font-num:var(--font-body);--fs-title:30px;--fw-title:600;--tr-title:0;--fs-body:16px;--lh-body:1.55;--r-card:22px;--r-tile:12px;--r-btn:16px;--ts:52%;--tl:40%;--tbs:55%;--tbl:92%;--pill-br:transparent;--pill-fg:var(--primary);--pill-bg:var(--primary-soft);--shadow:0 2px 6px rgba(60,40,20,.06),0 10px 30px rgba(60,40,20,.06);--press:var(--card-2)}
-.screen[data-theme=c][data-mode=light]{--bg:#FAF6EF;--card:#FFFFFF;--card-2:#F1EBE1;--text:#2B2622;--text-2:#7A716A;--text-3:#A89F96;--line:#ECE5DA;--primary:#A8552F;--on-primary:#FFFFFF;--primary-soft:#F5E6DE;--accent:#2E8C86;--accent-soft:#DDF0EE;--danger:#B5402C;--tgl-off:#DDD5CA;--nav-bg:#FAF6EF}
-.screen[data-theme=c][data-mode=dark]{--bg:#1A1614;--card:#24201D;--card-2:#2E2926;--text:#F3EDE6;--text-2:#A69A90;--text-3:#766C64;--line:#332D29;--primary:#D9906A;--on-primary:#1A1210;--primary-soft:#3A2A22;--accent:#5BB3AC;--accent-soft:#1D3331;--danger:#E8775F;--tgl-off:#3E3833;--nav-bg:#1A1614;--ts:48%;--tl:74%;--tbs:30%;--tbl:20%}
+.screen[data-theme=c]{--font-display:var(--font-body);--font-num:var(--font-body);--fs-title:30px;--fw-title:600;--tr-title:0;--fs-body:16px;--lh-body:1.55;--r-card:22px;--r-tile:12px;--r-btn:16px;--ts:52%;--tl:40%;--tbs:55%;--tbl:92%;--shadow:0 2px 6px rgba(60,40,20,.06),0 10px 30px rgba(60,40,20,.06);--press:var(--card-2)}
+.screen[data-theme=c][data-mode=light]{--bg:#FAF6EF;--card:#FFFFFF;--card-2:#F1EBE1;--text:#2B2622;--text-2:#6E655E;--text-3:#9C938A;--line:#ECE5DA;--primary:#A8552F;--on-primary:#FFFFFF;--primary-soft:#F5E6DE;--accent:#23756F;--accent-soft:#DDF0EE;--danger:#B5402C;--tgl-off:#DDD5CA;--nav-bg:#FAF6EF}
+.screen[data-theme=c][data-mode=dark]{--bg:#1A1614;--card:#24201D;--card-2:#2E2926;--text:#F3EDE6;--text-2:#B0A49A;--text-3:#827870;--line:#332D29;--primary:#D9906A;--on-primary:#1A1210;--primary-soft:#3A2A22;--accent:#5BB3AC;--accent-soft:#1D3331;--danger:#E8775F;--tgl-off:#3E3833;--nav-bg:#1A1614;--ts:48%;--tl:74%;--tbs:30%;--tbl:20%}
 .phead{padding-bottom:4px}
-.status{display:flex;align-items:center;gap:8px;margin:8px 20px 0;font-size:13px;color:var(--text-2)}
-.status.jobstat{color:var(--accent);cursor:pointer}
-.status svg{width:18px;height:18px;flex:none}
-.status.warn{margin:12px 16px 0;padding:12px 14px;border-radius:14px;background:var(--accent-soft);color:var(--text);cursor:pointer}
-.status.warn .blink{margin-left:auto}
-.trycard{display:flex;align-items:center;gap:12px;margin:14px 16px 0;padding:14px 16px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);cursor:pointer}
-.trycard .tt{font-size:15px;font-weight:600}
-.trycard .tc{margin-top:2px;font-size:12px;color:var(--text-2)}
-.trycard .fld{flex:1;min-height:36px;padding:8px 12px;border-radius:10px;background:var(--card-2);font-size:15px;color:var(--text-3);outline:none}
-.trycard .fld.has{color:var(--text)}
-.trycard.open{flex-direction:column;align-items:stretch;cursor:default}
-.trycard.open .fld{min-height:72px}
-.trycard .hint{margin-top:6px;font-size:12px;color:var(--text-3)}
+.kcard{margin:12px 16px 0;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);overflow:hidden}
+.kcard .krow{display:flex;align-items:center;gap:10px;padding:13px 14px;font-size:13px;line-height:1.45;color:var(--text-2);cursor:pointer}
+.kcard .krow .kdot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.kcard .krow.acc{color:var(--accent)}
+.kcard .krow.acc .kdot{background:var(--accent)}
+.kcard .krow.dgr{color:var(--danger)}
+.kcard .krow.dgr .kdot{background:var(--danger)}
+.kcard .krow .blink{margin-left:auto}
+.kcard .krow svg.kic{width:18px;height:18px;flex:none}
+.kcard .swline{padding:0 14px 10px;font-size:12px;color:var(--text-3)}
+.kcard .swline b{font-weight:500;color:var(--text-2)}
+.kcard .try{padding:0 14px 14px;display:none}
+.kcard .try.show{display:block}
+.kcard .fld{width:100%;min-height:40px;padding:9px 12px;border-radius:10px;background:var(--card-2);font-size:15px;color:var(--text-3);outline:none;font-family:inherit;border:0}
+.kcard .fld.has{color:var(--text)}
+.kcard .try.open .fld{min-height:72px}
+.kcard .tryfoot{display:flex;align-items:center;margin-top:6px;font-size:12px;color:var(--text-3)}
+.kcard .tryfoot .blink{margin-left:auto;font-weight:500;color:var(--text-2)}
 @keyframes hover{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.5px) scale(1.05)}}
 @keyframes rot{to{transform:rotate(360deg)}}
 .wing-hover{animation:hover 1.6s ease-in-out infinite}
 .spin{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--accent-soft);border-top-color:var(--accent);animation:rot 1s linear infinite;vertical-align:middle}
-@media (prefers-reduced-motion:reduce){.wing-hover,.spin{animation:none}.page,.cover,.sheet,.toast{transition:none}}
 .job{padding:16px}
 .jhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .jhead svg{width:22px;height:22px;color:var(--accent);flex:none}
 .jt{font-size:16px;font-weight:600}
 .js{margin-top:2px;font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.job.fail .jhead svg,.job.fail .jt{color:var(--danger)}
+.job.fail .js{color:var(--danger)}
 .steps{display:flex;flex-direction:column;gap:10px}
 .step{display:flex;align-items:flex-start;gap:10px;font-size:14px}
 .step .dot{flex:none;width:20px;height:20px;margin-top:1px;display:grid;place-items:center;border-radius:50%;border:1.5px solid var(--text-3);color:var(--text-3)}
@@ -159,17 +171,23 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .hint{margin-top:2px;font-size:12px;color:var(--text-2);font-variant-numeric:tabular-nums}
 .pbar{height:6px;margin:8px 0 0 30px;border-radius:3px;background:var(--card-2)}
 .pbar i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width .2s linear}
-.substeps{display:flex;flex-direction:column;gap:6px;margin:8px 0 0 30px;font-size:12px}
+details.sub{margin:10px 0 0 30px;font-size:12px}
+details.sub summary{cursor:pointer;color:var(--text-2);list-style:none}
+details.sub summary::-webkit-details-marker{display:none}
+details.sub summary::before{content:'›';display:inline-block;margin-right:6px;transition:transform .15s}
+details.sub[open] summary::before{transform:rotate(90deg)}
+details.sub .substeps{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .substep{display:flex;align-items:center;gap:8px;color:var(--text-3)}
 .substep svg{width:12px;height:12px;color:var(--accent)}
 .substep.done,.substep.cur{color:var(--text)}
 .substep .spin{width:11px;height:11px;border-width:1.5px}
-.substep.el{margin-top:4px;color:var(--text-2);font-variant-numeric:tabular-nums}
-.jacts{display:flex;gap:8px;margin-top:16px}
+.jacts{display:flex;flex-direction:column;gap:8px;margin-top:16px}
 .jacts .btn{height:44px;font-size:15px}
+.jacts.row{flex-direction:row}
+.jacts.row .btn{flex:1}
 .opt{display:flex;align-items:center;gap:14px;margin-top:12px;padding:14px;border-radius:18px;background:var(--card);border:1.5px solid transparent;box-shadow:var(--shadow);cursor:pointer}
 .opt.on{border-color:var(--primary);background:var(--primary-soft)}
-.opt .ot{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600}
+.opt .ot{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600}
 .opt .oc{margin-top:2px;font-size:12px;color:var(--text-2)}
 .mini26{flex:none;width:118px;display:flex;flex-direction:column;gap:3px}
 .mini26 .mr{display:flex;gap:3px;justify-content:center}
@@ -181,9 +199,17 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .ob-step{font-size:12px;color:var(--text-2);letter-spacing:.06em;font-variant-numeric:tabular-nums}
 .ob-title{margin-top:8px;font-family:var(--font-display);font-size:30px;font-weight:var(--fw-title);letter-spacing:var(--tr-title);line-height:1.15}
 .ob-sub{margin:8px 0 4px;font-size:13px;color:var(--text-2);line-height:1.55}
-.cfoot .btn+.btn{margin-top:6px}
 .infocard{margin-top:14px;padding:14px 16px;border-radius:16px;background:var(--card-2);font-size:13px;line-height:1.65;color:var(--text-2)}
 .infocard b{color:var(--text);font-weight:600}
+.path{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:14px 16px;border-radius:14px;background:var(--card-2);font-size:13px;line-height:1.55;color:var(--text-2)}
+.path b{font-weight:600;color:var(--text)}
+.path .arw{color:var(--text-3)}
+details.trouble{margin-top:12px;font-size:13px}
+details.trouble summary{cursor:pointer;color:var(--primary);font-weight:500;list-style:none}
+details.trouble summary::-webkit-details-marker{display:none}
+details.trouble summary::before{content:'›';display:inline-block;margin-right:6px;transition:transform .15s}
+details.trouble[open] summary::before{transform:rotate(90deg)}
+details.trouble .tb{padding:10px 0 0 14px;color:var(--text-2);line-height:1.6}
 .empty{display:flex;flex-direction:column;align-items:center;gap:10px;padding:36px 24px;text-align:center;color:var(--text-2);font-size:13px}
 .empty svg{width:44px;height:44px;color:var(--text-3)}
 .empty .et{font-size:15px;font-weight:500;color:var(--text)}
@@ -195,7 +221,7 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .statbox{padding:14px 16px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow)}
 .statbox .v{font-family:var(--font-num);font-size:26px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
 .statbox .l{margin-top:4px;font-size:12px;color:var(--text-2)}
-.chart{display:flex;align-items:flex-end;gap:6px;height:84px;margin-top:12px}
+.chart{display:flex;align-items:flex-end;gap:6px;height:84px;margin-top:12px;padding:0 16px}
 .chart i{flex:1;min-height:4px;border-radius:4px 4px 2px 2px;background:var(--primary);opacity:.85}
 .milestone{margin:0 16px;padding:12px 14px;border-radius:14px;background:var(--primary-soft);font-size:13px}
 .lic{padding:16px 20px;font:12px/1.65 var(--font-num);white-space:pre-wrap}
@@ -203,16 +229,9 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .aboutlogo svg{width:56px;height:56px;color:var(--primary)}
 .aboutlogo .an{font-family:var(--font-display);font-size:26px;font-weight:var(--fw-title)}
 .aboutlogo .av{font-size:12px;color:var(--text-2)}
-.swatches{display:flex;gap:10px;padding:14px 16px}
-.swatch{flex:1;overflow:hidden;border-radius:12px;border:1.5px solid var(--line)}
-.swatch .kb{display:flex;flex-direction:column;gap:3px;padding:10px 8px;background:var(--sw-bg)}
-.swatch .kb i{height:10px;flex:1;border-radius:2px;background:var(--sw-k)}
-.swatch .sl{padding:6px 8px;font-size:12px;color:var(--text-2);background:var(--card)}
 .radio{flex:none;width:22px;height:22px;display:grid;place-items:center;border-radius:50%;border:1.5px solid var(--text-3);color:transparent}
 .radio.on{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
 .radio svg{width:12px;height:12px}
-.page.root{padding-top:50px}
-.page{padding-bottom:100px}
 .tabbar{position:absolute;left:0;right:0;bottom:34px;z-index:12;display:flex;padding-top:6px;background:var(--tab-bg);box-shadow:0 -1px 0 var(--line)}
 .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:49px;padding:6px 0 0;border:0;background:none;color:var(--text-2);font:10px var(--font-body);cursor:pointer}
 .tab svg{width:24px;height:24px}
@@ -220,33 +239,36 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 .tabbar .pad{position:absolute;left:0;right:0;bottom:-34px;height:34px;background:var(--tab-bg)}
 .cat{padding:14px 4px 6px;font-size:12px;color:var(--text-2);letter-spacing:.02em}
 .row.catrow{min-height:0;padding:12px 16px 4px}
-.inscard{margin:12px 16px 0;padding:16px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);cursor:pointer}
+.inscard{margin:12px 16px 0;padding:14px 16px;background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow);cursor:pointer;display:flex;align-items:center;gap:12px}
 .inscard:active{background:var(--press)}
-.inscard .h{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:600}
-.inscard .h>div{flex:1;min-width:0}
-.inscard .d{margin-top:2px;font-size:12px;font-weight:400;color:var(--text-2)}
-.inscard .kv{display:flex;gap:12px;margin-top:14px}
-.inscard .kv>div{flex:1}
-.inscard .k{font-size:11px;color:var(--text-3)}
-.inscard .v{margin-top:2px;font-size:14px;font-weight:500;white-space:nowrap}
+.inscard .h{display:flex;align-items:center;gap:10px;flex:1;min-width:0;font-size:16px;font-weight:600}
+.inscard .h svg{width:18px;height:18px;color:var(--accent);flex:none}
+.inscard.acc .h svg{color:var(--accent)}
+.inscard .d{font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inscard.acc{box-shadow:inset 0 0 0 1.5px var(--accent)}
 .chips{display:flex;gap:10px;padding:14px 16px}
-.chipx{flex:1;display:flex;flex-direction:column;align-items:flex-start;padding:10px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit;color:var(--text);text-align:left}
+.chipx{flex:1;display:flex;flex-direction:column;align-items:stretch;padding:10px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);cursor:pointer;font-family:inherit;color:var(--text);text-align:left}
 .chipx.on{border-color:var(--primary);background:var(--primary-soft)}
-.chipx .dots{display:flex;gap:4px;margin-bottom:8px}
-.chipx .dots i{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.chipx .kb{display:flex;flex-direction:column;gap:3px;padding:8px 6px;border-radius:8px;background:var(--sw-bg);margin-bottom:8px}
+.chipx .kb i{height:9px;flex:none;border-radius:2px;background:var(--sw-k)}
+.chipx .kb i.sp{width:46%;opacity:.35}
 .chipx .n{font-size:13px;font-weight:600}
-.chipx .m{margin-top:2px;font-size:11px;color:var(--text-2)}
-.icons{display:flex;gap:14px;padding:14px 16px}
-.iconx{position:relative;width:58px;height:58px;display:grid;place-items:center;border-radius:14px;color:#fff;cursor:pointer}
-.iconx svg{width:34px;height:34px}
-.iconx.on::after{content:'';position:absolute;inset:-6px;border:2px solid var(--primary);border-radius:19px}
-.iconl{margin-top:7px;font-size:11px;color:var(--text-2);text-align:center}
+.chipx .m{margin-top:1px;font-size:11px;color:var(--text-2)}
 .pk-h{padding:12px 0 4px;font-size:12px;color:var(--text-2)}
 .pk-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .pk-row:last-child{border-bottom:0}
 .pk-row .row-title{font-size:15px}
 .pk-row.on .row-title{color:var(--primary)}
-/* @@CSS@@ */
+.pk-row.dev{cursor:pointer}
+.qa{padding:12px 16px;border-bottom:1px solid var(--line)}
+.qa:last-child{border-bottom:0}
+.qa .q{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:500;cursor:pointer}
+.qa .q .chev{margin-left:auto;transition:transform .15s}
+.qa.open .q .chev{transform:rotate(90deg)}
+.qa .a{display:none;margin-top:6px;font-size:13px;line-height:1.6;color:var(--text-2)}
+.qa.open .a{display:block}
+body.hide-dev .dev{display:none!important}
+@media (prefers-reduced-motion:reduce){.wing-hover,.spin{animation:none}.page,.cover,.sheet,.toast{transition:none}}
 </style>
 </head>
 <body data-mode="light">
@@ -255,30 +277,34 @@ body[data-mode=dark]{--sh-bg:#0B0C0E;--sh-fg:#D7DADE;--sh-line:#26292E;--sh-card
 <symbol id="i-layout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="3" y="5" width="18" height="4" rx="1.4"/><rect x="5.5" y="11" width="13" height="4" rx="1.4"/><rect x="9" y="17" width="6" height="4" rx="1.4"/></symbol>
 <symbol id="i-cand" viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="4.5" rx="2.25" fill="currentColor"/><rect x="3" y="11.5" width="18" height="3.5" rx="1.75" fill="currentColor" opacity=".55"/><rect x="3" y="17" width="9" height="3.5" rx="1.75" fill="currentColor" opacity=".3"/></symbol>
 <symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="8.5" width="10" height="10" rx="2.5"/><path d="M4 9a9 9 0 0 1 3.2-4.6M20 9a9 9 0 0 0-3.2-4.6"/></symbol>
-<symbol id="i-punct" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="7.5" cy="16" r="2.4"/><path d="M14.5 6.5c-1.6.4-2.5 1.7-2.5 3.5M19 6.5c-1.6.4-2.5 1.7-2.5 3.5"/></symbol>
 <symbol id="i-appearance" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></symbol>
 <symbol id="i-clip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><rect x="6" y="5" width="12" height="15" rx="2"/><rect x="9" y="3" width="6" height="4" rx="1.2"/></symbol>
 <symbol id="i-stats" viewBox="0 0 24 24" fill="currentColor"><rect x="4.5" y="12" width="3.2" height="7.5" rx="1.1"/><rect x="10.4" y="8" width="3.2" height="11.5" rx="1.1"/><rect x="16.3" y="4" width="3.2" height="15.5" rx="1.1"/></symbol>
 <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/></symbol>
 <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.8v.2"/></symbol>
-<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="5.5" y="10.5" width="13" height="9.5" rx="2.2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v3"/></symbol>
 <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></symbol>
 <symbol id="i-back" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></symbol>
 <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
 <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
 <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M7 11l5 5 5-5M5 20h14"/></symbol>
 <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 8.5L12 4l9 4.5v8L12 21l-9-4.5z"/><path d="M3 8.5l9 4.5 9-4.5M12 13v8"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.3M12 16.6v.2"/></symbol>
 <symbol id="i-status" viewBox="0 0 26 14" fill="currentColor"><rect x="0" y="8" width="3" height="5" rx="1"/><rect x="4.5" y="6" width="3" height="7" rx="1"/><rect x="9" y="3.5" width="3" height="9.5" rx="1"/><rect x="13.5" y="1" width="3" height="12" rx="1"/><rect x="19.5" y="1.5" width="6" height="11" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.1"/><rect x="21" y="3.2" width="3.6" height="7.6" rx="1.2"/></symbol>
 </svg>
 <header class="bar">
-<h1>Dragonfly · 主 App 设计预览</h1>
-<div class="ctl"><label>方向</label><div class="rseg" id="ctlTheme"><button data-v="a" class="on">A 素翼</button><button data-v="b">B 夜航</button><button data-v="c">C 晨光</button></div></div>
-<div class="ctl"><label>模式</label><div class="rseg" id="ctlMode"><button data-v="light" class="on">浅色</button><button data-v="dark">深色</button></div></div>
-<div class="ctl"><label>场景</label><select class="rselect" id="ctlScene"><option value="normal">正常</option><option value="cellular">蜂窝网络</option><option value="disk">磁盘不足（预检失败）</option><option value="drop">下载中断</option><option value="compiling">编译中（立即触发）</option></select></div>
+<h1>Dragonfly · 主 App 设计预览 v3</h1>
+<div class="ctl"><label>主题</label><div class="rseg" id="ctlTheme"><button data-v="a" class="on">素翼</button><button data-v="b">夜航</button><button data-v="c">晨光</button></div></div>
+<div class="ctl"><label>系统外观</label><div class="rseg" id="ctlMode"><button data-v="light" class="on">浅色</button><button data-v="dark">深色</button></div></div>
+<div class="ctl"><label>场景</label><select class="rselect" id="ctlScene"><option value="normal">正常</option><option value="cellular">蜂窝网络</option><option value="wifi">等 Wi-Fi</option><option value="disk">磁盘不足（预检失败）</option><option value="drop">下载中断</option><option value="compiling">编译中（立即触发）</option></select></div>
 <label class="chk"><input type="checkbox" id="ctlFa"> 模拟已开启完全访问</label>
+<label class="chk"><input type="checkbox" id="ctlKb"> 模拟键盘已添加</label>
+<label class="chk"><input type="checkbox" id="ctlDev" checked> 显示开发中项</label>
 <button class="rbtn" id="ctlReplay">重播首启引导</button>
 <button class="rbtn" id="ctlHome">回到首页</button>
-<a class="rlink" href="DESIGN.md" target="_blank">DESIGN.md</a>
+<a class="rlink" href="DESIGN.md" target="_blank">DESIGN.md v3</a>
 </header>
 <main class="stage"><div class="wrap" id="wrap"><div class="phone" id="phone"><div class="screen" id="screen" data-theme="a" data-mode="light">
 <div class="island"></div>
@@ -297,244 +323,159 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const svg=(id,cls='')=>`<svg class="${cls}" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const screen=$('#screen'), viewport=$('#viewport'), layer=$('#layer'), toastEl=$('#toast'), cover=$('#cover'), phone=$('#phone'), wrap=$('#wrap');
 const PKG={
- 'rime-ice':{name:'雾凇拼音',src:'rime-ice',license:'GPL-3.0',size:'47 MB',unzip:'124 MB',peak:500,ver:'nightly 2026-11-24',instant:true,desc:'全拼 + 自然码双拼，切换即时生效',types:[{id:'quanpin',n:'全拼（雾凇）'},{id:'zrm',n:'自然码双拼'}]},
- wanxiang:{name:'万象拼音',src:'amzxyz/rime-wanxiang',license:'CC-BY-4.0',size:'31 MB',unzip:'95 MB',peak:700,ver:'v18.1.14',instant:false,grammar:true,desc:'9 种输入类型 + 辅助码，切换需重新编译',types:[{id:'quanpin',n:'全拼'},{id:'zrm',n:'自然码'},{id:'flypy',n:'小鹤双拼'},{id:'mspy',n:'微软双拼'},{id:'sogou',n:'搜狗双拼'},{id:'znabc',n:'智能ABC'},{id:'ziguang',n:'紫光双拼'},{id:'pyjj',n:'拼音加加'},{id:'sdpy',n:'首道双拼'}]}
+ 'rime-ice':{name:'雾凇拼音',src:'iDvel/rime-ice',license:'GPL-3.0',licenseName:'GPL 3.0',author:'iDvel',size:47,unzip:124,peak:500,ver:'每日更新版',cat:'拼音',kb:['26'],desc:'全拼 + 7 种双拼，切换即时生效',types:[['quanpin','全拼'],['zrm','自然码双拼'],['flypy','小鹤双拼'],['mspy','微软双拼'],['sogou','搜狗双拼'],['abc','智能ABC双拼'],['pyjj','拼音加加双拼']]},
+ wanxiang:{name:'万象拼音',src:'amzxyz/rime-wanxiang',license:'CC-BY-4.0',licenseName:'CC BY 4.0',author:'amzxyz',size:31,unzip:95,peak:700,ver:'v18.1.14',cat:'拼音',kb:['26','9'],grammar:true,assist:true,desc:'全拼 + 8 种双拼 + 辅助码，支持九宫格',types:[['quanpin','全拼'],['zrm','自然码'],['flypy','小鹤双拼'],['mspy','微软双拼'],['sogou','搜狗双拼'],['abc','智能ABC双拼'],['zg','紫光双拼'],['pyjj','拼音加加双拼'],['sd','首道双拼']]}
 };
-const GRAMMAR={size:'391 MB',ver:'LTS 2026-11-20'};
-const PHASES={install:['获取版本信息','下载','校验文件完整性','解压文件','替换词库','编译词库'],grammar:['获取版本信息','下载','校验文件完整性','放置为保留文件']};
-const HINTS={install:['','','','','几秒完成','约 2–5 分钟，期间键盘只能打英文'],grammar:['','','','不打扰正在使用旧版本的键盘']};
-const DEPLOY=['关闭当前输入引擎','编译词库','检查编译结果','记录版本信息','重启输入引擎'];
-const HAPTIC=[['off','关'],['soft','弱'],['light','中'],['heavy','强']];
-const TILES={layout:{h:185,i:'layout'},scheme:{h:165,i:'wing'},cand:{n:1,i:'cand'},keys:{h:12,i:'key'},punct:{h:35,i:'punct'},appearance:{h:350,i:'appearance'},clip:{n:1,i:'clip'},stats:{h:225,i:'stats'},privacy:{n:1,i:'shield'},about:{n:1,i:'wing'}};
-const KEY='dragonfly-host-app-preview';
-function fresh(){return {theme:'a',mode:'light',scenario:'normal',fa:false,onboarded:false,layout:'26',inline:true,haptic:'off',defaultKb:'zh',types:{'rime-ice':'quanpin',wanxiang:'zrm'},pkgs:{'rime-ice':{st:'none'},wanxiang:{st:'none'}},grammar:{installed:false,on:true},statsOn:false,clipboardOn:false,tryOpen:false,tryText:''}}
+const GRAMMAR={size:391,ver:'长期稳定版'};
+const PLANNED=[['拼音','luna','朙月拼音','Rime 经典全拼家族，含简化字模式与各双拼'],['拼音','terra','地球拼音','带声调全拼'],['拼音','pinyin_simp','袖珍简化字拼音','大词库简化字拼音'],['形码','wubi','五笔','五笔 86 与五笔·拼音'],['形码','cangjie','仓颉','五代与速成'],['方言与其他','jyutping','粤拼','粤语罗马字拼音'],['方言与其他','wugniu','吴语','吴语拼音'],['方言与其他','bopomofo','注音','注音符号输入']];
+const CATS=['拼音','形码','方言与其他'];
+const INTENTS=[['小鹤双拼','flypy'],['微软双拼','mspy'],['搜狗双拼','sogou'],['自然码','zrm'],['全拼','quanpin']];
+const USAGE=[['quanpin','全拼'],['flypy','小鹤双拼'],['zrm','自然码'],['mspy','微软双拼'],['sogou','搜狗双拼'],['other','其他 / 不确定']];
+const HAPTIC=[['off','关'],['soft','弱'],['light','中'],['strong','强']];
+const TILES={layout:{h:185,i:'layout'},cand:{h:225,i:'cand'},keys:{h:12,i:'key'},clip:{n:1,i:'clip'},stats:{h:225,i:'stats'},privacy:{n:1,i:'shield'},about:{n:1,i:'wing'},packages:{h:165,i:'box'},help:{n:1,i:'help'},gear:{n:1,i:'gear'}};
+const THEMES=[['a','素翼','纸感 · 宋体',['#2E6460','#C8503A','#F6F4EF','#FFFFFF']],['b','夜航','石墨 · 等宽',['#1F2733','#1FA88E','#F2F3F5','#FFFFFF']],['c','晨光','暖纸 · 圆角',['#A8552F','#2E8C86','#FAF6EF','#FFFFFF']]];
+const PHASES={install:['下载','安装','编译词库'],grammar:['下载','放置为保留文件'],compile:['编译词库']};
+const HINTS={install:['12 MB / 31 MB · 剩余约 20 秒','几秒完成','约 2–5 分钟，期间键盘只能打英文'],grammar:['约 391 MB，建议 Wi-Fi','不打扰正在使用旧版本的键盘'],compile:['约 2–5 分钟，期间键盘只能打英文']};
+const SUB=['校验文件完整性','解压文件','关闭当前输入引擎','检查编译结果','记录版本信息','重启输入引擎'];
+const KEY='dragonfly-host-app-preview-v3';
+function fresh(){return {theme:'a',mode:'light',appMode:'system',fa:false,kbAdded:false,onboarded:false,skipCount:0,layout:'26',inline:true,haptic:'off',defaultKb:'zh',types:{'rime-ice':'quanpin',wanxiang:'quanpin'},pkgs:{'rime-ice':{st:'none'},wanxiang:{st:'none'}},sw:{},grammar:{installed:false,on:false},ud:{learn:true,n:1284,sync:false},statsOn:false,clipboardOn:false,tryOpen:false,tryText:'',quick:[],custom:[],moreOpen:false,privacyOpen:false}}
 function load(){try{const raw=localStorage.getItem(KEY);if(!raw)return fresh();return Object.assign(fresh(),JSON.parse(raw),{scenario:'normal'})}catch(e){return fresh()}}
 function save(){const {scenario,...rest}=S;try{localStorage.setItem(KEY,JSON.stringify(rest))}catch(e){}}
 let S=load(), JOB=null, tickTimer=null, toastTimer=null, OB=null;
 const inService=()=>Object.keys(S.pkgs).find(k=>S.pkgs[k].st==='inservice');
-const typeName=(p,t)=>(PKG[p].types.find(x=>x.id===t)||PKG[p].types[0]).n;
-const sizeText=(p,g)=>PKG[p].size+(PKG[p].grammar&&g?' + 语法 '+GRAMMAR.size:'');
+const typeName=(p,t)=>(PKG[p].types.find(x=>x[0]===t)||PKG[p].types[0])[1];
+const swOf=p=>(S.sw[p]??={trad:false,variant:'t',fullwidth:false,punct:true,emoji:true,single:false,assist:true,fuzzy:{}});
 const fmt=ms=>{const s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 const sinceDays=t=>Math.max(1,Math.floor((Date.now()-t)/864e5)+1);
-const PAGES={}, TABS=['keyboard','packages','personal','about'], stacks={keyboard:[],packages:[],personal:[],about:[]}, TABICON={keyboard:'layout',packages:'wing',personal:'appearance',about:'info'}, TABNAME={keyboard:'键盘',packages:'方案包',personal:'个性化',about:'关于'};
+const num=n=>n.toLocaleString('zh-CN');
+const PAGES={}, TABS=['keyboard','packages','personal','general'], stacks={keyboard:[],packages:[],personal:[],general:[]}, TABICON={keyboard:'layout',packages:'box',personal:'appearance',general:'gear'}, TABNAME={keyboard:'键盘',packages:'方案包',personal:'个性化',general:'通用'};
 let cur='keyboard';
 const tabbar=$('#tabbar');
 function renderTabbar(){tabbar.innerHTML=TABS.map(t=>`<button class="tab ${t===cur?'on':''}" data-act="tab" data-arg="${t}">${svg(TABICON[t])}<span>${TABNAME[t]}</span></button>`).join('')+'<div class="pad"></div>'}
 function mount(el){el.addEventListener('scroll',()=>el.classList.toggle('collapsed',el.scrollTop>34),{passive:true});viewport.appendChild(el);requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.remove('enter')))}
 function push(id,arg){const p=PAGES[id];if(!p)return;const st=stacks[cur],root=st.length===0;const el=document.createElement('div');el.className='page'+(root?' root':' enter');el.dataset.page=id;el.innerHTML=p.render(arg);const top=st[st.length-1];if(top){top.el.classList.add('under');top.el.style.pointerEvents='none'}st.push({id,el,arg});mount(el)}
 function pop(){const st=stacks[cur];if(st.length<2)return;const top=st.pop(),under=st[st.length-1];top.el.classList.add('enter');under.el.classList.remove('under');under.el.style.pointerEvents='';const el=top.el;setTimeout(()=>el.remove(),320)}
-function popAll(){Object.values(stacks).forEach(st=>{while(st.length>1)st.pop().el.remove();const u=st[0];if(u){u.el.classList.remove('under');u.el.style.pointerEvents=''}})}
-function switchTab(t){if(!stacks[t]||t===cur&&stacks[t].length)return;const prev=stacks[cur][stacks[cur].length-1];if(prev)prev.el.style.display='none';cur=t;if(!stacks[t].length)push(t);else stacks[t][stacks[t].length-1].el.style.display='';renderTabbar()}
+function popAll(){Object.values(stacks).forEach(st=>{while(st.length>1)st.pop().el.remove();const u=st[0];if(u){u.el.classList.remove('under','enter');u.el.style.pointerEvents=''}})}
+function switchTab(t){if(!stacks[t]||(t===cur&&stacks[t].length))return;stacks[cur].forEach(p=>p.el.style.display='none');cur=t;if(!stacks[t].length)push(t);else stacks[t].forEach(p=>p.el.style.display='');renderTabbar()}
 function rerender(){const top=stacks[cur][stacks[cur].length-1];if(!top)return;const st=top.el.scrollTop;top.el.innerHTML=PAGES[top.id].render(top.arg);top.el.scrollTop=st;top.el.classList.toggle('collapsed',st>34)}
 function rerenderAll(){Object.values(stacks).forEach(st=>st.forEach(p=>{p.el.innerHTML=PAGES[p.id].render(p.arg)}))}
-function refreshLive(){$$('[data-joblive]').forEach(el=>{el.outerHTML=statusHTML()})}
 const nav=(title,right)=>`<div class="nav"><button class="back" data-act="back">${svg('back')}返回</button><div class="nt">${title}</div>${right||''}</div>`;
 const head=(title,sub)=>`<div class="phead"><div class="ltitle">${title}</div>${sub?`<div class="lsub">${sub}</div>`:''}</div>`;
-function sheet(o){layer.innerHTML=`<div class="scrim" data-act="dismiss"></div><div class="sheet" role="dialog"><div class="grab"></div><h3>${o.title}</h3>${o.tag?`<div style="text-align:center;margin-top:6px">${o.tag}</div>`:''}${o.msg?`<div class="msg">${o.msg}</div>`:''}${o.html||''}<div class="acts">${(o.acts||[]).map(a=>`${a.gap?'<div class="gap"></div>':''}<button class="btn ${a.k||'secondary'}" data-act="${a.act||'dismiss'}" data-arg="${esc(a.arg||'')}">${a.l}</button>`).join('')}</div></div>`;layer.classList.add('show')}
+function sheet(o){layer.innerHTML=`<div class="scrim" data-act="dismiss"></div><div class="sheet" role="dialog"><div class="grab"></div><h3>${o.title}</h3>${o.tag?`<div style="text-align:center;margin-top:6px">${o.tag}</div>`:''}${o.msg?`<div class="msg">${o.msg}</div>`:''}${o.html||''}<div class="acts">${(o.acts||[]).map(a=>`${a.gap?'<div class="gap"></div>':''}<button class="btn ${a.k||'secondary'}" data-act="${a.act||'dismiss'}" data-page="${esc(a.page||'')}" data-arg="${esc(a.arg||'')}">${a.l}</button>`).join('')}</div></div>`;layer.classList.add('show')}
 function dismissSheet(){layer.classList.remove('show');setTimeout(()=>{if(!layer.classList.contains('show'))layer.innerHTML=''},320)}
-function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2400)}
-function devSheet(name){sheet({tag:'<span class="pill">开发中</span>',title:name,msg:`「${name}」正在开发中，预计随 V1.1 提供。\n当前版本不会生效，现有打字不受影响。`,acts:[{l:'知道了',k:'primary'}]})}
-function faSheet(){sheet({title:'需要允许完全访问',msg:'按键触感反馈由系统触感接口提供，iOS 只在键盘获得「允许完全访问」后才允许调用。\n不开启也能正常打字。完全访问只解锁触感反馈与以后的数据持久化。',html:'<div class="infocard">设置 → 键盘 → 蜻蜓 → 允许完全访问</div>',acts:[{l:'打开系统设置',k:'primary',act:'openSettings'},{gap:1,l:'暂不开启',k:'secondary'}]})}
-const pill=()=>'<span class="pill">开发中</span>', chip=()=>'<span class="chip">在役</span>';
+function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2600)}
+function devSheet(name){sheet({tag:'<span class="pill">开发中</span>',title:name,msg:`「${name}」正在开发中。\n当前版本不会生效，现有打字不受影响。`,acts:[{l:'知道了',k:'primary'},{l:'好了通知我',k:'secondary',act:'notifyMe',arg:name}]})}
+function faSheet(feature){sheet({title:`开启「${feature}」需要完全访问`,msg:'需在系统设置中为蜻蜓开启「允许完全访问」。不开启也能正常打字。\n系统会提示键盘可能联网。蜻蜓的键盘没有网络权限，也不记录你输入的内容。',html:`<div class="path"><b>设置</b><span class="arw">›</span><b>通用</b><span class="arw">›</span><b>键盘</b><span class="arw">›</span><b>键盘</b><span class="arw">›</span><b>蜻蜓</b><span class="arw">›</span><b>允许完全访问</b></div>`,acts:[{l:'去设置',k:'primary',act:'openSettings'},{gap:1,l:'暂不开启',k:'text'}]})}
+const pill=()=>'<span class="pill">开发中</span>', soon=()=>'<span class="pill">即将上架</span>', chip=()=>'<span class="chip">使用中</span>';
 const glabel=t=>`<div class="glabel">${t}</div>`, card=c=>`<div class="card">${c}</div>`, content=c=>`<div class="content">${c}</div>`, foot=t=>`<div class="foot">${t}</div>`;
 function tile(k,lg){const t=TILES[k];return `<span class="tile ${lg?'lg':''} ${t.n?'neutral':''}"${t.h?` style="--h:${t.h}"`:''}>${svg(t.i)}</span>`}
-function row(o){const a=o.act?` data-act="${o.act}"${o.arg!==undefined?` data-arg="${esc(o.arg)}"`:''}`:'';return `<div class="row ${o.tile?'has-tile':''} ${o.dev?'dev':''} ${o.act?'tappable':''}"${a}>${o.tile?tile(o.tile):''}<div class="row-main"><div class="row-title">${o.title}${o.lock?svg('lock','lock-ic'):''}</div>${o.cap?`<div class="row-cap">${o.cap}</div>`:''}</div><div class="row-trail">${o.dev?pill():''}${o.chip?chip():''}${o.value!==undefined?`<span class="row-val">${o.value}</span>`:''}${o.control||''}${o.radio!==undefined?`<span class="radio ${o.radio?'on':''}">${svg('check')}</span>`:''}${o.chev?svg('chev','chev'):''}</div></div>`}
-function tog(on,key,dev){return `<button class="tgl ${on?'on':''}" ${dev?'disabled':''} data-act="tog" data-key="${key}" aria-pressed="${!!on}"></button>`}
-function seg(opts,val,act,key,wide){const at=act?` data-act="${act}" data-key="${key||''}"`:'';return `<div class="seg ${wide?'wide':''}">${opts.map(o=>`<button class="${o[0]===val?'on':''}"${at} data-val="${esc(o[0])}"${o[2]?` data-dev="${esc(o[2])}"`:''}>${o[1]}</button>`).join('')}</div>`}
+function row(o){const a=o.act?` data-act="${o.act}"${o.page?` data-page="${esc(o.page)}"`:''}${o.arg!==undefined?` data-arg="${esc(o.arg)}"`:''}`:'';const click=o.act?'tappable':'';return `<div class="row ${o.tile?'has-tile':''} ${o.dev?'dev':''} ${click}"${a}>${o.tile?tile(o.tile):''}<div class="row-main"><div class="row-title">${o.title}${o.lock?svg('lock','lock-ic'):''}</div>${o.cap?`<div class="row-cap">${o.cap}</div>`:''}</div><div class="row-trail">${o.soon?soon():o.dev?pill():''}${o.chip?chip():''}${o.value!==undefined?`<span class="row-val">${o.value}</span>`:''}${o.control||''}${o.radio!==undefined?`<span class="radio ${o.radio?'on':''}">${svg('check')}</span>`:''}${o.chev?svg('chev','chev'):''}</div></div>`}
+function tog(on,act,arg,dev,lock){return `<button class="tgl ${on?'on':''}" ${dev||lock?'disabled':''} data-act="${act}"${arg!==undefined?` data-arg="${esc(arg)}"`:''} aria-pressed="${!!on}"></button>`}
+function seg(opts,val,act,key,wide){return `<div class="seg ${wide?'wide':''}">${opts.map(o=>`<button class="${o[0]===val?'on':''}" data-act="${act}" data-key="${key||''}" data-val="${esc(o[0])}"${o[2]?' data-dev="1"':''}>${o[1]}</button>`).join('')}</div>`}
 const ACT={};
 screen.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;const fn=ACT[el.dataset.act];if(fn){e.stopPropagation();fn(el,e)}});
-Object.assign(ACT,{
- back:()=>pop(), dismiss:()=>dismissSheet(), push:el=>push(el.dataset.arg), dev:el=>devSheet(el.dataset.arg),
- tog:el=>{S[el.dataset.key]=!S[el.dataset.key];save();rerender()},
- seg:el=>{S[el.dataset.key]=el.dataset.val;save();rerender()},
- haptic:el=>{if(!S.fa){faSheet();return}S.haptic=el.dataset.val;save();rerender();toast(S.haptic==='off'?'按键触感反馈已关闭，重新弹出键盘即生效':'按键触感反馈：'+el.textContent+'，重新弹出键盘即生效')},
- openSettings:()=>{dismissSheet();toast('预览：此处跳转系统设置 → 键盘 → 蜻蜓 → 允许完全访问')},
- goJob:()=>{if(!inService()){openCover(3)}else push('scheme')},
-});
-function applyChrome(){screen.dataset.theme=S.theme;screen.dataset.mode=S.mode;document.body.dataset.mode=S.mode;$$('#ctlTheme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));$$('#ctlMode button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.mode));$('#ctlFa').checked=S.fa;save()}
-$('#ctlTheme').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;applyChrome()});
-$('#ctlMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.mode=b.dataset.v;applyChrome()});
+screen.addEventListener('input',e=>{if(e.target.hasAttribute&&e.target.hasAttribute('data-try')){S.tryText=e.target.textContent;save()}});
+Object.assign(ACT,{back:()=>pop(),dismiss:()=>dismissSheet(),push:el=>push(el.dataset.page,el.dataset.arg),dev:el=>devSheet(el.dataset.arg),tab:el=>switchTab(el.dataset.arg),openSettings:()=>{dismissSheet();toast('预览：此处打开系统设置。回到 App 后半屏指引补齐「通用 › 键盘 › 键盘」两级')},notifyMe:()=>{dismissSheet();toast('已在本地记下。功能上线后提醒你一次')}});
+function applyChrome(){screen.dataset.theme=S.theme;const m=S.appMode==='system'?S.mode:S.appMode;screen.dataset.mode=m;document.body.dataset.mode=S.mode;$$('#ctlTheme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.theme));$$('#ctlMode button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.mode));$('#ctlFa').checked=S.fa;$('#ctlKb').checked=S.kbAdded;$('#ctlDev').checked=!document.body.classList.contains('hide-dev');save()}
+$('#ctlTheme').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.theme=b.dataset.v;applyChrome();rerenderAll()});
+$('#ctlMode').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S.mode=b.dataset.v;applyChrome();rerenderAll()});
 $('#ctlFa').addEventListener('change',e=>{S.fa=e.target.checked;applyChrome();rerenderAll();toast(S.fa?'已模拟开启完全访问':'已模拟关闭完全访问')});
-$('#ctlScene').addEventListener('change',e=>{S.scenario=e.target.value;if(S.scenario==='compiling')triggerCompileScenario();else toast('场景：'+e.target.selectedOptions[0].textContent+'（下次装包时生效）')});
-$('#ctlReplay').addEventListener('click',()=>{stopTick();JOB=null;const {theme,mode,fa}=S;S=Object.assign(fresh(),{theme,mode,fa});save();popAll();openCover()});
-$('#ctlHome').addEventListener('click',()=>{closeCover();S.onboarded=true;save();popAll();rerender()});
+$('#ctlKb').addEventListener('change',e=>{S.kbAdded=e.target.checked;applyChrome();rerenderAll();toast(S.kbAdded?'已模拟：键盘已添加到系统':'已模拟：键盘未添加')});
+$('#ctlDev').addEventListener('change',e=>{document.body.classList.toggle('hide-dev',!e.target.checked);applyChrome()});
+$('#ctlScene').addEventListener('change',e=>{S.scenario=e.target.value;const name=e.target.selectedOptions[0].textContent;if(S.scenario==='compiling')triggerCompileScenario();else toast('场景：'+name+'（下次装包时生效）')});
+$('#ctlReplay').addEventListener('click',()=>{stopTick();JOB=null;const {theme,mode,fa,kbAdded}=S;S=Object.assign(fresh(),{theme,mode,fa,kbAdded});save();popAll();openCover(1)});
+$('#ctlHome').addEventListener('click',()=>{closeCover();OB=null;if(!S.onboarded){S.onboarded=true}save();popAll();switchTab('keyboard');rerenderAll()});
 function fit(){const bar=$('.bar');const s=Math.min(1,(innerHeight-bar.offsetHeight-64)/844,(innerWidth-40)/390);phone.style.transform=`scale(${s})`;wrap.style.width=390*s+'px';wrap.style.height=844*s+'px'}
 addEventListener('resize',fit);
-PHASES.compile=['保存输入类型','编译词库'];HINTS.compile=['','约 2–5 分钟，期间键盘只能打英文'];
-function statusHTML(){
- if(JOB){const label=JOB.failed?(JOB.kind==='install'?'安装失败':JOB.kind==='compile'?'编译失败':'更新失败'):JOB.kind==='compile'?'正在编译词库':JOB.kind==='grammar'?'正在下载语法模型':'正在安装'+PKG[JOB.pkg].name;
-  const detail=JOB.failed?'点按查看':(JOB.kind==='install'&&JOB.phase===1)?Math.round(JOB.progress*100)+'%':'已耗时 '+fmt(JOB.elapsed);
-  return `<div class="status jobstat" data-joblive data-act="goJob">${JOB.failed?svg('x'):`<span class="wing-hover" style="display:inline-flex;width:18px;height:18px">${svg('wing')}</span>`}<span>${label} · ${detail}</span></div>`}
- const ins=inService();
- if(!ins)return `<div class="status warn" data-joblive data-act="goJob">${svg('info')}<span>未安装方案包，键盘目前只能打英文</span><button class="blink">去装包</button></div>`;
- return `<div class="status" data-joblive>${svg('wing')}<span>${PKG[ins].name} · ${typeName(ins,S.types[ins])} · 引擎就绪</span></div>`;
-}
-function jobStatusText(){const pct=Math.round(JOB.progress*100);if(JOB.kind==='compile'||(JOB.kind==='install'&&JOB.phase>=5))return '正在编译词库 · 已耗时 '+fmt(JOB.elapsed);if(JOB.phase===1)return '下载中 · '+pct+'%';return PHASES[JOB.kind][JOB.phase]+'…'}
-function jobHTML(){
- if(!JOB)return'';
- const phases=PHASES[JOB.kind],hints=HINTS[JOB.kind],cur=JOB.phase,done=JOB.done,failed=JOB.failed,pct=Math.round(JOB.progress*100);
- const showSub=(JOB.kind==='install'&&cur>=5)||(JOB.kind==='compile'&&cur>=1);
- let h=`<div class="card job" data-job><div class="jhead">${failed?svg('x'):`<span class="wing-hover" style="display:inline-flex;width:22px;height:22px">${svg('wing')}</span>`}<div><div class="jt">${failed?JOB.failTitle:JOB.title}</div><div class="js">${failed?esc(failed):done?'已完成':jobStatusText()}</div></div></div><div class="steps">`;
- phases.forEach((t,i)=>{const cls=done||i<cur?'done':i===cur?(failed?'fail':'cur'):'todo';const inner=done||i<cur?svg('check'):failed&&i===cur?svg('x'):i===cur?'<span class="spin"></span>':'';
-  h+=`<div class="step ${cls}"><span class="dot">${inner}</span><div><div>${t}</div>${i===cur&&!failed&&!done&&hints[i]?`<div class="hint">${hints[i]}</div>`:''}${i===cur&&!failed&&!done&&i===1&&JOB.kind!=='compile'?`<div class="pbar"><i style="width:${pct}%"></i></div><div class="hint">${pct}% · 约 ${JOB.kind==='grammar'?GRAMMAR.size:PKG[JOB.pkg].size} 流量</div>`:''}</div></div>`});
- if(showSub){h+='<div class="substeps">'+DEPLOY.map((s,i)=>{const c=done||i<JOB.sub?'done':i===JOB.sub?'cur':'';return `<div class="substep ${c}">${c==='done'?svg('check'):c==='cur'?'<span class="spin"></span>':''}${s}</div>`}).join('')+'</div>'}
- h+='</div>';
- if(failed)h+='<div class="jacts"><button class="btn secondary" data-act="retryJob">重试</button></div>';
- else if(!done&&JOB.cancellable)h+='<div class="jacts"><button class="btn text" data-act="cancelJob">取消安装</button></div>';
- return h+'</div>';
-}
-function refreshJob(){$$('[data-job]').forEach(el=>{el.outerHTML=jobHTML()});refreshLive();if(OB&&OB.step===3)obFooter()}
-function tryCard(){
- if(S.tryOpen)return `<div class="trycard open"><div style="display:flex;align-items:center"><div style="flex:1"><div class="tt">试打</div><div class="tc">在真机上，这里会弹出蜻蜓键盘</div></div><button class="blink" data-act="tryClose">收起</button></div><div class="fld has" contenteditable="true">${esc(S.tryText)}</div><div class="hint">换包、切输入类型、改布局后，在这里验证效果</div></div>`;
- return `<div class="trycard" data-act="tryOpen"><div style="flex:1"><div class="tt">试打</div><div class="tc">换包或切类型后验证</div></div><div class="fld" style="max-width:150px">在这里试打一句…</div></div>`;
-}
-function bcard(id,t,c){return `<div class="bcard" data-act="push" data-arg="${id}">${tile(id,1)}<div class="t">${t}</div><div class="c">${c}</div></div>`}
-TILES.cand={h:225,i:'cand'};TILES.packages={h:165,i:'wing'};
-PKG['rime-ice'].cat='拼音';PKG.wanxiang.cat='拼音';
-const PLANNED=[['拼音','luna','朙月拼音','Rime 经典全拼，含简化字模式'],['拼音','terra','地球拼音','带声调全拼'],['拼音','pinyin_simp','袖珍简化字拼音','大词库简化字拼音'],['双拼','flypy','小鹤双拼','小鹤音形，单独成包'],['双拼','mspy','微软双拼','微软拼音双拼键位'],['双拼','sogou','搜狗双拼','搜狗拼音双拼键位'],['形码','wubi86','五笔 86','86 版五笔字形'],['形码','wubi_pinyin','五笔·拼音','五笔与拼音混输'],['形码','cangjie5','仓颉','仓颉五代，繁体'],['形码','quick5','速成','仓颉速成，繁体'],['方言与其他','jyutping','粤拼','粤语罗马字拼音'],['方言与其他','wugniu','吴语','吴语拼音'],['方言与其他','bopomofo','注音','注音符号输入'],['方言与其他','emoji','Emoji','表情符号输入']];
-const CATS=['拼音','双拼','形码','方言与其他'];
-function groupedPackages(recommend){const by={};Object.keys(PKG).forEach(id=>{(by[recommend?'推荐':PKG[id].cat]??=[]).push(id)});PLANNED.forEach(p=>{(by[p[0]]??=[]).push(p)});return by}
-function deployCard(){const ins=inService(),eng=JOB?'编译中':ins?'就绪':'未初始化',dep=JOB?'已耗时 '+fmt(JOB.elapsed):ins?'上次部署 '+new Date(S.pkgs[ins].since||Date.now()).toLocaleDateString('zh-CN'):'—';return `<div class="cat">部署状态</div>${content(card(row({title:'引擎',value:eng})+row({title:'在役包',value:ins?PKG[ins].name:'无'})+row({title:'部署',value:dep})))}${JOB?`<div style="margin:12px 16px 0">${jobHTML()}</div>`:''}`}
-function inServiceCard(id){const st=S.pkgs[id],pk=PKG[id],d=st.since?sinceDays(st.since):42;return `<div class="cat">在役</div><div class="inscard" data-act="push" data-arg="detail:${id}"><div class="h">${tile('packages',1)}<div><div>${pk.name}</div><div class="d">${pk.desc}</div></div>${chip()}</div><div class="kv"><div><div class="k">输入类型</div><div class="v">${typeName(id,S.types[id])}</div></div><div><div class="k">版本</div><div class="v">${st.ver||pk.ver}</div></div><div><div class="k">在役</div><div class="v">第 ${d} 天</div></div></div></div>`}
-function pkgListRows(){let h='';const by=groupedPackages(false);for(const c of CATS){const items=by[c]||[];if(!items.length)continue;h+=`<div class="row catrow"><div class="row-main"><div class="row-title" style="font-size:12px;color:var(--text-2);font-weight:500">${c}</div></div></div>`;for(const it of items){if(typeof it==='string'){const st=S.pkgs[it],pk=PKG[it];if(st.st==='inservice')h+=`<div class="row tappable has-tile" data-act="push" data-arg="detail:${it}">${tile('packages')}<div class="row-main"><div class="row-title">${pk.name} ${chip()}</div><div class="row-cap">${st.ver||pk.ver} · 在役第 ${st.since?sinceDays(st.since):42} 天</div></div>${svg('chev','chev')}</div>`;else h+=row({tile:'packages',title:pk.name,cap:st.fail?`失败：${esc(st.fail)}`:st.st==='installed'?'已下载 · 点按切换使用（秒级，不重编译）':`约 ${sizeText(it,true)} · ${pk.license} · 点按安装并在役`,value:st.st==='installed'?'已下载':'',act:JOB?null:'pkgTap',arg:it,chev:!JOB})}else h+=row({title:it[2],cap:it[3],value:'未上架',dev:true,act:'dev',arg:it[2]})}}return h}
-function pickerSheet(){let html='';const by=groupedPackages(true);for(const c of ['推荐',...CATS]){const items=by[c]||[];if(!items.length)continue;html+=`<div class="pk-h">${c}</div>`;for(const it of items){if(typeof it==='string'){const pk=PKG[it];html+=`<div class="pk-row ${OB.pkg===it?'on':''}" data-act="obPick" data-arg="${it}"><div class="row-main"><div class="row-title">${pk.name}</div><div class="row-cap">${pk.desc} · 约 ${sizeText(it,true)} · ${pk.license}</div></div><span class="radio ${OB.pkg===it?'on':''}">${svg('check')}</span></div>`}else html+=`<div class="pk-row dev" data-act="dev" data-arg="${it[2]}"><div class="row-main"><div class="row-title">${it[2]}</div><div class="row-cap">${it[3]}</div></div>${pill()}</div>`}}sheet({title:'选择方案包',html,acts:[{l:'取消',k:'secondary'}]})}
-PAGES.keyboard={render(){const hapticTxt=HAPTIC.find(h=>h[0]===S.haptic)[1];return `<div class="ltitle" style="padding-top:12px">键盘</div>${statusHTML()}${tryCard()}<div class="glabel" style="padding-top:18px">打字</div><div class="bgrid">${bcard('layout','键盘布局',(S.layout==='26'?'二十六键':'九宫格')+' · 默认'+(S.defaultKb==='zh'?'中文':'英文'))}${bcard('cand','候选栏',S.inline?'显示拼音 · 开':'显示拼音 · 关')}${bcard('keys','按键与手势','触感反馈 · '+hapticTxt)}${bcard('punct','标点与符号','4 项开发中')}</div><div class="glabel">输入辅助</div>${content(card(row({tile:'clip',title:'剪贴板',value:'开发中',act:'push',arg:'clipboard'})))}${foot('当前手势：长按空格移动光标 · 长按回车换行 · 候选栏左滑滚动、右侧展开 · ⌫ 上滑整词删除')}`}};
-PAGES.packages={render(){const ins=inService();return `<div class="ltitle" style="padding-top:12px">方案包</div>${ins?'':statusHTML()}${deployCard()}${ins?inServiceCard(ins):''}<div class="cat">全部方案包</div>${content(card(pkgListRows()))}${foot('同一时刻只有一个包在役。已下载的包秒级切回，不重编译；旧版本只在新版下载成功后清除。标「未上架」的开源方案在开发中，当前版本不能安装。')}`}};
-Object.assign(ACT,{tab:el=>switchTab(el.dataset.arg),openPicker:()=>pickerSheet(),obPick:el=>{OB.pkg=el.dataset.arg;OB.grammar=true;dismissSheet();obRender()}});
-ACT.goJob=()=>{if(JOB)openCover(3);else if(!inService())openCover(2);else switchTab('packages')};
-Object.assign(ACT,{tryOpen:()=>{S.tryOpen=true;rerender()},tryClose:()=>{S.tryOpen=false;save();rerender()}});
-screen.addEventListener('input',e=>{if(e.target.hasAttribute&&e.target.hasAttribute('contenteditable')){S.tryText=e.target.textContent;save()}});
-ACT.goJob=()=>{if(JOB)openCover(3);else if(!inService())openCover(2);else push('scheme')};
+function markAdded(){S.kbAdded=true;S.onboarded=true;save();closeCover();OB=null;popAll();switchTab('keyboard');S.tryOpen=true;rerenderAll();toast('词库已就绪。试打一句，确认能切到蜻蜓')}
 function startTick(){stopTick();tickTimer=setInterval(tick,120)}
 function stopTick(){clearInterval(tickTimer);tickTimer=null}
-const DUR={install:[900,6000,900,1400,900,0],grammar:[900,8000,900,1200],compile:[600,0]};
-const SUBDUR=[600,9000,800,500,1000];
-function newJob(kind,pkgId,extra){JOB=Object.assign({kind,pkg:pkgId,phase:0,progress:0,sub:0,startedAt:Date.now(),elapsed:0,phaseStart:Date.now(),subStart:null,failed:null,failTitle:'',done:false,cancellable:kind!=='compile',title:''},extra);startTick()}
-function tick(){
- if(!JOB){stopTick();return}
- const now=Date.now();JOB.elapsed=now-JOB.startedAt;
- const durs=DUR[JOB.kind],t=now-JOB.phaseStart;
- const isDeploy=(JOB.kind==='install'&&JOB.phase>=5)||(JOB.kind==='compile'&&JOB.phase>=1);
- if(isDeploy){JOB.cancellable=false;if(!JOB.subStart)JOB.subStart=now;let acc=0,i=0;for(;i<SUBDUR.length;i++){acc+=SUBDUR[i];if(now-JOB.subStart<acc)break}JOB.sub=Math.min(i,SUBDUR.length);if(now-JOB.subStart>=SUBDUR.reduce((a,b)=>a+b,0)){JOB.sub=SUBDUR.length;finishJob();return}refreshJob();return}
- if(JOB.phase===1&&durs[1]>0){JOB.progress=Math.min(1,t/durs[1]);if(S.scenario==='drop'&&JOB.progress>=0.62){failJob('下载中断：网络连接中断。已清理，未占用空间。');return}}
- const d=durs[JOB.phase];
- if(d>0&&t>=d){JOB.phase++;JOB.phaseStart=now;JOB.progress=0;if(JOB.phase>=PHASES[JOB.kind].length){finishJob();return}}
- refreshJob();
-}
-function finishJob(){
- const j=JOB;JOB.done=true;JOB.cancellable=false;stopTick();refreshJob();
- setTimeout(()=>{if(JOB!==j)return;
-  if(j.kind==='install'){const prev=inService();if(prev&&prev!==j.pkg)S.pkgs[prev].st='installed';S.pkgs[j.pkg]={st:'inservice',since:Date.now(),ver:PKG[j.pkg].ver};if(j.grammar)S.grammar.installed=true;S.onboarded=true;toast(PKG[j.pkg].name+'已就绪，回到任何输入框即可打字');closeCover()}
-  else if(j.kind==='compile'){S.types[j.pkg]=j.type;toast('输入类型已切换为'+typeName(j.pkg,j.type)+'，重新弹出键盘即生效')}
-  else if(j.kind==='grammar'){S.grammar.installed=true;toast('语法模型已就绪，下次键盘唤起生效')}
-  JOB=null;save();rerenderAll();if(OB)obRender()},700);
-}
-function failJob(msg){JOB.failed=msg;JOB.failTitle=JOB.kind==='install'?'安装失败':JOB.kind==='compile'?'编译失败':'更新失败';JOB.cancellable=false;stopTick();refreshJob()}
-function cancelJob(){const p=JOB.pkg;JOB=null;stopTick();S.pkgs[p].fail=null;save();toast('已取消，未产生任何残留');rerenderAll();if(OB)obRender()}
-function retryJob(){const j=JOB;JOB=null;stopTick();if(j.kind==='install')startInstall(j.pkg,{grammar:j.grammar,cellular:true});else if(j.kind==='grammar')startGrammar(true);else startCompile(j.pkg,j.type)}
-function startInstall(pkgId,o={}){
- dismissSheet();const pk=PKG[pkgId],g=!!o.grammar;
- if(S.scenario==='disk'){const need=pk.peak+(pk.grammar&&g?390:0),needTxt=need>=1000?(need/1000).toFixed(1)+' GB':need+' MB';S.pkgs[pkgId].fail=`磁盘空间不足：安装峰值约需 ${needTxt}，当前可用 312 MB。已取消，未产生任何残留。`;rerenderAll();if(OB&&OB.step===3)obRender();return}
- if(S.scenario==='cellular'&&!o.cellular){sheet({title:'蜂窝网络下载',msg:`${pk.name} 资产约 ${sizeText(pkgId,g)}，当前为蜂窝/计费网络。继续下载将消耗流量。`,acts:[{l:'继续下载（蜂窝）',k:'primary',act:'installGo',arg:pkgId+(g?'+g':'')},{gap:1,l:'等 Wi-Fi 再下',k:'secondary'}]});return}
- S.pkgs[pkgId].fail=null;newJob('install',pkgId,{grammar:g,title:'正在安装'+pk.name});if(OB&&OB.step===3)obRender();else rerenderAll();
-}
-function startCompile(pkgId,typeId){dismissSheet();newJob('compile',pkgId,{type:typeId,title:'正在切换输入类型'});rerenderAll()}
-function startGrammar(cellular){
- dismissSheet();
- if(S.scenario==='disk'){toast('磁盘空间不足：语法模型约需 391 MB，当前可用 312 MB。已取消，未产生任何残留。');return}
- if(S.scenario==='cellular'&&!cellular){sheet({title:'蜂窝网络下载',msg:`语法模型约 ${GRAMMAR.size}，当前为蜂窝/计费网络。继续下载将消耗流量。`,acts:[{l:'继续下载（蜂窝）',k:'primary',act:'grammarGo'},{gap:1,l:'等 Wi-Fi 再下',k:'secondary'}]});return}
- newJob('grammar','wanxiang',{title:'正在下载语法模型'});rerenderAll();
-}
-function triggerCompileScenario(){const ins=inService();if(!ins){toast('先装一个方案包，再触发编译场景');return}const other=PKG[ins].types.find(t=>t.id!==S.types[ins]);startCompile(ins,other.id)}
-function licenseSheet(id,ob){
- const pk=PKG[id],gOn=ob?OB.grammar:S.grammar.on;
- const html=pk.grammar?`<div class="row" style="padding:12px 0;min-height:0"><div class="row-main"><div class="row-title">随包安装语法模型</div><div class="row-cap">~${GRAMMAR.size}，建议 Wi-Fi；不装不影响打字</div></div><button class="tgl ${gOn?'on':''}" data-act="${ob?'obGrammar':'tog'}" data-key="grammar.on" data-resheet="${ob?'licenseob':'license'}:${id}" aria-pressed="${gOn}"></button></div>`:'';
- const msg=pk.grammar?'万象拼音（上游 amzxyz/rime-wanxiang）以 CC-BY-4.0 分发（下载即分发：本 App 为你从官方渠道获取并安装）。\n源码与署名：github.com/amzxyz/rime-wanxiang。\n许可全文将随安装内容落地（App Group 内 LICENSE）。':'rime-ice 以 GPL-3.0 分发（下载即分发：本 App 为你从官方渠道获取并安装）。\n源码：github.com/iDvel/rime-ice（nightly 构建，GitHub Releases）。\n许可全文随下载内容一同落地（App Group 内 LICENSE），也可在此查看。';
- sheet({title:pk.license+' 条款确认',msg,html,acts:[{l:'同意并下载',k:'primary',act:ob?'obInstallGo':'installReq',arg:id},{l:'查看许可全文',k:'secondary',act:'licenseView',arg:id},{gap:1,l:'取消',k:'secondary'}]});
-}
-ACT.tog=el=>{const k=el.dataset.key.split('.');let o=S;for(let i=0;i<k.length-1;i++)o=o[k[i]];o[k[k.length-1]]=!o[k[k.length-1]];save();if(el.dataset.resheet){const [fn,arg]=el.dataset.resheet.split(':');({license:licenseSheet,licenseob:(a)=>licenseSheet(a,true)})[fn](arg)}else rerender()};
-Object.assign(ACT,{
- installReq:el=>startInstall(el.dataset.arg),
- installGo:el=>{const a=el.dataset.arg;startInstall(a.replace('+g',''),{cellular:true,grammar:a.endsWith('+g')})},
- grammarGo:()=>startGrammar(true), licenseView:el=>{dismissSheet();push('license',el.dataset.arg)},
- cancelJob:()=>cancelJob(), retryJob:()=>retryJob(),
- compileGo:el=>{const [p,t]=el.dataset.arg.split(':');startCompile(p,t)},
- typeTap:el=>{const id=el.dataset.pkg,t=el.dataset.arg;if(JOB||t===S.types[id])return;if(PKG[id].instant){S.types[id]=t;save();rerenderAll();toast('已切换为'+typeName(id,t)+'，打下一个词就用新方案')}else sheet({title:'切换输入类型',msg:`${typeName(id,t)} 需要重新编译词库，约 2–5 分钟，期间键盘只能打英文。现在切换？`,acts:[{l:'现在切换',k:'primary',act:'compileGo',arg:id+':'+t},{gap:1,l:'取消',k:'secondary'}]})},
- pkgTap:el=>{const id=el.dataset.arg,st=S.pkgs[id].st;if(JOB||st==='inservice')return;if(st==='installed'){const prev=inService();if(prev)S.pkgs[prev].st='installed';S.pkgs[id].st='inservice';S.pkgs[id].since=S.pkgs[id].since||Date.now();save();rerender();toast('已切换到'+PKG[id].name+'，重新弹出键盘即生效');return}licenseSheet(id)},
- checkUpdate:el=>{const id=el.dataset.arg;S.pkgs[id].check='checking';rerender();setTimeout(()=>{if(S.pkgs[id]){S.pkgs[id].check=null;save();rerenderAll();toast(PKG[id].name+'已是最新版本')}},1200)},
- grammarAction:el=>{const a=el.dataset.arg;if(a==='dl')startGrammar(false);else if(a==='check'){S.grammar.check='checking';rerender();setTimeout(()=>{S.grammar.check=null;rerenderAll();toast('语法模型已是最新（LTS 2026-11-20）')},1200)}else if(a==='del')sheet({title:'删除语法模型',msg:`将删除语法模型文件与安装记录（~${GRAMMAR.size}），不影响在役方案包与词库；键盘回基线排序，之后可随时重新下载。`,acts:[{l:'删除模型',k:'destructive',act:'grammarDel'},{gap:1,l:'取消',k:'secondary'}]})},
- grammarDel:()=>{dismissSheet();S.grammar.installed=false;S.grammar.on=true;save();rerenderAll();toast('语法模型已删除，键盘回基线排序')},
-});
-function openCover(step){OB={step:step||1,layout:S.layout||'26',pkg:'rime-ice',haptic:S.haptic||'off',grammar:true};cover.classList.add('show');obRender()}
+const DUR={install:[5000,1200,7000],grammar:[4000,800],compile:[5000]};
+function newJob(kind,pkgId,extra){JOB=Object.assign({kind,pkg:pkgId,phase:0,progress:0,startedAt:Date.now(),elapsed:0,phaseStart:Date.now(),failed:null,failTitle:'',done:false,cancellable:kind!=='compile',title:'',detailOpen:false},extra);startTick()}
+function tick(){if(!JOB){stopTick();return}const now=Date.now();JOB.elapsed=now-JOB.startedAt;const durs=DUR[JOB.kind],t=now-JOB.phaseStart;if(JOB.phase===0&&durs[0]>0){JOB.progress=Math.min(1,t/durs[0]);if(S.scenario==='drop'&&JOB.progress>=0.62){failJob(JOB.kind==='grammar'?'下载中断：网络连接中断。已清理，未占用空间。':'下载中断：网络连接中断。已清理，未占用空间。');return}}if(t>=durs[JOB.phase]){JOB.phase++;JOB.phaseStart=now;JOB.progress=0;if(JOB.phase>=PHASES[JOB.kind].length){finishJob();return}}refreshJob()}
+function dlText(){const total=JOB.kind==='grammar'?GRAMMAR.size:PKG[JOB.pkg].size+(JOB.grammar?GRAMMAR.size:0);return `${Math.round(JOB.progress*total)} MB / ${total} MB · 剩余约 ${Math.max(1,Math.round((1-JOB.progress)*(JOB.kind==='grammar'?4:5)))} 秒${S.scenario==='cellular'?' · 蜂窝':''}`}
+function jobStatusText(){if(JOB.failed)return esc(JOB.failed);if(JOB.done)return '已完成';const ph=JOB.phase;if(JOB.kind==='install'&&ph===2||JOB.kind==='compile')return '已耗时 '+fmt(JOB.elapsed)+' · 通常 2–5 分钟，期间键盘只能打英文';return PHASES[JOB.kind][ph]+' · 已耗时 '+fmt(JOB.elapsed)}
+function jobHTML(){if(!JOB)return'';const phases=PHASES[JOB.kind],hints=HINTS[JOB.kind],cur_=JOB.phase,done=JOB.done,failed=JOB.failed;let h=`<div class="card job ${failed?'fail':''}" data-job><div class="jhead">${failed?svg('x'):`<span class="wing-hover" style="display:inline-flex;width:22px;height:22px">${svg('wing')}</span>`}<div><div class="jt">${failed?JOB.failTitle:JOB.title}</div><div class="js">${jobStatusText()}</div></div></div><div class="steps">`;phases.forEach((t,i)=>{const cls=done||i<cur_?'done':i===cur_?(failed?'fail':'cur'):'todo';const inner=done||i<cur_?svg('check'):failed&&i===cur_?svg('x'):i===cur_?'<span class="spin"></span>':'';h+=`<div class="step ${cls}"><span class="dot">${inner}</span><div><div>${t}</div>${i===cur_&&!failed&&!done&&i===0?(dlText()+`<div class="pbar" style="margin-top:6px"><i style="width:${Math.round(JOB.progress*100)}%"></i></div>`):i===cur_&&!failed&&!done&&hints[i]?`<div class="hint">${hints[i]}</div>`:''}</div></div>`});h+='</div>';if(!failed&&!done&&(JOB.kind==='install'&&cur_===2||JOB.kind==='compile'))h+=`<details class="sub" ${JOB.detailOpen?'open':''} data-act="jobDetail"><summary>查看详情</summary><div class="substeps">${SUB.map((s,i)=>{const k=Math.floor(JOB.elapsed/1100);const c=k>i?'done':k===i?'cur':'';return `<div class="substep ${c}">${c==='done'?svg('check'):c==='cur'?'<span class="spin"></span>':''}${s}</div>`}).join('')}</div></details>`;if(failed)h+=failActsHTML(JOB.pkg,failed);else if(!done&&JOB.cancellable)h+='<div class="jacts"><button class="btn text" data-act="cancelJob">取消安装</button></div>';return h+'</div>'}
+function failActsHTML(p,msg){const other=p==='wanxiang'?'rime-ice':'wanxiang';return `<div class="jacts row"><button class="btn primary" data-act="retryJob">重试</button>${p==='wanxiang'?`<button class="btn secondary" data-act="switchLight">换轻量方案</button>`:''}</div><div class="jacts"><button class="btn text" data-act="ignoreFail">忽略</button></div>`}
+function diskFailHTML(p){const f=S.pkgs[p].fail,g=f.grammar;return `<div class="card job fail"><div class="jhead">${svg('x')}<div><div class="jt">空间不足，还差约 ${f.need-f.have} MB</div><div class="js">安装过程最多占用约 ${f.need} MB，装完约 ${PKG[p].unzip} MB，当前可用 ${f.have} MB。已取消，未产生任何残留。</div></div></div><div class="jacts row">${g?`<button class="btn primary" data-act="failFix" data-arg="nogrammar">去掉语法模型继续</button>`:`<button class="btn primary" data-act="failFix" data-arg="retry">重试</button>`}${p==='wanxiang'?'<button class="btn secondary" data-act="failFix" data-arg="light">换轻量方案</button>':''}</div><div class="jacts"><button class="btn text" data-act="failFix" data-arg="clean">去清理空间</button></div></div>`}
+function refreshJob(){$$('[data-job]').forEach(el=>{el.outerHTML=el.classList.contains('fail')&&!JOB?el.outerHTML:jobHTML()});$$('[data-live]').forEach(el=>{el.outerHTML=el.dataset.live==='kb'?kbCardHTML():taskHTML()});if(OB&&OB.step===3)obRender();applyChromeOnly()}
+function applyChromeOnly(){}
+function finishJob(){const j=JOB;JOB.done=true;JOB.cancellable=false;stopTick();refreshJob();setTimeout(()=>{if(JOB!==j)return;if(j.kind==='install'){const prev=inService();if(prev&&prev!==j.pkg)S.pkgs[prev].st='installed';S.pkgs[j.pkg]={st:'inservice',since:Date.now(),ver:PKG[j.pkg].ver};if(j.grammar)S.grammar.installed=true;if(OB&&OB.step===3){OB.step=4;JOB=null;save();rerenderAll();obRender();return}if(!S.kbAdded){JOB=null;save();rerenderAll();openCover(4);return}toast(PKG[j.pkg].name+'已就绪，打下一个词就用新方案')}else if(j.kind==='compile'){toast('模糊音已更新，重新弹出键盘即生效')}else if(j.kind==='grammar'){S.grammar.installed=true;S.grammar.on=true;toast('语法模型已就绪，下次键盘唤起生效')}JOB=null;save();rerenderAll()},700)}
+function failJob(msg){JOB.failed=msg;JOB.failTitle=JOB.kind==='grammar'?'下载中断':JOB.kind==='install'?'安装失败':'更新失败';JOB.cancellable=false;S.pkgs[JOB.pkg].st=JOB.prevSt||'none';stopTick();refreshJob();save()}
+function cancelJob(){const p=JOB.pkg;S.pkgs[p].st=JOB.prevSt||'none';JOB=null;stopTick();save();toast('已取消，未产生任何残留');rerenderAll();if(OB&&OB.step===3){OB.step=2;obRender()}}
+function retryJob(){const j=JOB;JOB=null;stopTick();if(j.kind==='install')startInstall(j.pkg,{grammar:j.grammar,cellular:true});else if(j.kind==='grammar')startGrammar(true);else startCompile(j.pkg)}
+Object.assign(ACT,{cancelJob,_retryJob:null,retryJob,jobDetail:el=>{JOB.detailOpen=!JOB.detailOpen;el.open=JOB.detailOpen},ignoreFail:()=>{const p=JOB.pkg;S.pkgs[p].st=JOB.prevSt||'none';JOB=null;stopTick();save();rerenderAll();if(OB&&OB.step===3){OB.step=2;obRender()}},switchLight:()=>{const p=JOB.pkg;S.pkgs[p].st=JOB.prevSt||'none';JOB=null;stopTick();if(OB){OB.pkg='rime-ice';OB.type='quanpin';OB.step=2;obRender()}else{push('detail','rime-ice')}save();rerenderAll();toast('已换为雾凇拼音，约 47 MB')},failFix:el=>{const a=el.dataset.arg,p=Object.keys(S.pkgs).find(k=>S.pkgs[k].fail);if(!p)return;if(a==='nogrammar'){S.pkgs[p].fail.grammar=false;S.grammarOn=false;S.pkgs[p].fail=null;if(OB)OB.step=3;startInstall(p,{grammar:false,cellular:true});if(OB)obRender();return}if(a==='light'){S.pkgs[p].fail=null;if(OB){OB.pkg='rime-ice';OB.type='quanpin';OB.step=2;obRender()}else{rerenderAll();push('detail','rime-ice')}toast('已换为雾凇拼音，约 47 MB');return}if(a==='retry'){S.pkgs[p].fail=null;startInstall(p,{grammar:S.pkgs[p].wantGrammar,cellular:true});if(OB)obRender();return}toast('预览：此处打开系统「设置 › 通用 › iPhone 储存空间」');S.pkgs[p].fail=null;rerenderAll();if(OB){OB.step=2;obRender()}}});
+function sizeMB(p,g){return PKG[p].size+(g?GRAMMAR.size:0)}
+function startInstall(pkgId,o={}){dismissSheet();const g=!!o.grammar,total=sizeMB(pkgId,g);S.pkgs[pkgId].wantGrammar=g;if(S.scenario==='disk'){const need=PKG[pkgId].peak+(g?390:0);S.pkgs[pkgId].fail={kind:'disk',need,have:Math.max(100,need-190),grammar:g};rerenderAll();if(OB&&OB.step===3)obRender();else toast('空间不足，还差约 190 MB');return}if(S.scenario==='wifi'){S.pkgs[pkgId].waiting=true;save();toast('已暂停。连上 Wi-Fi 后回来点开始装包');if(OB&&OB.step===3){OB.step=2;obRender()}rerenderAll();return}if(S.scenario==='cellular'&&total>150&&!o.cellular){sheet({title:'用流量下载？',msg:`约 ${total} MB，当前为蜂窝网络。也可以等 Wi-Fi。`,acts:[{l:`同意并用流量下载（${total} MB）`,k:'primary',act:'installGo',arg:pkgId+(g?'+g':'')},{gap:1,l:'等 Wi-Fi 再下',k:'secondary',act:'waitWifi',arg:pkgId}]});return}licenseSheet(pkgId,g,o.ob)}
+function licenseSheet(id,g,ob){const pk=PKG[id];sheet({title:'安装'+pk.name,msg:`由 ${pk.author} 以 ${pk.licenseName} 授权，免费使用。安装前需要你同意许可条款。${g?'\n含可选语法模型（约 391 MB）。':''}`,html:`<div class="infocard" style="text-align:left">来源：github.com/${pk.src}<br>下载约 ${sizeMB(id,g)} MB · 安装过程最多占用约 ${pk.peak+(g?390:0)} MB</div>`,acts:[{l:'同意并安装',k:'primary',act:'installGo',arg:id+(g?'+g':'')+(ob?'|ob':'')},{l:'查看许可全文',k:'secondary',act:'licenseInSheet',arg:id},{gap:1,l:'取消',k:'text'}]})}
+function beginInstall(pkgId,g,ob){S.pkgs[pkgId].fail=null;S.pkgs[pkgId].waiting=false;S.pkgs[pkgId].prevSt=S.pkgs[pkgId].st;S.pkgs[pkgId].st='pending';newJob('install',pkgId,{grammar:g,title:'正在安装'+PKG[pkgId].name});save();if(ob&&OB){OB.step=3;obRender()}rerenderAll()}
+function startGrammar(cellular){dismissSheet();if(S.scenario==='disk'){toast('空间不足：语法模型约需 391 MB，当前可用 312 MB。已取消，未产生任何残留。');return}if(S.scenario==='wifi'){toast('已暂停。连上 Wi-Fi 后回来再试');return}if(S.scenario==='cellular'&&!cellular){sheet({title:'用流量下载？',msg:'语法模型约 391 MB，当前为蜂窝网络。也可以等 Wi-Fi。',acts:[{l:'同意并用流量下载（391 MB）',k:'primary',act:'grammarGo'},{gap:1,l:'等 Wi-Fi 再下',k:'secondary'}]});return}newJob('grammar','wanxiang',{title:'正在下载语法模型'});rerenderAll()}
+function startCompile(pkgId){dismissSheet();newJob('compile',pkgId,{title:'正在重新编译词库'});rerenderAll()}
+function triggerCompileScenario(){const ins=inService();if(!ins){toast('先装一个方案包，再触发编译场景');return}startCompile(ins)}
+Object.assign(ACT,{installGo:el=>{dismissSheet();const [id,rest]=el.dataset.arg.split('|');const g=id.endsWith('+g');beginInstall(g?id.slice(0,-2):id,g,rest==='ob')},waitWifi:()=>{dismissSheet();toast('已暂停。连上 Wi-Fi 后回来点开始装包')},licenseInSheet:el=>{dismissSheet();const id=el.dataset.arg,l=LIC[id];sheet({title:l.t+' · 节选',html:`<div class="lic">${esc(l.body)}</div>`,acts:[{l:'返回',k:'primary',act:'licenseBack',arg:id}]})},licenseBack:el=>{const id=el.dataset.arg;licenseSheet(id,S.pkgs[id].wantGrammar,OB&&OB.step===3)},grammarGo:()=>{dismissSheet();startGrammar(true)},grammarAction:el=>{const a=el.dataset.arg;if(a==='dl')startGrammar(false);else if(a==='check'){S.grammar.check='checking';rerender();setTimeout(()=>{S.grammar.check=null;rerenderAll();toast('语法模型已是最新')},1200)}else if(a==='del')sheet({title:'删除语法模型',msg:`将删除语法模型文件（约 ${GRAMMAR.size} MB），不影响使用中的方案包与词库；键盘回基线排序，之后可随时重新下载。`,acts:[{l:'删除模型',k:'destructive',act:'grammarDel'},{gap:1,l:'取消',k:'secondary'}]})},grammarDel:()=>{dismissSheet();S.grammar.installed=false;S.grammar.on=false;save();rerenderAll();toast('语法模型已删除，键盘回基线排序')},typeSheet:el=>typeSheet(el.dataset.arg,S.types[el.dataset.arg],'typeTap',el.dataset.arg),typeTap:el=>{const id=el.dataset.pkg,t=el.dataset.arg;if(t===S.types[id])return;S.types[id]=t;save();rerenderAll();toast('已切换为'+typeName(id,t)+'，打下一个词就用新方案')},sw:el=>{const [p,k]=el.dataset.arg.split(':'),o=swOf(p);o[k]=!o[k];save();rerender();toast(SWNAME[k]+'：'+(o[k]?'开':'关')+'，重新弹出键盘即生效')},swval:el=>{const [p,k,v]=el.dataset.arg.split(':'),o=swOf(p);o[k]=v;save();rerender()},fuzzy:el=>{const [p,k]=el.dataset.arg.split(':'),o=swOf(p);o.fuzzy[k]=!o.fuzzy[k];save();rerender();startCompile(p);toast('模糊音已改，正在重新编译约 2–5 分钟，期间键盘只能打英文')},usePkg:el=>{const id=el.dataset.arg,prev=inService();if(prev&&prev!==id)S.pkgs[prev].st='installed';S.pkgs[id].st='inservice';S.pkgs[id].since=S.pkgs[id].since||Date.now();save();rerenderAll();toast('已切换到'+PKG[id].name+'，重新弹出键盘即生效')},checkUpdate:el=>{const id=el.dataset.arg;S.pkgs[id].check='checking';rerender();setTimeout(()=>{if(S.pkgs[id]){S.pkgs[id].check=null;save();rerenderAll();toast(PKG[id].name+'已是最新版本')}},1200)},delPkg:el=>{const id=el.dataset.arg;sheet({title:'删除'+PKG[id].name,msg:`将删除此方案包及其词库，释放约 ${PKG[id].unzip} MB。之后可随时重新下载。`,acts:[{l:'删除',k:'destructive',act:'delPkgGo',arg:id},{gap:1,l:'取消',k:'secondary'}]})},delPkgGo:el=>{dismissSheet();S.pkgs[el.dataset.arg]={st:'none'};save();rerenderAll();toast('已删除')},more:()=>{S.moreOpen=!S.moreOpen;save();rerender()},intent:()=>intentSheet(),intentGo:el=>{const [t]=el.dataset.arg.split(':');const pkg=el.dataset.arg.includes(':w:')?'wanxiang':'rime-ice';S.types[pkg]=t;save();dismissSheet();toast('已预选 '+typeName(pkg,t)+' · 装好即用');push('detail',pkg)},moreInstall:()=>{devSheet('自定义方案包导入')},privacyToggle:()=>{S.privacyOpen=!S.privacyOpen;save();rerender()},qa:el=>{el.classList.toggle('open')},udAct:el=>{const a=el.dataset.arg;if(a==='learn'){S.ud.learn=!S.ud.learn;save();rerender();toast('学习：'+(S.ud.learn?'开 · 第二次打同一个词会排到前面':'关'))}else if(a==='export')toast('预览：已导出用户词文本快照（1,284 条）到「文件」');else if(a==='import')toast('预览：从「文件」选择快照导入');else if(a==='clear')sheet({title:'清空用户词典',msg:'将删除本机学到的 1,284 个词与调频记录，不影响方案包。',acts:[{l:'清空',k:'destructive',act:'udClear'},{gap:1,l:'取消',k:'secondary'}]});else if(a==='sync'){if(!S.fa){faSheet('用户词典同步');return}S.ud.sync=!S.ud.sync;save();rerender()}},udClear:()=>{dismissSheet();S.ud.n=0;save();rerenderAll();toast('用户词典已清空')},stats:el=>{if(!S.fa){faSheet('输入统计');return}S.statsOn=!S.statsOn;save();rerender()},appMode:el=>{S.appMode=el.dataset.val;applyChrome();rerenderAll();toast('主 App 外观：'+el.textContent)},theme:el=>{S.theme=el.dataset.arg;applyChrome();rerenderAll();toast('主题：'+THEMES.find(t=>t[0]===S.theme)[1])},haptic:el=>{if(!S.fa){faSheet('按键触感反馈');return}S.haptic=el.dataset.val;save();rerender();toast('按键触感反馈：'+el.textContent+'，重新弹出键盘即生效')},seg:el=>{if(el.dataset.dev)return;const k=el.dataset.key;S[k]=el.dataset.val;save();rerender()},tog:el=>{const k=el.dataset.key.split('.');let o=S;for(let i=0;i<k.length-1;i++)o=o[k[i]];o[k[k.length-1]]=!o[k[k.length-1]];save();rerender()},tryFocus:()=>{S.tryOpen=true;rerender();setTimeout(()=>{const f=$('[data-try]');if(f){f.focus()}},50)},tryClose:()=>{S.tryOpen=false;save();rerender()},tryClear:()=>{S.tryText='';save();rerender();if(OB)obRender()},phraseAdd:el=>{const k=el.dataset.arg;S[k].push({t:'新短语'});save();rerender()},phraseDel:el=>{const [k,i]=el.dataset.arg.split(':');S[k].splice(+i,1);save();rerender()},export:()=>toast('预览：已导出 .txt 到「文件」'),feedback:()=>sheet({title:'反馈问题',msg:'问题会提交到 GitHub Issues。可以附一份诊断包，帮助定位问题。',html:'<div class="infocard" style="text-align:left">诊断包含：librime 版本、使用中方案包与版本、输入方案 id、部署日志。<br>不含任何输入内容。</div>',acts:[{l:'导出诊断包',k:'primary',act:'diag'},{l:'打开 GitHub Issues',k:'secondary',act:'gh'},{gap:1,l:'取消',k:'text'}]}),diag:()=>{dismissSheet();toast('预览：诊断包已导出（不含输入内容）')},gh:()=>{dismissSheet();toast('预览：打开 GitHub Issues')},replay:()=>{stopTick();JOB=null;const {theme,mode,fa,kbAdded}=S;S=Object.assign(fresh(),{theme,mode,fa,kbAdded});save();popAll();openCover(1)}});
+const SWNAME={swkey:'键盘切换键',trad:'繁体输出',fullwidth:'全角',punct:'中文标点',emoji:'emoji',single:'单字模式',assist:'辅助码'};
+function intentSheet(){sheet({title:'找某种双拼？',html:'<div class="pk-h">选你习惯的键位，自动选中提供它的方案包并预选</div>'+INTENTS.map(i=>`<div class="pk-row" data-act="intentGo" data-arg="${i[1]}:w:${i[1]==='quanpin'?'r':'w'}"><div class="row-main"><div class="row-title">${i[0]}</div><div class="row-cap">${i[1]==='quanpin'?'雾凇拼音 · 万象拼音':'雾凇拼音 · 万象拼音 都提供'}</div></div>${svg('chev','chev')}</div>`).join(''),acts:[{l:'取消',k:'secondary'}]})}
+function kbCardHTML(){if(!S.onboarded)return'';const ins=inService();const krow=(cls,ic,txt,act,page,arg,btn)=>`<div class="krow ${cls}"${act?` data-act="${act}"${page?` data-page="${page}"`:''}${arg?` data-arg="${arg}"`:''}`:''}>${ic?svg(ic,'kic'):'<span class="kdot"></span>'}<span>${txt}</span>${btn?`<button class="blink" data-act="${btn[0]}" data-page="${btn[1]||''}" data-arg="${btn[2]||''}">${btn[3]}</button>`:''}</div>`;
+ if(!S.kbAdded)return `<div class="kcard" data-live="kb">${krow('','gear','键盘尚未添加到系统，先去设置里添加蜻蜓','push','kbsetup',null,['push','kbsetup','','去添加'])}</div>`;
+ const failP=Object.keys(S.pkgs).find(k=>S.pkgs[k].fail);if(failP)return `<div class="kcard" data-live="kb">${krow('dgr','x',`安装未完成：${S.pkgs[failP].fail.kind==='disk'?'空间不足':'下载中断'}`,'push','packages',null,['push','packages','','重试'])}</div>`;
+ if(!ins)return `<div class="kcard" data-live="kb">${krow('','info','尚未安装方案包，键盘只能打英文','tab','packages',['tab','packages','','去装包'])}</div>`;
+ if(JOB&&JOB.pkg!==ins&&JOB.phase>=2)return `<div class="kcard" data-live="kb">${krow('acc',null,`词库更新中 · 键盘暂只能打英文 · ${fmt(JOB.elapsed)}，通常 2–5 分钟`,'tab','packages')}</div>`;
+ if(JOB&&JOB.pkg!==ins)return `<div class="kcard" data-live="kb">${krow('acc',null,`可正常打字（${PKG[ins].name}）· 正在下载${PKG[JOB.pkg].name}`,'tab','packages')}</div>`;
+ const sw=swOf(ins);const swl=[sw.trad?'繁':'简',sw.fullwidth?'全角':'半角',sw.punct?'中文标点':'',sw.emoji?'emoji':'',S.grammar.installed&&S.grammar.on?'语法 开':''].filter(Boolean).join(' · ');
+ return `<div class="kcard" data-live="kb"><div class="krow" data-act="push" data-page="detail" data-arg="${ins}"><span class="kdot"></span><span>${PKG[ins].name} · ${typeName(ins,S.types[ins])} · 使用中</span>${svg('chev','chev')}</div><div class="swline">当前开关：<b>${swl}</b></div><div class="try ${S.tryOpen?'show open':'show'}">${S.tryOpen?`<div class="fld has" contenteditable="true" data-try>${esc(S.tryText)}</div><div class="tryfoot"><span>在真机上，这里会弹出蜻蜓键盘</span><button class="blink" data-act="tryClear">清空</button><button class="blink" data-act="tryClose">收起</button></div>`:`<div class="fld" data-act="tryFocus" style="cursor:text">试打一句…</div><div class="tryfoot"><span>换包、切输入方案、改开关后在这里验证</span></div>`}</div></div>`}
+function taskHTML(){if(JOB)return `<div style="margin:12px 16px 0" data-live="task">${jobHTML()}</div>`;const p=Object.keys(S.pkgs).find(k=>S.pkgs[k].fail);if(p)return `<div style="margin:12px 16px 0" data-live="task">${diskFailHTML(p)}</div>`;return '<div data-live="task"></div>'}
+function obRec(u){if(u==='quanpin'||u==='other')return {pkg:'rime-ice',type:'quanpin'};return {pkg:'wanxiang',type:u}}
+function openCover(step){OB=Object.assign({step:step||1,usage:S.obUsage||'quanpin',layout:S.layout||'26',haptic:S.haptic||'off'},obRec(S.obUsage||'quanpin'));cover.classList.add('show');obRender()}
 function closeCover(){cover.classList.remove('show')}
 function mini26(){const row=n=>`<div class="mr">${'<span class="mk"></span>'.repeat(n)}</div>`;return `<div class="mini26">${row(10)}${row(9)}${row(7)}<div class="mr"><span class="mk fn"></span><span class="mk sp"></span><span class="mk fn"></span></div></div>`}
 function mini9(){return `<div class="mini9">${['2','3','4','5','6','7','8','9','符'].map(l=>`<span class="k9">${l}</span>`).join('')}</div>`}
-function failCard(msg){return `<div class="card job"><div class="jhead">${svg('x')}<div><div class="jt">预检未通过</div><div class="js">${esc(msg)}</div></div></div></div>`}
-function obFootHTML(){
- const fail=S.pkgs[OB.pkg].fail;
- if(OB.step===1)return '<button class="btn primary" data-act="obNext">下一步</button><button class="btn text" data-act="obSkip">稍后在设置中安装</button>';
- if(OB.step===2)return `<button class="btn primary" data-act="obInstall">开始装包 · 约 ${sizeText(OB.pkg,OB.pkg==='wanxiang'&&OB.grammar)}</button><button class="btn text" data-act="obSkip">稍后在设置中安装</button>`;
- if(fail)return '<button class="btn primary" data-act="obRetry">重试</button><button class="btn text" data-act="obSkip">稍后在设置中安装</button>';
- if(JOB)return '<button class="btn text" data-act="obBackground">在后台继续，先去看看</button>';
- return '<button class="btn text" data-act="obSkip">稍后在设置中安装</button>';
-}
-function obFooter(){if(!OB||OB.step!==3)return;const f=cover.querySelector('.cfoot');if(f)f.innerHTML=obFootHTML()}
-function obRender(){
- if(!OB)return;const pk=PKG[OB.pkg];let body='';
- if(OB.step===1){body=`<div class="ob-step">1 / 3</div><h1 class="ob-title">先选键盘布局</h1><p class="ob-sub">选定后，只给你看这个布局相关的配置。之后可以随时改。</p><div class="opt ${OB.layout==='26'?'on':''}" data-act="obLayout" data-arg="26">${mini26()}<div><div class="ot">二十六键</div><div class="oc">全拼、双拼都在这个布局上</div></div></div><div class="opt ${OB.layout==='9'?'on':''}" data-act="obLayout" data-arg="9">${mini9()}<div><div class="ot">九宫格 ${pill()}</div><div class="oc">开发中。先按二十六键完成，就绪后在「键盘布局」里切换</div></div></div>${OB.layout==='9'?`<div class="banner dev" style="margin-top:16px">${svg('info','ic')}<div class="btxt">九宫格开发中，键盘当前仍按二十六键运行。下一步只列通用项与九宫格预告项。</div></div>`:''}`}
- else if(OB.step===2){const pk=PKG[OB.pkg];body=`<div class="ob-step">2 / 3</div><h1 class="ob-title">推荐配置</h1><p class="ob-sub">按「${OB.layout==='26'?'二十六键':'九宫格（开发中）'}」预选好了，都可以改。方案包以后会有很多，先装一个顺手的，之后随时换。</p><div style="margin-top:14px">${card(row({title:'方案包',cap:`${pk.desc} · ${pk.license}`,value:pk.name,act:'openPicker',chev:true})+row({title:'输入类型',value:'全拼',cap:OB.pkg==='wanxiang'?'装好后可在 9 种输入类型里切换，切换需重新编译':'装好后可切到自然码双拼，即时生效'})+row({title:'触感反馈',lock:true,cap:S.fa?'已开启完全访问，选择后重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」；不开也能打字',control:seg(HAPTIC,OB.haptic,'obHaptic')})+(OB.layout==='9'?row({title:'九宫格首选上屏',value:'空格上屏',dev:true,act:'dev',arg:'九宫格首选上屏'}):'')+(OB.pkg==='wanxiang'?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(OB.grammar,'x').replace('data-act="tog"','data-act="obGrammar"')}):''))}</div><div class="infocard"><b>为什么要装包</b><br>词库不随 App 提供，安装包更小、许可更干净。下载后在设备上编译，几分钟，期间键盘只能打英文。装完即用，之后可随时换包或更新。</div>`}
- else{const fail=S.pkgs[OB.pkg].fail;body=`<div class="ob-step">3 / 3</div><h1 class="ob-title">${JOB&&JOB.pkg===OB.pkg?'正在安装'+pk.name:fail?'装包未开始':'安装'+pk.name}</h1><p class="ob-sub">装完会自动收起。离开本页也会继续。</p><div style="margin-top:14px">${JOB&&JOB.pkg===OB.pkg?jobHTML():fail?failCard(fail):''}</div>`}
- cover.innerHTML=`<div class="cbody">${body}</div><div class="cfoot">${obFootHTML()}</div>`;
-}
-Object.assign(ACT,{
- obLayout:el=>{OB.layout=el.dataset.arg;obRender()},
- obPkg:el=>{OB.pkg=el.dataset.val;obRender()},
- obHaptic:el=>{if(!S.fa){faSheet();return}OB.haptic=el.dataset.val;obRender()},
- obGrammar:el=>{OB.grammar=!OB.grammar;if(el.dataset.resheet)licenseSheet(el.dataset.resheet.split(':')[1],true);else obRender()},
- obNext:()=>{OB.step=2;obRender()},
- obSkip:()=>{S.onboarded=true;S.layout=OB.layout;save();closeCover();rerenderAll();toast('跳过后键盘先按英文直通使用，装包前不出中文候选')},
- obInstall:()=>{S.layout=OB.layout;S.haptic=OB.haptic;licenseSheet(OB.pkg,true)},
- obInstallGo:()=>{OB.step=3;obRender();startInstall(OB.pkg,{grammar:OB.pkg==='wanxiang'&&OB.grammar});obRender()},
- obRetry:()=>{S.pkgs[OB.pkg].fail=null;startInstall(OB.pkg,{grammar:OB.pkg==='wanxiang'&&OB.grammar});obRender()},
- obBackground:()=>{S.onboarded=true;save();closeCover();rerenderAll()},
-});
-PAGES.layout={render(){
- const t9=S.layout==='9';
- return nav('键盘布局')+head('键盘布局','决定按键排列。选定后只显示与该布局相关的设置。')+(t9?`<div class="banner dev">${svg('info','ic')}<div class="btxt">九宫格开发中，键盘当前仍按二十六键运行。以下九宫格项就绪后自动生效。</div></div>`:'')+content(glabel('布局')+card(row({title:'布局',cap:'选定后只显示该布局相关的设置',control:seg([['26','二十六键'],['9','九宫格','九宫格']],S.layout,'seg','layout')})))+content(glabel(t9?'九宫格':'二十六键')+card(t9?row({title:'九宫格首选上屏',value:'空格上屏',dev:true,act:'dev',arg:'九宫格首选上屏'})+row({title:'九宫格分词符',value:'开',dev:true,act:'dev',arg:'九宫格分词符'}):row({title:'键序预设',value:'QWERTY',dev:true,act:'dev',arg:'键序预设'})))+content(glabel('通用')+card(row({title:'默认键盘',cap:'键盘弹出与切换输入框时先落中文还是英文。手动切回的布局保留到键盘收起。',control:seg([['zh','中文'],['en','英文']],S.defaultKb,'seg','defaultKb')})+row({title:'键盘高度',value:'标准',dev:true,act:'dev',arg:'键盘高度'})))+foot('键盘高度随布局生效，不改按键比例。');
-}};
-PAGES.keys={render(){
- const faCap=S.fa?'已开启完全访问。重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」才会生效；不开也能打字';
- return nav('按键与手势')+head('按键与手势','手感与手势。带锁标的项需要系统授予「允许完全访问」。')+content(glabel('按键')+card(row({title:'按键触感反馈',lock:!S.fa,cap:faCap,control:seg(HAPTIC,S.haptic,'haptic')})+row({title:'按键音',value:'关',dev:true,act:'dev',arg:'按键音'})))+content(glabel(S.layout==='26'?'手势 · 二十六键':'手势 · 通用')+card(row({title:'手势预设',value:'默认预设',dev:true,act:'dev',arg:'手势预设'})+(S.layout==='26'?row({title:'上划输入符号',value:'开',dev:true,act:'dev',arg:'上划输入符号'})+row({title:'长按字母变音',value:'关',dev:true,act:'dev',arg:'长按字母变音'}):'')+row({title:'双指触摸板光标',value:'开',dev:true,act:'dev',arg:'双指触摸板光标'})+row({title:'Shift 双击锁定',value:'开',dev:true,act:'dev',arg:'Shift 双击锁定'})))+foot('当前手势：长按空格移动光标 · 长按回车换行 · 候选栏左滑滚动、右侧展开 · ⌫ 上滑整词删除 · 候选区次选 / 三选滑动上屏');
-}};
-ACT.push=el=>{const [p,a]=el.dataset.arg.split(':');push(p,a)};
-PAGES.detail={render(arg){
- const id=(arg||'').split(':')[1]||'rime-ice',st=S.pkgs[id],pk=PKG[id],ins=st.st==='inservice',busy=!!JOB,d=st.since?sinceDays(st.since):42;
- const status=ins?'在役':st.st==='installed'?'已下载':st.fail?'失败：'+esc(st.fail):'未下载';
- let h=nav(pk.name)+head(pk.name,pk.desc)+content(glabel('状态')+card(row({title:'包',value:pk.src})+row({title:'版本',value:st.ver||pk.ver})+row({title:'状态',value:status})+row({title:'许可',value:pk.license})+row({title:ins?'在役':'安装峰值预检',value:ins?'第 '+d+' 天':'约 '+pk.peak+' MB'})));
- if(ins){
-  if(JOB&&JOB.pkg===id)h+=`<div style="margin:12px 16px 0">${jobHTML()}</div>`;
-  h+=content(glabel('输入类型')+card(pk.types.map(t=>row({title:t.n,cap:t.id===S.types[id]?(pk.instant?'当前使用。切换即时生效，打下一个词就用新方案':'当前使用。切换需重新编译词库，约 2–5 分钟，期间键盘只能打英文'):undefined,radio:t.id===S.types[id],act:busy||t.id===S.types[id]?null:'typeTap',arg:t.id}).replace('data-act="typeTap"',`data-act="typeTap" data-pkg="${id}"`)).join('')));
-  if(pk.grammar){const g=S.grammar,gState=g.check==='checking'?'检查中…':g.installed?'已装':'未装';const gBtn=g.installed?'<button class="btn secondary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="check">检查</button>':'<button class="btn primary" style="width:auto;height:34px;padding:0 12px;font-size:13px" data-act="grammarAction" data-arg="dl">下载</button>';
-   h+=content(glabel('语法')+card(row({title:'语法模型',cap:'万象 LTS 语法模型 '+GRAMMAR.ver+' · 约 '+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',value:gState,control:gBtn})+(g.installed?row({title:'语法排序',cap:'按上下文搭配重排候选。下次键盘唤起生效，无需重新部署',control:tog(g.on,'grammar.on')}):'')+(g.installed?row({title:'删除语法模型',act:'grammarAction',arg:'del',value:'~'+GRAMMAR.size}):'')));}
-  h+=content(glabel('方案设置')+card((pk.grammar?row({title:'辅助码',value:'开',dev:true,act:'dev',arg:'辅助码'}):'')+row({title:'模糊音',value:'全关',dev:true,act:'dev',arg:'模糊音'})+row({title:'简繁切换',value:'简体',dev:true,act:'dev',arg:'简繁切换'})+row({title:'联想词',value:'开',dev:true,act:'dev',arg:'联想词'})));}
- const manage=JOB?row({title:'安装进行中',value:'回「方案包」看步骤'}):st.st!=='none'?row({title:'检查版本',act:'checkUpdate',arg:id,value:st.check==='checking'?'检查中…':''}):row({title:'下载并使用',act:'pkgTap',arg:id,value:sizeText(id,true)});
- h+=content(glabel('管理')+card(manage+(pk.grammar&&!ins?row({title:'随包安装语法模型',cap:'~'+GRAMMAR.size+'，建议 Wi-Fi；不装不影响打字',control:tog(S.grammar.on,'grammar.on')}):'')+row({title:'查看许可全文',act:'push',arg:'license:'+id,chev:true})));
- return h+foot('切换输入类型请在 App 内操作；键盘内输入 /zrm 之类的指令不会生效。');
-}};
-
-const LIC={
- 'rime-ice':{t:'GPL-3.0',body:'GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n\nCopyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n……（全文随下载内容落地于 App Group 内 LICENSE，此处为节选）\n\n——\n上游源码：https://github.com/iDvel/rime-ice（nightly 构建）'},
- wanxiang:{t:'CC-BY-4.0',body:'Creative Commons Attribution 4.0 International (CC BY 4.0)\n\n你可以自由地：\n· 共享 — 在任何媒介以任何形式复制、发行本作品\n· 改编 — 修改、转换或以本作品为基础进行创作\n在任何用途下，甚至商业性使用。\n\n惟须遵守下列条件：\n· 署名 — 你必须给出适当的署名，提供指向本许可协议的链接，同时标明是否（对原作）作了修改。你可以用任何合理的方式来署名，但不得以任何方式暗示许可人为你或你的使用背书。\n· 没有附加限制 — 你不得适用法律术语或技术措施从而限制其他人做许可协议允许的事情。\n\n……（全文随安装内容落地于 App Group 内 LICENSE，此处为要点摘录）\n\n——\n上游源码：https://github.com/amzxyz/rime-wanxiang（tag 构建）'}};
-PAGES.license={render(arg){const id=(arg||'').split(':')[1]||'rime-ice',l=LIC[id];return nav(l.t)+head(l.t,id==='rime-ice'?'雾凇拼音 · 随下载内容一同落地':'万象拼音 · 随安装内容落地')+`<div class="lic">${esc(l.body)}</div>`}};
-PAGES.candidates={render(){return nav('候选栏')+head('候选栏','拼音串显示在哪里、一屏几个候选。')+content(glabel('组码显示')+card(row({title:'在输入框内显示拼音',cap:'开启时拼音串直接显示在输入框内，同系统键盘；关闭或密码框时显示在候选栏。组码清空后的下一词起生效。',control:tog(S.inline,'inline')})))+content(glabel('候选')+card(row({title:'候选数量',value:'4',dev:true,act:'dev',arg:'候选数量'})+row({title:'还原全拼显示',value:'关',dev:true,act:'dev',arg:'还原全拼显示'})))+foot('候选栏右侧展开完整候选面板，展开后可连续滚动、懒拉窗口。')}};
-PAGES.punct={render(){return nav('标点与符号')+head('标点与符号','中文态全角成对，英文态一律半角。')+content(card(row({title:'中文态全角标点',value:'开',dev:true,act:'dev',arg:'中文态全角标点'})+row({title:'成对符号自动补全',value:'开',dev:true,act:'dev',arg:'成对符号自动补全'})+row({title:'双击空格输入句号',value:'开',dev:true,act:'dev',arg:'双击空格输入句号'})+row({title:'符号页常用符号',value:'默认集',dev:true,act:'dev',arg:'符号页常用符号'})))+foot('中文态标点：，。？！、；：“”‘’（）《》〈〉【】——…… · 123 页与 #+= 页含中文常用符号。')}};
-const THEMES=[['a','素翼','知性 · 克制',['#2E6460','#C8503A','#F6F4EF']],['b','夜航','专注 · 锐利',['#1F2733','#1FA88E','#F2F3F5']],['c','晨光','温柔 · 纸感',['#A8552F','#2E8C86','#FAF6EF']]];
-function themeChips(){return `<div class="chips">${THEMES.map(t=>`<button class="chipx ${S.theme===t[0]?'on':''}" data-act="theme" data-arg="${t[0]}"><span class="dots">${t[3].map(c=>`<i style="background:${c}"></i>`).join('')}</span><span class="n">${t[1]}</span><span class="m">${t[2]}</span></button>`).join('')}</div>`}
-PAGES.personal={render(){return `<div class="ltitle" style="padding-top:12px">个性化</div><div class="lsub" style="padding:0 20px;margin-top:4px">外观主题、App 图标与统计。三套主题各一个主色、一个强调色，键盘与主 App 同步。</div>${content(glabel('外观主题')+card(themeChips()+row({title:'主 App 深色模式',value:'跟随系统',dev:true,act:'dev',arg:'主 App 深色模式'})+row({title:'键盘主题',value:'素白',dev:true,act:'dev',arg:'键盘主题'})+row({title:'App 图标',value:(THEMES.find(t=>t[0]===S.icon)||THEMES[0])[1],act:'push',arg:'icon',chev:true})))}${content(glabel('统计')+card(row({tile:'stats',title:'统计看板',value:'开发中',act:'push',arg:'stats',chev:true})+row({title:'输入统计',value:'关',dev:true,act:'dev',arg:'输入统计'})))}${foot('预览中外观主题与 App 图标可直接切换以便对比；正式版随主题系统一起提供（开发中）。')}`}};
-PAGES.icon={render(){const I=[['a','素翼','#2E6460','#fff'],['b','夜航','#0E1013','#37C9AE'],['c','晨光','#FAF6EF','#A8552F'],['d','墨','#1C1C1E','#F4F4F5']];return nav('App 图标')+head('App 图标','默认随主题，也可以单独固定一个。')+content(card(`<div class="icons">${I.map(i=>`<div><div class="iconx ${S.icon===i[0]?'on':''}" style="background:${i[2]};color:${i[3]}" data-act="icon" data-arg="${i[0]}">${svg('wing')}</div><div class="iconl">${i[1]}</div></div>`).join('')}</div>`))+`<div class="banner dev">${svg('info','ic')}<div class="btxt">App 图标切换开发中 · 预览里可先选。</div></div>`}};
-Object.assign(ACT,{theme:el=>{S.theme=el.dataset.arg;applyChrome();rerenderAll();toast('主题：'+THEMES.find(t=>t[0]===S.theme)[1])},icon:el=>{S.icon=el.dataset.arg;save();rerenderAll();toast('App 图标已选择，回到主屏幕生效（开发中）')}});
-PAGES.about={render(){const ins=inService();return `<div class="aboutlogo">${svg('wing')}<div class="an">蜻蜓</div><div class="av">1.0 (0) · iOS 第三方中文 Rime 输入法</div><div class="av" style="margin-top:6px;line-height:1.5">引擎在设备上运行，离线，不上传任何输入。</div></div>`+content(card(row({title:'版本',value:'1.0 (0)'})+row({title:'引擎',value:'librime · 进程内 · 离线'})+row({title:'在役包',value:ins?PKG[ins].name:'未安装',act:ins?'push':null,arg:ins?'detail:'+ins:undefined,chev:!!ins})))+content(glabel('数据与隐私')+card(row({title:'数据与隐私',cap:S.fa?'完全访问已开启':'完全访问未开启',act:'push',arg:'privacy',chev:true})+row({title:'隐私说明',act:'push',arg:'privacyNote',chev:true})))+content(glabel('许可与反馈')+card(row({title:'方案包许可全文',act:'push',arg:'license:'+(ins||'rime-ice'),chev:true})+row({title:'开源组件致谢',cap:'librime、语法插件、rime-ice、万象拼音、语法模型',dev:true,act:'dev',arg:'开源组件致谢'})+row({title:'反馈问题',cap:'GitHub Issues',dev:true,act:'dev',arg:'反馈问题'})+row({title:'重看首启引导',cap:'重新走一遍布局选择与推荐配置，不影响已装内容',dev:true,act:'dev',arg:'重看首启引导'})))+foot('词库不随 App 提供，按需下载。')}};
-applyChrome();fit();switchTab('keyboard');if(!S.onboarded)openCover();
+function obFootHTML(){if(!OB)return'';if(OB.step===1)return '<button class="btn primary" data-act="obNext">下一步</button>';if(OB.step===2)return `<button class="btn primary" data-act="obInstall">开始装包 · 约 ${PKG[OB.pkg].size} MB</button><button class="btn text" data-act="obSkip">稍后在设置中安装</button>`;if(OB.step===3){if(JOB&&!JOB.failed)return '<button class="btn text" data-act="obLeave">先去其他页面看看</button>';return ''}if(OB.step===4)return '<button class="btn primary" data-act="openSettings">打开系统设置</button><button class="btn secondary" data-act="obAdded">我已添加键盘，试打一下</button>';return''}
+function obRender(){if(!OB)return;let body='';const rec=obRec(OB.usage);if(OB.step===1){body=`<div class="ob-step">1 / 4</div><h1 class="ob-title">你平时用什么打字？</h1><p class="ob-sub">按你的习惯推荐方案包和输入方案。之后都可以改。</p>${USAGE.map(u=>`<div class="opt ${OB.usage===u[0]?'on':''}" data-act="obUsage" data-arg="${u[0]}"><div><div class="ot">${u[1]}</div></div></div>`).join('')}<div style="display:flex;align-items:center;gap:12px;margin-top:18px;padding:0 4px;font-size:13px;color:var(--text-2)">键盘布局${seg([['26','二十六键'],['9','九宫格','1']],OB.layout,'obLayout','',true)}</div><div class="infocard">布局切换可能同时切换输入方案：九宫格是另一个方案，目前仅万象拼音提供。</div>`}
+ else if(OB.step===2){const pk=PKG[OB.pkg];body=`<div class="ob-step">2 / 4</div><h1 class="ob-title">推荐配置</h1><p class="ob-sub">按「${USAGE.find(u=>u[0]===OB.usage)[1]}」预选好了，都可以改。</p><div style="margin-top:14px">${card(row({title:'方案包',cap:`${pk.desc} · ${pk.licenseName}`,value:pk.name,act:'obPicker',chev:true})+row({title:'输入方案',cap:'装好后随时切换，即时生效',value:typeName(OB.pkg,OB.type),act:'obType',chev:true})+row({title:'按键触感反馈',lock:!S.fa,cap:S.fa?'已开启完全访问，重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」；不开也能打字',control:seg(HAPTIC,OB.haptic,'obHaptic')}))}</div><div class="infocard"><b>为什么要装包</b><br>词库不随 App 提供，按需下载后在设备上生成词库，几分钟。期间键盘只能打英文，装完即用。${OB.pkg==='wanxiang'?'<br>语法模型（可选，约 391 MB）装好后可在方案包详情里加装，不装不影响打字。':''}</div>`}
+ else if(OB.step===3){const fail=S.pkgs[OB.pkg].fail;body=`<div class="ob-step">3 / 4</div><h1 class="ob-title">${fail?'装包未开始':JOB?'正在安装'+PKG[OB.pkg].name:'安装'+PKG[OB.pkg].name}</h1><p class="ob-sub">${fail?'换一个更小的方案，或先腾出空间。':JOB?'编译期间请保持蜻蜓在前台，可以先去其他页面看看；离开后被中断，回来会自动续做。':'准备中…'}</p><div style="margin-top:14px">${fail?diskFailHTML(OB.pkg):JOB?jobHTML():''}</div>`}
+ else{body=`<div class="ob-step">4 / 4</div><h1 class="ob-title">把蜻蜓添加到键盘</h1><p class="ob-sub">词库已就绪。还差这一步，才能在任何输入框里用蜻蜓打字。</p><div class="path" style="margin-top:14px"><b>1</b> 设置 <span class="arw">›</span> <b>2</b> 通用 <span class="arw">›</span> <b>3</b> 键盘 <span class="arw">›</span> 键盘 <span class="arw">›</span> <b>4</b> 添加新键盘… <span class="arw">›</span> <b>蜻蜓</b></div><p class="ob-sub" style="margin-top:12px">添加后回到这里，试打一句确认能切到蜻蜓。</p><details class="trouble"><summary>看不到蜻蜓？</summary><div class="tb">· 添加后需要重启一次正在用的 App<br>· 确认点了「添加新键盘…」，并在第三方键盘区找到蜻蜓<br>· 在输入框长按地球键（或点地球键）切换到蜻蜓<br>· 怎么切回系统键盘：长按地球键选系统拼音即可</div></details>`}
+ cover.innerHTML=`<div class="cbody">${body}</div><div class="cfoot">${obFootHTML()}</div>`}
+Object.assign(ACT,{obUsage:el=>{OB.usage=el.dataset.arg;Object.assign(OB,obRec(OB.usage));obRender()},obLayout:el=>{OB.layout=el.dataset.arg;obRender()},obNext:()=>{S.obUsage=OB.usage;OB.step=2;obRender()},obPicker:()=>obPickerSheet(),obType:()=>typeSheet(OB.pkg,OB.type,'obTypeGo'),obTypeGo:el=>{OB.type=el.dataset.arg;dismissSheet();obRender()},obHaptic:el=>{if(!S.fa){faSheet('按键触感反馈');return}OB.haptic=el.dataset.val;obRender()},obInstall:()=>{S.layout=OB.layout;S.haptic=OB.haptic;S.types[OB.pkg]=OB.type;startInstall(OB.pkg,{ob:true})},obSkip:()=>{S.onboarded=true;S.skipCount=(S.skipCount||0)+1;S.layout=OB.layout;save();closeCover();OB=null;rerenderAll();toast('键盘先按英文直通使用。横幅会提醒你装包')},obLeave:()=>{S.onboarded=true;S.layout=OB.layout;save();closeCover();rerenderAll();toast('安装进行中。状态行可查看进度')},obAdded:()=>markAdded()});
+function obPickerSheet(){let html='<div class="pk-h">推荐</div>';Object.keys(PKG).forEach(id=>{const pk=PKG[id];html+=`<div class="pk-row ${OB.pkg===id?'on':''}" data-act="obPick" data-arg="${id}"><div class="row-main"><div class="row-title">${pk.name}</div><div class="row-cap">${pk.desc} · 约 ${pk.size} MB${pk.grammar?'（可选语法模型 391 MB）':''} · ${pk.licenseName}</div></div><span class="radio ${OB.pkg===id?'on':''}">${svg('check')}</span></div>`});html+='<div class="pk-h" style="padding-top:14px">更多方案陆续上架</div>';sheet({title:'选择方案包',html,acts:[{l:'取消',k:'secondary'}]})}
+Object.assign(ACT,{obPick:el=>{OB.pkg=el.dataset.arg;OB.type=S.types[OB.pkg]||'quanpin';dismissSheet();obRender()}});
+function typeSheet(pkg,cur,act,pkgAttr){sheet({title:'输入方案',html:'<div class="pk-h">'+PKG[pkg].name+' · 切换即时生效</div>'+PKG[pkg].types.map(t=>`<div class="pk-row" data-act="${act}" data-arg="${t[0]}"${pkgAttr?` data-pkg="${pkgAttr}"`:''}><div class="row-main"><div class="row-title">${t[1]}</div></div><span class="radio ${t[0]===cur?'on':''}">${svg('check')}</span></div>`).join(''),acts:[{l:'取消',k:'secondary'}]})}
+PAGES.keyboard={render(){const hapticTxt=HAPTIC.find(h=>h[0]===S.haptic)[1];return `<div class="ltitle" style="padding-top:12px">键盘</div>${kbCardHTML()}<div class="glabel" style="padding-top:18px">打字</div><div class="bgrid">${bcard('layout','键盘布局',(S.layout==='26'?'二十六键':'九宫格')+' · 默认'+(S.defaultKb==='zh'?'中文':'英文'))}${bcard('cand','候选栏',S.inline?'显示组码 · 开':'显示组码 · 关')}${bcard('keys','按键与手势','触感反馈 · '+hapticTxt)}${bcard('clip','剪贴板与短语',S.custom.length+' 条候选内短语')}</div>${foot('当前手势：长按空格移动光标 · 长按回车换行 · 候选栏左滑滚动、右侧展开 · ⌫ 上滑整词删除 · 候选区次选 / 三选滑动上屏')}`}};
+function bcard(page,t,c){return `<div class="bcard" data-act="push" data-page="${page}">${tile(page,1)}<div class="t">${t}</div><div class="c">${c}</div></div>`}
+PAGES.layout={render(){const t9=S.layout==='9',nineOk=PKG[inService()||'rime-ice'].kb.includes('9');return nav('键盘布局')+head('键盘布局','切换布局可能同时切换输入方案：九宫格是另一个方案。')+content(glabel('布局')+card(row({title:'布局',cap:nineOk?'':'当前方案包仅支持 26 键；万象拼音提供九宫格',control:seg([['26','二十六键'],['9','九宫格',nineOk?'':'1']],S.layout,'seg','layout')})))+content(glabel(t9?'九宫格':'二十六键')+card(t9?row({title:'九宫格首选上屏',dev:true,act:'dev',arg:'九宫格首选上屏'})+row({title:'九宫格分词符',dev:true,act:'dev',arg:'九宫格分词符'}):row({title:'键序预设',dev:true,act:'dev',arg:'键序预设'})))+content(glabel('通用')+card(row({title:'默认键盘',cap:'键盘弹出与切换输入框时先落中文还是英文。',control:seg([['zh','中文'],['en','英文']],S.defaultKb,'seg','defaultKb')})+row({title:'键盘高度',dev:true,act:'dev',arg:'键盘高度'})))+foot('键盘高度随布局生效，不改按键比例。')}};
+PAGES.candidates={render(){return nav('候选栏')+head('候选栏','编码显示在哪里、一屏几个候选。')+content(glabel('组码显示')+card(row({title:'显示组码',cap:'开启时编码直接显示在输入框内（全拼 = 拼音，双拼 = 双拼码）；关闭或密码框时显示在候选栏。',control:tog(S.inline,'tog','inline')})))+content(glabel('候选')+card(row({title:'候选数量',dev:true,act:'dev',arg:'候选数量'})+row({title:'还原全拼显示',dev:true,act:'dev',arg:'还原全拼显示'})))+foot('候选栏右侧展开完整候选面板，展开后可连续滚动。')}};
+PAGES.keys={render(){return nav('按键与手势')+head('按键与手势','带锁标的项需要系统授予「允许完全访问」。')+content(glabel('按键')+card(row({title:'按键触感反馈',lock:!S.fa,cap:S.fa?'已开启完全访问。重新弹出键盘即生效':'需在系统设置中开启「允许完全访问」；不开也能打字',control:seg(HAPTIC,S.haptic,'haptic')})+row({title:'按键音',dev:true,act:'dev',arg:'按键音'})))+content(glabel(S.layout==='26'?'手势 · 二十六键':'手势 · 通用')+card(row({title:'手势预设',dev:true,act:'dev',arg:'手势预设'})+(S.layout==='26'?row({title:'上划输入符号',dev:true,act:'dev',arg:'上划输入符号'})+row({title:'长按字母变音',dev:true,act:'dev',arg:'长按字母变音'}):'')+row({title:'双指触摸板光标',dev:true,act:'dev',arg:'双指触摸板光标'})+row({title:'Shift 双击锁定',dev:true,act:'dev',arg:'Shift 双击锁定'})))+foot('当前手势：长按空格移动光标 · 长按回车换行 · 候选栏左滑滚动、右侧展开 · ⌫ 上滑整词删除')}};
+PAGES.clip={render(){return nav('剪贴板与短语')+head('剪贴板与短语','短语在主 App 里编辑，键盘只读，不需要完全访问。')+content(card(row({title:'快插短语',value:S.quick.length+' 条',act:'push',page:'quick',chev:true})+row({title:'候选内短语',cap:'Rime 自定义短语：编码 → 短语，进候选可置顶，每包独立',value:S.custom.length+' 条',act:'push',page:'custom',chev:true})))+content(glabel('剪贴板')+card(row({title:'剪贴板历史',lock:!S.fa,dev:true,cap:'需允许完全访问。内容只存本机。',control:tog(S.clipboardOn,'tog','clipboardOn',true,!S.fa)})))+foot('系统「允许粘贴」弹窗行为以真机验证为发布门控；若弹窗频繁，键盘上改为手动「粘贴」键按需读取。')}};
+PAGES.quick={render(){return nav('快插短语')+head('快插短语','在键盘面板上一键插入。')+content(S.quick.length?card(S.quick.map((q,i)=>row({title:esc(q.t),control:`<button class="blink" data-act="phraseDel" data-arg="quick:${i}">删除</button>`})).join('')):emptyHTML('clip','还没有快插短语','添加后，键盘面板上会出现这些短语。','phraseAdd','quick','添加'))+foot('预览：编辑器省略，仅示意列表与增删。')}};
+PAGES.custom={render(){const list=S.custom.length?S.custom:[{t:'yh → 谢谢'},{t:'zj → 正在'}];return nav('候选内短语')+head('候选内短语','Rime 自定义短语：编码 → 短语，进候选、可置顶。每包独立，不需要完全访问。')+content(card(list.map((q,i)=>row({title:esc(q.t),control:`<button class="blink" data-act="phraseDel" data-arg="custom:${i}">删除</button>`})).join('')))+content(glabel('')+card(row({title:'导入 .txt',act:'export',chev:true})+row({title:'导出 .txt',act:'export',chev:true})))+`<div style="padding:16px"><button class="btn secondary" data-act="phraseAdd" data-arg="custom">添加短语</button></div>`}};
+function emptyHTML(ic,t,m,act,arg,btn){return `<div class="card">${''}</div><div class="empty">${svg(ic)}<div class="et">${t}</div><div>${m}</div>${act?`<button class="btn secondary" data-act="${act}" data-arg="${arg||''}">${btn}</button>`:''}</div>`}
+PAGES.packages={render(){const ins=inService();let h=`<div class="ltitle" style="padding-top:12px">方案包</div>`;if(ins){const compiling=JOB&&JOB.pkg===ins;h+=`<div class="inscard ${compiling?'acc':''}" data-act="push" data-page="detail" data-arg="${ins}"><div class="h">${svg('check')}${PKG[ins].name}<span class="d" style="flex:1">${compiling?'编译中 · 键盘暂只能打英文':'引擎就绪 · 上次更新 '+new Date(S.pkgs[ins].since||Date.now()).toLocaleDateString('zh-CN')}</span></div></div>`}h+=taskHTML();h+=`<div class="cat">全部方案包</div>${content(card(row({title:'找某种双拼？',cap:'小鹤 · 微软 · 搜狗 · 自然码',act:'intent',chev:true})))}`;h+=pkgList();return h+foot('同一时刻只有一个方案包使用中。已下载的包秒级切换，不重新编译。标「即将上架」的开源方案还不能安装。')}};
+function pkgList(){let h=`<div class="cat" style="padding-top:4px">拼音</div>${content(card(Object.keys(PKG).map(pkgRow).join('')+row({title:S.moreOpen?'收起更多方案':'更多方案',cap:S.moreOpen?'':'8 个开源方案陆续上架：朙月拼音 · 地球拼音 · 袖珍简化字拼音 · 五笔 · 仓颉 · 粤拼 · 吴语 · 注音',act:'more',chev:true}).replace('class="chev"','class="chev" style="transform:rotate(90deg)"')))}`;if(S.moreOpen){const by={};PLANNED.forEach(p=>{(by[p[0]]??=[]).push(p)});for(const c of CATS.slice(1).concat(['拼音'])){const items=(by[c]||[]).filter(p=>c!=='拼音');if(!items.length)continue;h+=`<div class="cat">${c}</div>${content(card(items.map(planRow).join('')))}`}}return h}
+function pkgRow(id){const st=S.pkgs[id],pk=PKG[id];if(st.st==='inservice')return row({title:pk.name,chip:true,cap:pk.desc+' · 含 '+pk.types.length+' 种输入方案'+(pk.kb.includes('9')?' · 支持 9 键':''),act:'push',page:'detail',arg:id,chev:true});if(st.waiting)return row({title:pk.name,cap:'约 '+pk.size+' MB · '+pk.licenseName+' · 等 Wi-Fi 中',control:`<button class="blink" data-act="pkgTap" data-arg="${id}">继续</button>`});if(st.st==='installed')return row({title:pk.name,value:'已下载',cap:pk.desc,act:'push',page:'detail',arg:id,chev:true});return row({title:pk.name,cap:`约 ${pk.size} MB · ${pk.licenseName} · 点按安装`,act:JOB?null:'pkgTap',arg:id,chev:!JOB})}
+function planRow(p){return `<div class="dev">${row({title:p[2],cap:p[3],soon:true,act:'dev',arg:p[2]})}</div>`}
+Object.assign(ACT,{pkgTap:el=>{const id=el.dataset.arg;if(JOB)return;startInstall(id,{})}});
+PAGES.detail={render(arg){const id=arg||'rime-ice',st=S.pkgs[id],pk=PKG[id],ins=st.st==='inservice',busy=!!JOB,sw=swOf(id);const summary=ins?`使用中 · 版本 ${st.ver||pk.ver} · 已陪你打了 ${st.since?sinceDays(st.since):42} 天`:st.st==='installed'?'已下载 · 点按「使用这个包」秒级切换':st.fail?'安装未完成':`未下载 · 约 ${pk.size} MB · ${pk.licenseName}`;let h=nav(pk.name)+head(pk.name,pk.desc+'<br><span style="color:var(--text-3)">'+summary+'</span>');if(st.st==='installed')h+=`<div style="padding:14px 16px 0"><button class="btn primary" data-act="usePkg" data-arg="${id}">使用这个包（秒级切换）</button></div>`;
+ h+=content(glabel('')+card(row({title:'输入方案',value:typeName(id,S.types[id]),cap:ins?'切换即时生效，打下一个词就用新方案':'装好后在 9 种方案里切换，即时生效',act:ins&&!busy?'typeSheet':null,arg:id,chev:ins&&!busy})));
+ const swRows=[row({title:'输出',cap:sw.trad?'繁体经 OpenCC 转换':'简体',control:seg([['s','简体'],['t','繁体']],sw.trad?'t':'s','swval',id+':trad')} )+(sw.trad?row({title:'繁体变体',control:seg([['t','通用'],['tw','台湾'],['hk','香港']],sw.variant,'swval',id+':variant')}):'')+row({title:'键盘上显示切换键',cap:'简繁切换键出现在键盘候选栏右侧',control:tog(sw.swkey!==false,'sw',id+':swkey')}),row({title:'全角',cap:'中文态数字与字母按全角输出',control:tog(sw.fullwidth,'sw',id+':fullwidth')}),row({title:'中文标点',cap:'中文态全角标点；英文态一律半角。成对符号自动补全默认关',control:tog(sw.punct,'sw',id+':punct')}),row({title:'emoji',cap:'候选里出现 emoji',control:tog(sw.emoji,'sw',id+':emoji')}),row({title:'单字模式',cap:'只出单字候选',control:tog(sw.single,'sw',id+':single')}),row({title:'联想词',dev:true,cap:'上屏后给下一个词的候选',act:'dev',arg:'联想词'}),(pk.assist?row({title:'辅助码',cap:'输入方式：ni + K（Shift + 字母）筛选重码；码表 ›',control:tog(sw.assist,'sw',id+':assist')}):''),row({title:'模糊音',value:Object.values(sw.fuzzy).filter(Boolean).length+' 组开',act:ins?'push':null,page:'fuzzy',arg:id,chev:true})];
+ h+=content(glabel('开关 · 随包')+card(swRows.filter(Boolean).join('')));
+ if(pk.grammar){const g=S.grammar,gState=g.check==='checking'?'检查中…':g.installed?'已装':'未装';h+=content(glabel('语法 · 可选')+card(row({title:'语法模型',cap:`按上下文搭配重排候选。万象长期稳定版约 ${GRAMMAR.size} MB，建议 Wi-Fi。不装不影响打字。`,value:gState,control:g.installed?`<button class="secbtn ghost" data-act="grammarAction" data-arg="check">检查</button>`:`<button class="secbtn" data-act="grammarAction" data-arg="dl">下载</button>`})+(g.installed?row({title:'语法排序',cap:'下次键盘唤起生效',control:tog(g.on,'tog','grammar.on')})+row({title:'删除语法模型',value:'约 '+GRAMMAR.size+' MB',act:'grammarAction',arg:'del'}):'')))}
+ const fa=S.fa;h+=content(glabel('用户词典')+card(row({title:'学习',cap:fa?'已开启完全访问：学到的词会保存，更新方案包后也保留':'未开启完全访问：学到的词只在本次会话保留',control:tog(S.ud.learn,'udAct','learn')})+row({title:'用户词',value:num(S.ud.n)+' 个'})+row({title:'导出文本快照',act:'udAct',arg:'export',chev:true})+row({title:'导入快照',act:'udAct',arg:'import',chev:true})+row({title:'同步',lock:!fa,cap:fa?'通过 iCloud 同步到其他设备':'需要允许完全访问',control:tog(S.ud.sync,'udAct','sync',false,!fa)})+row({title:'清空',act:'udAct',arg:'clear'})));
+ h+=content(glabel('关于此包')+card(row({title:'来源',value:'github.com/'+pk.src})+row({title:'许可',value:pk.licenseName,act:'push',page:'license',arg:id,chev:true})+(st.st!=='none'?row({title:'占用',value:'约 '+pk.unzip+' MB'}):'')+row({title:'检查版本',act:st.st==='none'?null:'checkUpdate',arg:id,value:st.check==='checking'?'检查中…':st.st==='none'?'':pk.ver})+row({title:'更新渠道',dev:true,cap:'仅 Wi-Fi 时自动检查；更新前提示键盘将 x 分钟只能打英文',act:'dev',arg:'更新渠道'})+row({title:'包元信息',dev:true,cap:'词库条目数、词频来源、OpenCC 变体',act:'dev',arg:'包元信息'})+(st.st==='installed'?row({title:'删除此包',value:'释放约 '+pk.unzip+' MB',act:'delPkg',arg:id}):'')));
+ return h+foot('输入方案与开关随包走；换包后开关集合可能不同。')}};
+PAGES.fuzzy={render(arg){const id=arg||'rime-ice',sw=swOf(id),G=[['zh','zh ↔ z'],['ch','ch ↔ c'],['sh','sh ↔ s'],['nl','n ↔ l'],['an','an ↔ ang'],['en','en ↔ eng'],['ing','in ↔ ing'],['fh','f ↔ h'],['rl','r ↔ l']];return nav('模糊音')+head('模糊音',PKG[id].name+' · 改动后重新编译约 2–5 分钟，期间键盘只能打英文')+content(card(G.map(g=>row({title:g[1],control:tog(!!sw.fuzzy[g[0]],'fuzzy',id+':'+g[0])})).join('')))}};
+const LIC={'rime-ice':{t:'GPL 3.0',body:'GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007\n\nThis program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\n……（节选）\n\n——\n上游：https://github.com/iDvel/rime-ice'},wanxiang:{t:'CC BY 4.0',body:'Creative Commons Attribution 4.0 International\n\n你可以自由地共享与改编，任何用途，包括商业用途；须署名、提供许可链接并标明是否修改。\n\n……（节选）\n\n——\n上游：https://github.com/amzxyz/rime-wanxiang'}};
+PAGES.license={render(arg){const id=arg||'rime-ice',l=LIC[id];return nav(l.t)+head(l.t,PKG[id].name+' · 许可全文随安装内容落地，此处为节选')+`<div class="lic">${esc(l.body)}</div>`}};
+PAGES.personal={render(){return `<div class="ltitle" style="padding-top:12px">个性化</div>${content(glabel('外观主题')+card(themeChips()+row({title:'主 App 深色模式',control:seg([['system','跟随系统'],['light','浅色'],['dark','深色']],S.appMode,'appMode')})+row({title:'键盘主题',dev:true,cap:'当前主题下微调键帽颜色',act:'dev',arg:'键盘主题'})))+content(glabel('统计')+card(row({tile:'stats',title:'统计看板',act:'push',page:'stats',chev:true})+row({title:'输入统计',lock:!S.fa,cap:S.fa?'只在本机记录，不上传':'需要允许完全访问才能跨会话累计',control:tog(S.statsOn,'stats',null,false,!S.fa)})))}${foot('三套主题键盘与主 App 同步派生，亮暗各一套。')}`}};
+function themeChips(){return `<div class="chips">${THEMES.map(t=>`<button class="chipx ${S.theme===t[0]?'on':''}" data-act="theme" data-arg="${t[0]}"><span class="kb" style="--sw-bg:${t[3]};--sw-k:${t[2]}"><i></i><i></i><i></i><i class="sp"></i></span><span class="n">${t[1]}</span><span class="m">${t[2]}</span></button>`).join('')}</div>`}
+PAGES.stats={render(){if(!S.fa)return nav('统计看板')+emptyHTML('lock','需要允许完全访问','输入统计要跨会话累计字数，只有开启完全访问后才能保存。','faStats',null,'去开启');if(!S.statsOn)return nav('统计看板')+emptyHTML('stats','输入统计已关闭','开启后，在这里看今日字数、首选命中率与已用天数。','stats',null,'开启');return nav('统计看板')+head('统计看板','只在本机记录，不上传。')+`<div class="bignum"><div class="v">1,286</div><div class="l">今日字数</div></div><div class="statgrid"><div class="statbox"><div class="v">8,420</div><div class="l">本周字数</div></div><div class="statbox"><div class="v">71%</div><div class="l">首选命中率</div></div><div class="statbox"><div class="v">48,210</div><div class="l">累计字数</div></div><div class="statbox"><div class="v">42</div><div class="l">已用天数</div></div></div><div class="chart">${[38,52,44,70,58,90,46].map(h=>`<i style="height:${h}%"></i>`).join('')}</div><div class="milestone">还差 1,790 字到 5 万字</div>`}};
+Object.assign(ACT,{faStats:()=>faSheet('输入统计')});
+PAGES.general={render(){const ins=inService();return `<div class="aboutlogo">${svg('wing')}<div class="an">蜻蜓</div><div class="av">1.0 (0) · iOS 第三方中文 Rime 输入法</div><div class="av" style="margin-top:6px;line-height:1.5;text-align:center">引擎在设备上运行，离线，不上传任何输入。</div></div>`+content(glabel('数据与隐私')+card(row({title:'允许完全访问',cap:S.fa?'已开启。键盘可保存学到的词、提供触感反馈':'未开启。不影响打字；学到的词只在本次会话保留',value:S.fa?'已开启':'未开启',act:S.fa?null:'faGeneral',chev:!S.fa})+row({title:'隐私说明',act:'privacyToggle',chev:true})+(S.privacyOpen?`<div class="row" style="display:block;padding-top:0;border-top:0"><div class="row-cap" style="font-size:13px;line-height:1.65;color:var(--text-2)">引擎在设备上运行，键盘没有网络权限，也不记录你输入的内容。学到的词只存本机，开启完全访问后才会跨会话保存。主 App 只在你主动操作时联网下载方案包。</div></div>`:'')+row({title:'占用总览',value:ins?'约 '+(PKG[ins].unzip+(S.grammar.installed?GRAMMAR.size:0))+' MB':'—',act:'push',page:'storage',chev:true})+row({title:'删除全部数据',act:'delAll'})))+content(glabel('键盘与帮助')+card(row({tile:'gear',title:'启用与管理键盘',value:S.kbAdded?'已添加':'未添加',act:'push',page:'kbsetup',chev:true})+row({tile:'help',title:'帮助与自检',cap:'为什么没有中文候选？',act:'push',page:'help',chev:true})+row({title:'宿主 App 兼容性',dev:true,cap:'密码框只有英文、个别 App 不出联想',act:'dev',arg:'宿主 App 兼容性'})+row({title:'反馈问题',cap:'GitHub Issues · 可附诊断包',act:'feedback',chev:true})))+content(glabel('关于')+card(row({title:'开源组件致谢',cap:'librime、语法插件、rime-ice、万象拼音',act:'push',page:'credits',chev:true})+row({title:'许可全文',value:ins?PKG[ins].licenseName:'',act:'push',page:'license',arg:ins||'rime-ice',chev:true})+row({title:'使用中方案包',value:ins?PKG[ins].name:'未安装',act:ins?'push':null,page:'detail',arg:ins,chev:!!ins})+row({title:'重看首启引导',act:'replay'})))}};
+Object.assign(ACT,{faGeneral:()=>faSheet('完全访问'),delAll:()=>sheet({title:'删除全部数据',msg:'将删除所有已下载方案包、用户词典与设置，回到首次安装状态。',acts:[{l:'全部删除',k:'destructive',act:'delAllGo'},{gap:1,l:'取消',k:'secondary'}]}),delAllGo:()=>{dismissSheet();const {theme,mode,fa,kbAdded}=S;S=Object.assign(fresh(),{theme,mode,fa,kbAdded,onboarded:true});save();popAll();rerenderAll();toast('已删除全部数据')},markAdded:()=>markAdded()});
+PAGES.storage={render(){const ins=inService();return nav('占用总览')+head('占用','解压后的词库与编译产物。')+content(card(Object.keys(PKG).filter(id=>S.pkgs[id].st!=='none').map(id=>row({title:PKG[id].name,value:'约 '+PKG[id].unzip+' MB',chip:S.pkgs[id].st==='inservice'})).join('')+(S.grammar.installed?row({title:'语法模型',value:'约 '+GRAMMAR.size+' MB'}):'')+row({title:'合计',value:'约 '+(Object.keys(PKG).filter(id=>S.pkgs[id].st!=='none').reduce((a,id)=>a+PKG[id].unzip,0)+(S.grammar.installed?GRAMMAR.size:0))+' MB'})))+foot('安装过程最多占用约 500–700 MB，装完即释放。')}};
+PAGES.kbsetup={render(){return nav('启用与管理键盘')+head('启用与管理键盘',S.kbAdded?'蜻蜓已添加到系统键盘。':'还差这一步，才能在任何输入框里用蜻蜓打字。')+`<div style="padding:14px 16px 0"><div class="path"><b>1</b> 设置 <span class="arw">›</span> <b>2</b> 通用 <span class="arw">›</span> <b>3</b> 键盘 <span class="arw">›</span> 键盘 <span class="arw">›</span> <b>4</b> 添加新键盘… <span class="arw">›</span> <b>蜻蜓</b></div><div style="display:flex;flex-direction:column;gap:8px;margin-top:14px"><button class="btn primary" data-act="openSettings">打开系统设置</button><button class="btn secondary" data-act="markAdded">我已添加键盘，试打一下</button></div><details class="trouble" style="padding:0 16px"><summary>看不到蜻蜓？</summary><div class="tb">· 添加后需要重启一次正在用的 App<br>· 确认点了「添加新键盘…」，并在第三方键盘区找到蜻蜓<br>· 在输入框长按地球键切换到蜻蜓<br>· 怎么切回系统键盘：长按地球键选系统拼音</div></details></div>`+foot('重装、换机、系统更新后都需要重新添加。')}};
+PAGES.help={render(){const QA=[['没有中文候选？','按顺序检查：① 键盘是否已添加（上方「启用与管理键盘」）；② 是否装了方案包（键盘 Tab 横幅）；③ 是否切到了蜻蜓（长按地球键）。'],['装包失败怎么办？','看失败卡上的原因：空间不足就去清理或换雾凇拼音（约 47 MB）；下载中断会自动续传，不用手动重试。'],['「允许完全访问」是什么？','系统给键盘的一项权限。蜻蜓不开也能完整打字；开了才会保存学到的词、提供触感反馈与剪贴板历史。蜻蜓的键盘没有网络权限。'],['编译期间能切出去吗？','可以切到 App 内其他页面。切到别的 App 或锁屏会被系统中断，回来后自动续做；被系统杀掉后下次启动自动续做。'],['怎么切回系统键盘？','长按地球键，选系统拼音。'],['第二遍打同一个词还是排不到前面？','没开完全访问时，学到的词只在本次会话保留；开启后跨会话保存。']];return nav('帮助与自检')+head('帮助与自检','先看这里，再去反馈。')+content(card(QA.map(q=>`<div class="qa" data-act="qa"><div class="q">${q[0]}${svg('chev','chev')}</div><div class="a">${q[1]}</div></div>`).join('')))+foot('反馈问题时可附诊断包（不含输入内容）。')}};
+PAGES.credits={render(){return nav('开源组件致谢')+head('开源组件致谢','随安装内容落地的许可全文可在「许可全文」查看。')+content(card([['librime','BSD-3-Clause'],['librime-lua','BSD-3-Clause'],['librime-octagram','BSD-3-Clause'],['KeyboardKit 7.8.0','MIT'],['OpenCC','Apache-2.0'],['雾凇拼音 rime-ice','GPL-3.0'],['万象拼音 rime-wanxiang','CC BY 4.0'],['语法模型 rime-wanxiang-data','CC BY 4.0']].map(c=>row({title:c[0],value:c[1]})).join('')))}};
+applyChrome();fit();renderTabbar();
+(function init(){const pending=Object.keys(S.pkgs).find(k=>S.pkgs[k].st==='pending');if(pending){S.pkgs[pending].st='none';beginInstall(pending,S.pkgs[pending].wantGrammar,false);toast('已恢复上次未完成的安装')}switchTab('keyboard');rerenderAll();const needCover=!S.onboarded||(!inService()&&!S.kbAdded&&(S.skipCount||0)<2&&!Object.keys(S.pkgs).some(k=>S.pkgs[k].fail));if(needCover)openCover(inService()?4:1)})();
 </script>
 </body>
 </html>
